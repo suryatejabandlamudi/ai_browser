@@ -9,9 +9,16 @@
 - ✅ **Git Repository**: Initialized, committed, and pushed to remote
 
 ### Architecture & Planning
-- ✅ **System Architecture**: Comprehensive design document created
+- ✅ **System Architecture**: Updated with Comet insights and macOS focus
 - ✅ **Development Plan**: 4-week implementation timeline
 - ✅ **Technical Stack**: Python backend + Chromium fork + GPT-OSS 20B
+- ✅ **CLAUDE.md**: Comprehensive guidance document created
+
+### Research & Analysis
+- ✅ **BrowserOS Study**: Analyzed patches and Chromium integration approach
+- ✅ **Comet Research**: Latest architecture details from July 2025 launch
+- ✅ **Side Panel UX**: Learned conversational context patterns
+- ✅ **macOS Focus**: Simplified to Apple-only for better development
 
 ### AI Model Integration
 - ✅ **GPT-OSS 20B**: Successfully tested via Ollama
@@ -25,33 +32,45 @@
 - ✅ **depot_tools**: Added as git submodule
 - ✅ **Chromium Directory**: Created and ready for source checkout
 
+### Prototype Development  
+- ✅ **Browser Extension**: Complete Chrome extension for testing
+  - Side panel UI with chat interface
+  - FastAPI backend integration
+  - Content extraction and automation
+  - Testing framework for rapid iteration
+
 ## 🔄 Currently In Progress
 
 ### Chromium Source Checkout
-- **Status**: Ready to start (requires 4-6 hours, ~20GB disk space)
-- **Command**: `fetch chromium` (will be run next)
-- **Note**: This is a long-running process that should be run when system can be left alone
+- **Status**: 33GB/55GB downloaded (60% complete)
+- **Process**: gclient sync running in background
+- **ETA**: 2-3 more hours to complete
+- **Note**: Long-running download continuing successfully
 
 ## 📋 Next Immediate Steps
 
-### 1. Complete Chromium Setup
-```bash
-cd /Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/chromium
-export PATH="../depot_tools:$PATH"
-fetch chromium  # 4-6 hours download
-```
+### 1. Complete Chromium Setup (In Progress - 60% done)
+- **Status**: 33GB/55GB downloaded
+- **Wait for completion**: ~2-3 more hours
+- **Verification**: Check for `src/` directory when done
 
-### 2. Study BrowserOS Integration
-- Clone BrowserOS repository
-- Analyze their patches in `patches/nxtscape/`
-- Understand AI sidebar implementation
-- Plan our integration approach
+### 2. Apply BrowserOS-Style Patches  
+- Study BrowserOS patches in detail (`patches/nxtscape/`)
+- Create custom patches for GPT-OSS integration
+- Focus on AI sidebar and browserOS API patches
+- Adapt for local LLM instead of cloud APIs
 
-### 3. Create Minimal AI Sidebar
-- Start with basic Chromium patch
-- Add simple chat interface
-- Connect to our FastAPI backend
-- Test page content extraction
+### 3. Build Custom AI Browser
+- Configure Chromium build for macOS 
+- Apply patches and build browser
+- Test AI sidebar with local GPT-OSS
+- Implement Comet-inspired conversational UX
+
+### 4. Test Extension Prototype (Available Now)
+- Load extension in Chrome for immediate testing
+- Test FastAPI backend integration
+- Validate page extraction and automation
+- Use as reference for browser integration
 
 ## 🎯 Success Metrics
 
@@ -118,5 +137,27 @@ ai_browser/
 - **Frontend**: React/HTML in Chromium sidebar
 - **Platform**: macOS with Apple Silicon optimization
 - **Build**: depot_tools + GN + Ninja
+
+## 🚀 Latest Update (Session Progress)
+
+### Major Achievements Today
+- **Research Breakthrough**: Analyzed Perplexity Comet (July 2025) - $200/month AI browser
+- **Architecture Clarity**: Understood BrowserOS patch system + Comet UX patterns  
+- **macOS Focus**: Simplified to Apple-only for better development experience
+- **Working Prototype**: Built complete Chrome extension for testing and validation
+- **Documentation**: Created CLAUDE.md and updated all architecture docs
+- **Repository**: All progress committed and pushed to remote
+
+### Key Insights Gained
+- **Comet Patterns**: Side panel assistant, conversational context, task automation
+- **BrowserOS Approach**: ~30 Chromium patches + built-in extension integration
+- **Our Advantage**: Local GPT-OSS vs $200/month cloud subscription
+- **Implementation Path**: Use BrowserOS patches as foundation, adapt for local LLM
+
+### Current State
+- **Backend**: Fully functional FastAPI + GPT-OSS 20B integration
+- **Extension**: Complete testing prototype with AI chat interface
+- **Chromium**: 60% downloaded (33GB/55GB), continuing in background
+- **Next Step**: Wait for Chromium completion, then apply patches
 
 The foundation is solid and ready for the next phase of implementation!
