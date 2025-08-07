@@ -225,6 +225,151 @@ ai_browser/
 - Basic update mechanism
 - Documentation and website
 
+## BrowserOS-Agent Deep Analysis
+
+### Key Architecture Insights
+
+**Agent System**:
+- **Unified BrowserAgent** - Single agent handles all tasks through classification and planning
+- **LangChain Integration** - Uses `@langchain` packages for tool binding and LLM interaction
+- **Streaming Support** - Real-time response streaming with `llm.stream()` instead of `llm.invoke()`
+- **Tool System** - Modular tools using `DynamicStructuredTool` with Zod schemas
+
+**Critical Agent Components**:
+```typescript
+// Core execution flow
+User Query → NxtScape.run() → BrowserAgent.execute()
+                                        ↓
+                              ClassificationTool
+                                   ↙        ↘
+                            Simple Task   Complex Task
+                                ↓              ↓
+                          Direct Tool     PlannerTool
+                           Execution      (3 steps)
+                                ↓              ↓
+                              Tool         Execute Each
+                             Result      Step with Tools
+```
+
+**Tool Architecture**:
+- **ToolManager** - Centralized tool registration and management
+- **Tools as LangChain DynamicStructuredTool** - Each tool is a structured function with Zod schema
+- **Tool Types**: Navigation, Interaction, Planning, Classification, Extraction, Tab Management
+- **Tool Results**: Standardized `{ ok: boolean, output?: any, error?: string }` format
+
+**LLM Provider Strategy**:
+- **Multiple Providers** - OpenAI, Anthropic, Ollama, Google, custom Nxtscape proxy
+- **LangChainProvider Singleton** - Centralized LLM instance management
+- **Streaming Architecture** - Progressive tool call building in streams
+- **Model Capabilities** - Context window and capability tracking
+
+### Our GPT-OSS Adaptation Strategy
+
+**Key Adaptations for Local AI**:
+1. **Replace Cloud LLM** - Use Ollama + GPT-OSS instead of OpenAI/Claude
+2. **Simplify Provider** - Single local provider instead of multiple cloud providers  
+3. **Enhanced FastAPI** - Bridge between browser extension and Ollama
+4. **Local Streaming** - Maintain streaming UX with local model
+
+**Implementation Approach**:
+```typescript
+// Our LangChain + Ollama integration
+export class LocalLangChainProvider {
+  private static instance: BaseChatModel;
+  
+  static async getInstance(): Promise<BaseChatModel> {
+    if (!this.instance) {
+      this.instance = new ChatOllama({
+        baseUrl: 'http://localhost:11434',
+        model: 'gpt-oss:20b',
+        temperature: 0.7,
+        streaming: true
+      });
+    }
+    return this.instance;
+  }
+}
+```
+
+**BrowserOS Tool System Adaptation**:
+- **Copy Tool Architecture** - Use their DynamicStructuredTool approach
+- **Adapt for Chrome APIs** - Replace puppeteer with Chrome extension APIs
+- **Local FastAPI Bridge** - Tools communicate via our FastAPI backend
+- **Maintain Streaming** - Keep real-time user feedback
+
+### Technical Implementation Details
+
+**BrowserOS Chrome Extension Structure**:
+```
+BrowserOS-agent/
+├── src/
+│   ├── background/           # Service worker
+│   ├── content/             # DOM interaction
+│   ├── sidepanel/           # React UI
+│   └── lib/
+│       ├── agent/           # BrowserAgent core
+│       ├── browser/         # puppeteer-core integration  
+│       ├── tools/           # Tool implementations
+│       ├── llm/            # LangChain providers
+│       └── runtime/        # ExecutionContext, MessageManager
+```
+
+**Key Files for Our Adaptation**:
+- `BrowserAgent.ts` - Agent execution loop with planning
+- `ToolManager.ts` - Tool registration system
+- `NavigationTool.ts` - Browser navigation example
+- `LangChainProvider.ts` - LLM integration pattern
+- `ExecutionContext.ts` - Runtime state management
+
+**Chrome Extension vs Browser Integration**:
+- **BrowserOS-agent** - Chrome extension using puppeteer-core + debugger API
+- **Our Approach** - Native Chromium browser with built-in extension
+- **Advantage** - Full browser control vs extension limitations
+- **Implementation** - Apply BrowserOS agent patterns to native browser
+
+### Integration with Our Patch System
+
+**Patch 1: Native Agent Integration**
+```cpp
+// chrome/browser/extensions/api/ai_browser/ai_browser_agent.h
+class AIBrowserAgent {
+ public:
+  // Copy BrowserOS-agent execution patterns
+  async ExecuteTask(const std::string& user_query);
+  
+ private:
+  // Integration with local FastAPI + GPT-OSS
+  std::unique_ptr<LocalLLMProvider> llm_provider_;
+  std::unique_ptr<ToolManager> tool_manager_;
+};
+```
+
+**Patch 2: Tool System Integration**
+```cpp
+// Native Chrome APIs instead of puppeteer
+namespace ai_browser {
+  // Navigation tool using native Chrome navigation
+  void NavigateToUrl(const std::string& url, base::OnceCallback callback);
+  
+  // Interaction tool using Chrome accessibility APIs  
+  void ClickElement(const gfx::Point& position, base::OnceCallback callback);
+}
+```
+
+**Patch 3: FastAPI Bridge**
+```javascript
+// Extension communicates with our FastAPI backend
+const AI_BACKEND = 'http://localhost:8001';
+
+async function executeAgentTask(query) {
+  const response = await fetch(`${AI_BACKEND}/api/agent/execute`, {
+    method: 'POST',
+    body: JSON.stringify({ query, context: await getPageContext() })
+  });
+  return response.json();
+}
+```
+
 ## Lessons Learned
 
 ### What Worked Well

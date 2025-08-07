@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "AI Browser Assistant",
+  "version": "1.0.0",
+  "description": "Privacy-first AI browser with local GPT-OSS 20B integration",
+  "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8b2N1G9YxP4l5QdZ8+QcL3p1r5/4l8z3xKj0e7N2g3qZ5g8D1+LKj6o7R0z5vG5V3m1f8A2Y3K9j0l7q8z3W5s1A9c7Q2B6X8f9L3k5z3m7K0p3x5T8a2Y5V4c9L7z8G3J9o5Q4z2p1L8k6W3b1f7X0o9T2s5z8K3m4v1Q6QIDAQAB",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting", 
+    "tabs",
+    "tabGroups",
+    "sidePanel",
+    "bookmarks",
+    "history",
+    "debugger",
+    "aiBrowser"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png", 
+      "128": "assets/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "commands": {
+    "toggle-panel": {
+      "suggested_key": {
+        "default": "Ctrl+E",
+        "mac": "Command+E"
+      },
+      "description": "Toggle the AI Browser side panel"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "component": true
+}

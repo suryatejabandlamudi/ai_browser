@@ -151,13 +151,29 @@ ai_browser/
 ### Key Insights Gained
 - **Comet Patterns**: Side panel assistant, conversational context, task automation
 - **BrowserOS Approach**: ~30 Chromium patches + built-in extension integration
+- **BrowserOS-Agent**: Unified agent with LangChain + streaming + tool system
 - **Our Advantage**: Local GPT-OSS vs $200/month cloud subscription
-- **Implementation Path**: Use BrowserOS patches as foundation, adapt for local LLM
+- **Implementation Path**: Use BrowserOS patches + agent architecture as foundation
+
+### Deep BrowserOS-Agent Analysis Completed
+- **Agent Architecture**: Single BrowserAgent with classification → planning → tool execution
+- **LangChain Integration**: Streaming LLM with DynamicStructuredTool system
+- **Tool System**: Navigation, interaction, planning, classification tools with Zod schemas
+- **Extension Structure**: Background service worker + side panel UI + content scripts
+- **Local Adaptation Strategy**: Replace cloud LLM with Ollama + GPT-OSS via FastAPI
+
+### Patch System Design Completed
+- **Patch Series Created**: 11 patches planned for GPT-OSS integration
+- **Directory Structure**: `patches/`, `resources/files/`, `build/` ready
+- **Extension Foundation**: Component extension manifest and background script
+- **Build Strategy**: Adapt BrowserOS build system for local AI integration
 
 ### Current State
 - **Backend**: Fully functional FastAPI + GPT-OSS 20B integration
-- **Extension**: Complete testing prototype with AI chat interface
+- **Extension**: Complete testing prototype with AI chat interface  
 - **Chromium**: 60% downloaded (33GB/55GB), continuing in background
-- **Next Step**: Wait for Chromium completion, then apply patches
+- **Patch System**: Comprehensive patch plan + directory structure ready
+- **Agent Architecture**: BrowserOS-agent patterns analyzed and adaptation strategy defined
+- **Next Step**: Wait for Chromium completion, then implement first patches
 
-The foundation is solid and ready for the next phase of implementation!
+The foundation is solid with comprehensive patch system design ready for implementation!
