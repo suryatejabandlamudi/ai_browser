@@ -18,6 +18,7 @@ from pydantic import BaseModel
 
 from ai_client import AIClient
 from browser_agent import BrowserAgent
+from browser_agent_enhanced import BrowserAgentEnhanced
 from content_extractor import ContentExtractor
 
 # Configure structured logging
@@ -40,18 +41,20 @@ logger = structlog.get_logger(__name__)
 # Global instances
 ai_client: Optional[AIClient] = None
 browser_agent: Optional[BrowserAgent] = None
+enhanced_agent: Optional[BrowserAgentEnhanced] = None
 content_extractor: Optional[ContentExtractor] = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    global ai_client, browser_agent, content_extractor
+    global ai_client, browser_agent, enhanced_agent, content_extractor
     
     logger.info("Starting AI Browser Backend...")
     
     # Initialize components
     ai_client = AIClient()
     browser_agent = BrowserAgent()
+    enhanced_agent = BrowserAgentEnhanced(ai_client)
     content_extractor = ContentExtractor()
     
     # Test Ollama connection
@@ -125,11 +128,12 @@ class ActionResponse(BaseModel):
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
+    from datetime import datetime
     return {
         "status": "healthy",
         "ai_model": "gpt-oss:20b",
         "backend": "ollama",
-        "timestamp": structlog.processors.TimeStamper()._make_stamper(fmt="iso")()
+        "timestamp": datetime.utcnow().isoformat()
     }
 
 @app.post("/api/chat", response_model=ChatResponse)
@@ -173,6 +177,46 @@ async def chat_with_ai(request: ChatRequest):
     except Exception as e:
         logger.error("Chat request failed", error=str(e))
         raise HTTPException(status_code=500, detail=f"AI chat failed: {str(e)}")
+
+@app.post("/api/chat/enhanced", response_model=ChatResponse)
+async def enhanced_chat_with_ai(request: ChatRequest):
+    """Enhanced chat endpoint with intelligent planning and action parsing"""
+    try:
+        logger.info("Processing enhanced chat request", message_preview=request.message[:100])
+        
+        # Build page context
+        page_context = {}
+        if request.page_url and request.page_content:
+            cleaned_content = await content_extractor.extract_main_content(
+                request.page_content, request.page_url
+            )
+            page_context = {
+                "page_url": request.page_url,
+                "page_content": cleaned_content,
+                "has_page_context": True
+            }
+        
+        # Process task with enhanced agent
+        result = await enhanced_agent.process_task(request.message, page_context)
+        
+        # Add to conversation history
+        enhanced_agent.add_to_history(request.message, result["response"])
+        
+        return ChatResponse(
+            response=result["response"],
+            actions=result.get("actions", []),
+            metadata={
+                "model": "gpt-oss:20b",
+                "task_type": result.get("task_type"),
+                "plan_confidence": result.get("plan_confidence"),
+                "enhanced_agent": True,
+                **result.get("metadata", {})
+            }
+        )
+        
+    except Exception as e:
+        logger.error("Enhanced chat request failed", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Enhanced AI chat failed: {str(e)}")
 
 @app.post("/api/summarize", response_model=PageSummaryResponse)
 async def summarize_page(request: PageSummaryRequest):

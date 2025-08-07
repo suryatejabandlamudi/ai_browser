@@ -1,7 +1,7 @@
 // Background script for AI Browser Extension
 // Handles communication between extension components and FastAPI backend
 
-let backendUrl = 'http://localhost:8001';
+let backendUrl = 'http://localhost:8000';
 
 // Extension installation/startup
 chrome.runtime.onInstalled.addListener(() => {
