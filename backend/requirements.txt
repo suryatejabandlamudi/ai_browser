@@ -1,13 +1,41 @@
-fastapi==0.115.0
-uvicorn[standard]==0.25.0
-websockets==13.1
+# AI Browser Backend Requirements
+# Install with: pip install -r requirements.txt
+
+# Core FastAPI and server dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+websockets==12.0
+
+# HTTP client and async support
+aiohttp==3.9.1
+aiosqlite==0.20.0
+
+# Data validation and serialization
+pydantic==2.5.2
+
+# HTML processing and content extraction
+beautifulsoup4==4.13.4
+readability-lxml==0.8.4.1
+lxml==5.0.0
+
+# HTTP requests
 requests==2.32.3
-aiohttp==3.10.5
-beautifulsoup4==4.12.3
-readability-lxml==0.8.1
-selenium==4.25.0
-playwright==1.48.0
-python-multipart==0.0.16
-pydantic==2.9.0
-structlog==24.4.0
-tiktoken==0.8.0
+
+# Logging and structured logging
+structlog==23.2.0
+
+# Optional OCR dependencies (install as needed)
+# pytesseract==0.3.10    # Tesseract OCR
+# pillow==10.1.0         # Image processing
+# easyocr==1.7.0         # EasyOCR (GPU recommended)
+# paddlepaddle==2.5.2    # PaddleOCR backend
+# paddleocr==2.7.3       # PaddleOCR
+
+# Development and testing dependencies
+pytest==7.4.3
+pytest-asyncio==0.21.1
+
+# Additional utilities
+python-dateutil==2.8.2
+typing-extensions==4.8.0

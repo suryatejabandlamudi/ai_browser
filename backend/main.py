@@ -18,9 +18,19 @@ from pydantic import BaseModel
 
 from ai_client import AIClient
 from browser_agent import BrowserAgent
-from browser_agent_enhanced import BrowserAgentEnhanced
-from structured_agent import StructuredAgent
-from content_extractor import ContentExtractor
+try:
+    from browser_agent_enhanced import BrowserAgentEnhanced
+except ImportError:
+    BrowserAgentEnhanced = None
+
+try:
+    from structured_agent import StructuredAgent
+except ImportError:
+    StructuredAgent = None
+try:
+    from content_extractor import ContentExtractor
+except ImportError:
+    from content_extractor_minimal import ContentExtractor
 from accessibility_tree import AccessibilityTreeExtractor
 from task_classifier import IntelligentTaskClassifier, TaskClassification
 from visual_highlighter import VisualElementHighlighter
@@ -68,8 +78,8 @@ async def lifespan(app: FastAPI):
     # Initialize components
     ai_client = AIClient()
     browser_agent = BrowserAgent()
-    enhanced_agent = BrowserAgentEnhanced(ai_client)
-    structured_agent = StructuredAgent(ai_client)
+    enhanced_agent = BrowserAgentEnhanced(ai_client) if BrowserAgentEnhanced else None
+    structured_agent = StructuredAgent(ai_client) if StructuredAgent else None
     content_extractor = ContentExtractor()
     accessibility_extractor = AccessibilityTreeExtractor()
     task_classifier = IntelligentTaskClassifier()
@@ -246,7 +256,19 @@ class VisualAnalysisRequest(BaseModel):
 async def health_check():
     """Health check endpoint"""
     from datetime import datetime
-    from tools import tool_registry
+    
+    try:
+        from tools import tool_registry
+        tools_info = {
+            "total_registered": len(tool_registry.tools),
+            "categories": len(tool_registry.tools_by_type)
+        }
+    except ImportError:
+        tools_info = {
+            "total_registered": 0,
+            "categories": 0,
+            "error": "Tools system not available"
+        }
     
     return {
         "status": "healthy",
@@ -255,12 +277,14 @@ async def health_check():
         "agents": {
             "browser_agent": browser_agent is not None,
             "enhanced_agent": enhanced_agent is not None,
-            "structured_agent": structured_agent is not None
+            "structured_agent": structured_agent is not None,
+            "task_classifier": task_classifier is not None,
+            "visual_highlighter": visual_highlighter is not None,
+            "form_processor": form_processor is not None,
+            "memory_manager": memory_manager is not None,
+            "visual_processor": visual_processor is not None
         },
-        "tools": {
-            "total_registered": len(tool_registry.tools),
-            "categories": len(tool_registry.tools_by_type)
-        },
+        "tools": tools_info,
         "timestamp": datetime.utcnow().isoformat()
     }
 

@@ -13,13 +13,37 @@ from dataclasses import dataclass
 
 import structlog
 
-from .tools import (
-    get_tool_manager,
-    create_tool_execution_context,
-    ToolManager,
-    ToolResult,
-    ToolExecutionContext
-)
+try:
+    from tools import (
+        get_tool_manager,
+        create_tool_execution_context,
+        ToolManager,
+        ToolResult,
+        ToolExecutionContext
+    )
+except ImportError:
+    # Create dummy classes if tools aren't available
+    class ToolManager:
+        def get_available_tools(self): return {}
+        async def execute_tool(self, name, params): return {"success": False, "error": "Tools not available"}
+    
+    class ToolResult:
+        def __init__(self, success=False, message="", data=None, error=None):
+            self.success = success
+            self.message = message
+            self.data = data
+            self.error = error
+    
+    class ToolExecutionContext:
+        def __init__(self, page_url="", page_content=""):
+            self.page_url = page_url
+            self.page_content = page_content
+    
+    def get_tool_manager():
+        return ToolManager()
+    
+    def create_tool_execution_context(page_url="", page_content=""):
+        return ToolExecutionContext(page_url, page_content)
 
 logger = structlog.get_logger(__name__)
 
