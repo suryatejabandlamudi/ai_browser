@@ -98,44 +98,66 @@ class ActionPlanner:
         """Generate a step-by-step plan for complex tasks"""
         
         prompt = f"""
-        Create a detailed plan to accomplish this browser task:
+        You are an expert browser automation planner. Create a step-by-step plan for this task.
         
-        Task: "{task}"
-        Current page: {context.get('url', 'unknown')}
-        Page content: {str(context.get('page_content', ''))[:500]}...
+        TASK: "{task}"
+        CURRENT PAGE: {context.get('url', 'unknown')}
         
-        Available actions:
-        - NAVIGATE: Go to a URL
-        - CLICK: Click an element (provide selector or description)  
+        AVAILABLE ACTIONS:
+        - NAVIGATE: Go to a URL  
+        - CLICK: Click an element
         - TYPE: Type text in an element
-        - SCROLL: Scroll page (up/down)
+        - SCROLL: Scroll page (up/down/top/bottom)
         - EXTRACT: Get text/data from page
         - WAIT: Wait for page to load
         - SCREENSHOT: Take page screenshot
         
-        Return a JSON plan with this exact format:
+        RESPOND WITH ONLY VALID JSON - NO OTHER TEXT:
+        
         {{
             "steps": [
                 {{
                     "action": "NAVIGATE",
-                    "url": "https://example.com",
-                    "reasoning": "Need to go to the target site"
+                    "url": "https://google.com", 
+                    "reasoning": "Go to Google homepage"
                 }},
                 {{
-                    "action": "CLICK", 
-                    "selector": "button.search-btn",
-                    "reasoning": "Click the search button"
+                    "action": "CLICK",
+                    "selector": "input[name='q']",
+                    "reasoning": "Focus search input field"
+                }},
+                {{
+                    "action": "TYPE",
+                    "text": "AI news",
+                    "reasoning": "Enter search query"
+                }},
+                {{
+                    "action": "CLICK",
+                    "selector": "input[type='submit']",
+                    "reasoning": "Submit search"
                 }}
             ],
             "confidence": 0.9
         }}
         
-        Keep plans simple - max 5 steps. Be specific with selectors.
+        IMPORTANT: Return ONLY the JSON object, no explanations, no markdown formatting.
         """
         
         try:
             response = await self.ai_client.chat(prompt, context={})
-            plan_data = json.loads(response["content"])
+            content = response["content"].strip()
+            
+            # Try to extract JSON if response has extra text
+            if not content.startswith('{'):
+                # Look for JSON in the response
+                import re
+                json_match = re.search(r'\{.*\}', content, re.DOTALL)
+                if json_match:
+                    content = json_match.group(0)
+                else:
+                    raise ValueError("No JSON found in response")
+            
+            plan_data = json.loads(content)
             
             steps = []
             for step in plan_data.get("steps", []):

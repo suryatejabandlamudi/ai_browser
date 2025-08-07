@@ -10,6 +10,14 @@
   }
   window.aiBrowserExtensionInjected = true;
   
+  // Load accessibility integration
+  const accessibilityScript = document.createElement('script');
+  accessibilityScript.src = chrome.runtime.getURL('accessibility.js');
+  accessibilityScript.onload = function() {
+    console.log('[AI Browser] Accessibility integration loaded');
+  };
+  (document.head || document.documentElement).appendChild(accessibilityScript);
+  
   // Enhanced element finder that uses multiple strategies
   function findElement(description) {
     const strategies = [

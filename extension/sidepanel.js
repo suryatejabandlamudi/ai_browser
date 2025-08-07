@@ -5,10 +5,13 @@ class AIBrowserSidePanel {
         this.currentTab = null;
         this.pageContent = null;
         this.isProcessing = false;
+        this.websocket = null;
+        this.currentStreamingMessage = null;
         
         this.initializeElements();
         this.attachEventListeners();
         this.loadCurrentTab();
+        this.initializeWebSocket();
         
         console.log('AI Browser Side Panel initialized');
     }
@@ -113,6 +116,63 @@ class AIBrowserSidePanel {
         textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
     }
     
+    initializeWebSocket() {
+        // Try to connect to WebSocket for streaming responses
+        try {
+            this.websocket = new WebSocket('ws://localhost:8000/ws');
+            
+            this.websocket.onopen = () => {
+                console.log('WebSocket connected for streaming');
+                this.updateStatus('ready', 'Connected with streaming');
+            };
+            
+            this.websocket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                this.handleStreamingMessage(data);
+            };
+            
+            this.websocket.onclose = () => {
+                console.log('WebSocket disconnected');
+                this.websocket = null;
+            };
+            
+            this.websocket.onerror = (error) => {
+                console.log('WebSocket error, falling back to HTTP requests');
+                this.websocket = null;
+            };
+        } catch (error) {
+            console.log('WebSocket not available, using HTTP requests');
+            this.websocket = null;
+        }
+    }
+    
+    handleStreamingMessage(data) {
+        if (data.type === 'chat_chunk') {
+            if (!this.currentStreamingMessage) {
+                // First chunk - create new AI message
+                this.removeTypingIndicator();
+                this.currentStreamingMessage = this.addMessage('', 'ai', true);
+            }
+            
+            // Append chunk to current streaming message
+            const contentDiv = this.currentStreamingMessage.querySelector('.message-content');
+            contentDiv.textContent += data.content;
+            
+            // Auto-scroll to bottom
+            this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
+        } else if (data.type === 'chat_complete') {
+            // Streaming complete
+            this.currentStreamingMessage = null;
+            this.isProcessing = false;
+            this.updateSendButton();
+            
+            // Handle actions if any
+            if (data.actions && data.actions.length > 0) {
+                this.handleActions(data.actions);
+            }
+        }
+    }
+
     async sendMessage() {
         const message = this.elements.messageInput.value.trim();
         if (!message || this.isProcessing) return;
@@ -131,42 +191,61 @@ class AIBrowserSidePanel {
         this.addTypingIndicator();
         
         try {
-            // Send to AI backend
-            const response = await chrome.runtime.sendMessage({
-                type: 'SEND_TO_AI',
-                data: {
+            // Use WebSocket for streaming if available
+            if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
+                this.websocket.send(JSON.stringify({
+                    type: 'chat',
                     message: message,
-                    pageUrl: this.currentTab?.url,
-                    pageContent: this.pageContent
-                }
-            });
-            
-            this.removeTypingIndicator();
-            
-            if (response.success) {
-                const aiResponse = response.data;
-                
-                // Add AI response to chat
-                this.addMessage(aiResponse.response || aiResponse.message || 'I received your message.', 'ai');
-                
-                // Handle any actions
-                if (aiResponse.actions && aiResponse.actions.length > 0) {
-                    await this.handleActions(aiResponse.actions);
-                }
+                    context: {
+                        page_url: this.currentTab?.url,
+                        page_content: this.pageContent
+                    }
+                }));
             } else {
-                this.addMessage('Sorry, I encountered an error processing your request. Please try again.', 'ai');
+                // Fallback to HTTP request
+                await this.sendMessageHTTP(message);
             }
         } catch (error) {
             console.error('Error sending message:', error);
             this.removeTypingIndicator();
-            this.addMessage('Sorry, I\'m having trouble connecting to the AI backend. Please check that the backend server is running.', 'ai');
+            this.addMessage('Sorry, I encountered an error processing your request. Please try again.', 'ai');
+            this.isProcessing = false;
+            this.updateSendButton();
+        }
+    }
+    
+    async sendMessageHTTP(message) {
+        // Original HTTP-based method as fallback
+        const response = await chrome.runtime.sendMessage({
+            type: 'SEND_TO_AI',
+            data: {
+                message: message,
+                pageUrl: this.currentTab?.url,
+                pageContent: this.pageContent
+            }
+        });
+        
+        this.removeTypingIndicator();
+        
+        if (response.success) {
+            const aiResponse = response.data;
+            
+            // Add AI response to chat
+            this.addMessage(aiResponse.response || aiResponse.message || 'I received your message.', 'ai');
+            
+            // Handle any actions
+            if (aiResponse.actions && aiResponse.actions.length > 0) {
+                await this.handleActions(aiResponse.actions);
+            }
+        } else {
+            this.addMessage('Sorry, I encountered an error processing your request. Please try again.', 'ai');
         }
         
         this.isProcessing = false;
         this.updateSendButton();
     }
     
-    addMessage(content, sender) {
+    addMessage(content, sender, isStreaming = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message message-${sender}`;
         
@@ -174,7 +253,7 @@ class AIBrowserSidePanel {
         contentDiv.className = 'message-content';
         
         // Format content for display
-        if (sender === 'ai') {
+        if (sender === 'ai' && !isStreaming) {
             contentDiv.innerHTML = this.formatAIResponse(content);
         } else {
             contentDiv.textContent = content;
@@ -190,6 +269,9 @@ class AIBrowserSidePanel {
         
         this.elements.chatContainer.appendChild(messageDiv);
         this.scrollToBottom();
+        
+        // Return the message div for streaming updates
+        return messageDiv;
     }
     
     formatAIResponse(content) {

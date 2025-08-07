@@ -59,6 +59,64 @@ class AIClient:
             logger.error("AI model connection test error", error=str(e))
             return False
     
+    async def chat_stream(self,
+                         message: str,
+                         context: Optional[Dict[str, Any]] = None,
+                         max_tokens: int = 1000) -> AsyncIterator[str]:
+        """Stream chat response from AI model"""
+        try:
+            session = await self._get_session()
+            url = f"{self.base_url}/v1/chat/completions"
+            
+            # Build system prompt based on context
+            system_prompt = self._build_system_prompt(context)
+            
+            messages = []
+            if system_prompt:
+                messages.append({"role": "system", "content": system_prompt})
+            messages.append({"role": "user", "content": message})
+            
+            payload = {
+                "model": self.model,
+                "messages": messages,
+                "max_tokens": max_tokens,
+                "temperature": 0.7,
+                "stream": True  # Enable streaming
+            }
+            
+            logger.debug("Starting streaming chat request", message_preview=message[:100])
+            
+            async with session.post(url, json=payload) as response:
+                if response.status == 200:
+                    async for line in response.content:
+                        line_text = line.decode('utf-8').strip()
+                        
+                        if line_text.startswith('data: '):
+                            json_text = line_text[6:]  # Remove 'data: ' prefix
+                            
+                            if json_text == '[DONE]':
+                                break
+                                
+                            try:
+                                chunk = json.loads(json_text)
+                                delta_content = chunk.get('choices', [{}])[0].get('delta', {}).get('content', '')
+                                
+                                if delta_content:
+                                    yield delta_content
+                                    
+                            except json.JSONDecodeError:
+                                continue  # Skip malformed JSON
+                else:
+                    error_text = await response.text()
+                    logger.error("Streaming chat request failed", 
+                               status=response.status, 
+                               error=error_text)
+                    yield f"Error: Request failed with status {response.status}"
+                    
+        except Exception as e:
+            logger.error("Streaming chat error", error=str(e))
+            yield f"Error: {str(e)}"
+
     async def chat(self, 
                    message: str, 
                    context: Optional[Dict[str, Any]] = None,
