@@ -1,0 +1,4 @@
+backend/chromium/_gclient_src*/
+backend/chromium/src/
+backend/chromium/BrowserOS/
+backend/chromium/BrowserOS-agent/

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Browser Assistant</title>
+    <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <img src="icons/icon48.png" alt="AI Browser" class="logo-icon">
+                <h1>AI Browser</h1>
+            </div>
+            <div class="status" id="status">
+                <span class="status-dot"></span>
+                <span class="status-text">Ready</span>
+            </div>
+        </div>
+
+        <!-- Current Page Info -->
+        <div class="current-page" id="currentPage">
+            <div class="page-info">
+                <div class="page-title" id="pageTitle">No page loaded</div>
+                <div class="page-url" id="pageUrl"></div>
+            </div>
+            <button class="refresh-btn" id="refreshBtn" title="Refresh page content">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                    <path d="M4.146 4.146a.5.5 0 0 1 .708 0L8 7.293l3.146-3.147a.5.5 0 0 1 .708.708L8.707 8l3.147 3.146a.5.5 0 0 1-.708.708L8 8.707l-3.146 3.147a.5.5 0 0 1-.708-.708L7.293 8 4.146 4.854a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <p>Welcome to AI Browser! I can help you:</p>
+                <ul>
+                    <li>Summarize the current page</li>
+                    <li>Answer questions about the content</li>
+                    <li>Navigate and interact with websites</li>
+                    <li>Fill forms and click buttons</li>
+                </ul>
+                <p>Try asking: "What is this page about?" or "Click the login button"</p>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-container">
+                <textarea 
+                    id="messageInput" 
+                    placeholder="Ask me anything about this page or tell me what to do..."
+                    rows="2"
+                ></textarea>
+                <button id="sendBtn" class="send-btn" disabled>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M15.854.146a.5.5 0 0 1 .11.54L13.026 8l2.938 7.314a.5.5 0 0 1-.538.686l-13-2a.5.5 0 0 1-.314-.858L8 8 2.112 2.858a.5.5 0 0 1 .314-.858l13-2a.5.5 0 0 1 .428.146z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="quick-actions">
+                <button class="quick-action" data-action="summarize">Summarize Page</button>
+                <button class="quick-action" data-action="extract">Extract Key Info</button>
+                <button class="quick-action" data-action="help">Help</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="sidepanel.js"></script>
+</body>
+</html>

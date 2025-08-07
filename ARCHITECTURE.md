@@ -2,22 +2,56 @@
 
 ## Project Overview
 
-Building a real AI browser similar to Perplexity Comet, but running 100% locally with GPT-OSS 20B via Ollama. This is a **Chromium-based browser** (not an extension), taking inspiration from BrowserOS but optimized for local AI interactions.
+Building a real AI browser inspired by **Perplexity Comet** (launched July 2025), but running 100% locally with GPT-OSS 20B via Ollama. This is a **native macOS Chromium-based browser** (not an extension), taking inspiration from BrowserOS patches but optimized for local AI interactions.
+
+### Comet vs Our Browser (Key Differences)
+
+**Perplexity Comet (Cloud-based)**:
+- Chromium-based with integrated AI search engine
+- Assistant in side panel with cross-tab context
+- Cloud LLMs (GPT-4o, Claude, Perplexity Sonar)
+- $200/month subscription, invite-only
+- Data stored remotely with privacy controls
+
+**Our AI Browser (Privacy-first, Local)**:
+- Chromium-based with integrated local LLM
+- Assistant in side panel with cross-tab context  
+- Local GPT-OSS 20B via Ollama
+- Free, open-source, macOS-only
+- All data stays on user's machine
 
 ## Core Philosophy
 
 - **Privacy First**: All AI processing happens locally, no data sent to cloud
-- **Real Browser**: Custom Chromium fork with deep AI integration, not an extension
+- **Real Browser**: Custom Chromium fork with deep AI integration, not an extension  
+- **macOS Native**: Built specifically for Apple Silicon with Metal acceleration
 - **Agent-Driven**: AI can read pages, understand context, and perform actions
-- **Local Model**: GPT-OSS 20B running via Ollama on Apple Silicon with Metal acceleration
+- **Comet-Inspired UX**: Side panel assistant with conversational context across tabs
+- **Local Model**: GPT-OSS 20B running via Ollama with Apple optimization
 
 ## Browser Engine Strategy
 
-**Selected Approach: Custom Chromium Fork (following BrowserOS)**
-- **Phase 1**: Fork BrowserOS repository as starting point
-- **Phase 2**: Customize for GPT-OSS integration and local processing
-- **Phase 3**: Add advanced AI features and automation capabilities
-- **Reasoning**: Full control over browser internals, access to Accessibility Tree, native performance
+**Selected Approach: Custom Chromium Fork (BrowserOS + Comet Insights)**
+- **Phase 1**: Use BrowserOS patches as foundation 
+- **Phase 2**: Adapt Comet's UX patterns (side panel, conversational context)
+- **Phase 3**: Integrate GPT-OSS 20B for local processing
+- **Phase 4**: Add macOS-specific optimizations and packaging
+- **Reasoning**: Full control over browser internals, native performance, privacy-first design
+
+### Key Comet Architecture Insights (July 2025)
+
+**What Comet Got Right**:
+- **Side Panel Assistant**: Persistent AI interface across all tabs
+- **Conversational Context**: Remembers conversation history across sessions
+- **Task Automation**: Natural language commands for browser actions
+- **Page Integration**: AI can read and interact with current page content
+- **Seamless UX**: No switching between search and browse modes
+
+**Our Local Advantage**:
+- **No Subscription Fees**: Comet costs $200/month, ours is free
+- **Complete Privacy**: No data ever leaves the user's machine
+- **Open Source**: Users can audit, modify, and distribute
+- **Apple Optimization**: Native Metal acceleration for better performance
 
 ## System Architecture
 
@@ -212,20 +246,28 @@ Response Generation & UI Update
 - **Trust**: Transparent about what data is processed locally
 - **Performance**: Feels responsive, doesn't slow down browsing
 
-## Deployment Strategy
+## macOS-Only Deployment Strategy
 
 ### Distribution Options
-1. **Chrome Web Store Extension** + separate Ollama setup guide
-2. **GitHub Releases** with packaged installers (Mac focus initially)  
-3. **Homebrew Formula** for easy installation on macOS
-4. **Docker Container** for cross-platform deployment (future)
+1. **Direct Download**: DMG installer from GitHub Releases
+2. **Homebrew Formula**: `brew install --cask ai-browser` (future)  
+3. **App Store**: Signed macOS app (long-term goal)
+4. **Open Source**: Build from source via GitHub
 
-### Installation Flow
-1. Install Ollama: `brew install ollama`
-2. Download GPT-OSS model: `ollama pull gpt-oss:20b`
-3. Install browser extension or download app
-4. Quick setup wizard to test connection
-5. Interactive tutorial showing key features
+### Installation Flow (macOS)
+1. Download AI Browser DMG from releases
+2. Drag to Applications folder
+3. First launch installs Ollama automatically
+4. Auto-downloads GPT-OSS 20B model (~13GB)
+5. Interactive tutorial showing AI features
+6. Ready to browse with local AI!
+
+### macOS-Specific Advantages
+- **Apple Silicon Optimization**: Metal acceleration for GPT-OSS 20B
+- **Native macOS UI**: Follows Apple Human Interface Guidelines  
+- **Spotlight Integration**: Launch with "AI Browser" search
+- **Privacy-First**: Aligns with Apple's privacy focus
+- **No Subscription**: Unlike Comet's $200/month cost
 
 ## Future Enhancements
 
