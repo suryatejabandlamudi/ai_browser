@@ -4,310 +4,231 @@ This file provides guidance to Claude Code when working with this AI browser pro
 
 ## 🎯 Project Mission
 
-**Build the world's best privacy-first AI browser that competes directly with Perplexity Comet using 100% local AI processing.**
+**Build a privacy-first AI browser extension with local AI capabilities, eventually evolving toward competing with cloud-based AI browsers like Perplexity Comet.**
 
-### Core Vision
-Create a superior AI browser that delivers:
-- **Complete Privacy**: All AI processing happens locally on user's machine (zero cloud dependencies)  
-- **Superior Performance**: Faster than cloud-based alternatives with Apple Silicon optimization
-- **No Subscription Costs**: Free unlimited usage after one-time setup
-- **Advanced Intelligence**: GPT-OSS 20B with sophisticated browser automation capabilities
-- **Native Integration**: Custom Chromium browser with built-in AI, not just an extension
+### Current Reality (January 2025)
+This is a **working prototype browser extension** with local AI capabilities:
+- **Local AI Processing**: GPT-OSS 20B via Ollama (confirmed working, but slow ~10-15s responses)
+- **Privacy Advantage**: No data sent to cloud services (unlike Comet)
+- **Extension Architecture**: Chrome extension with FastAPI backend (not custom browser)
+- **Development Stage**: Functional prototype with basic automation capabilities
 
-### Competitive Position vs Perplexity Comet
-| Feature | Perplexity Comet | Our AI Browser |
-|---------|------------------|----------------|
-| **Privacy** | Cloud processing | 100% Local |
-| **Cost** | $20/month subscription | Free after setup |
-| **Speed** | Network + inference latency | Local inference only |
-| **Offline** | Requires internet | Works completely offline |
-| **Customization** | Provider-limited | Full model control |
-| **Data Ownership** | Shared with Perplexity | User owns all data |
+### Honest Status vs Perplexity Comet
+| Feature | Perplexity Comet | Our Current State | Implementation Gap |
+|---------|------------------|-----------------|------------------|
+| **Browser Type** | Custom Chromium build | Chrome extension only | ❌ Major - need custom browser |
+| **AI Search Engine** | Built-in AI search as default | Regular browser search + AI chat | ❌ No search engine replacement |
+| **Sidebar AI Assistant** | Full agentic task automation | Basic AI chat with limited actions | 🟡 Framework exists, needs work |
+| **Task Automation** | Restaurant booking, email sending, publishing | Click/type/form filling framework | 🟡 Tools exist but limited testing |
+| **Gmail/Calendar Integration** | Deep native integration | None | ❌ Major missing feature |
+| **Multi-LLM Support** | GPT-4, Claude, Gemini, Grok | Local GPT-OSS 20B only | ❌ Single model limitation |
+| **Context Management** | Smart tab/session handling | Basic page content awareness | 🟡 Memory system exists but basic |
+| **Performance** | Fast cloud inference | Slow local inference (10-15s) | ❌ Speed disadvantage |
+| **Ad Blocking** | Built-in ad blocking | None | ❌ Not implemented |
+| **Cross-Platform** | Windows/Mac/Mobile planned | Chrome extension only | ❌ Platform limitation |
+| **Privacy** | Cloud processing | 100% Local processing | ✅ **Major advantage** |
+| **Cost** | $20/month subscription | Free after setup | ✅ **Major advantage** |
+| **Offline Capability** | Requires internet | Works offline | ✅ **Advantage** |
 
-## 📁 Repository Structure & Key Files
+## 📁 Repository Structure & What Actually Works
 
 ```
 ai_browser/
-├── CLAUDE.md                           # This guidance file (ALWAYS READ FIRST)
-├── SETUP.md                           # Complete installation guide
-├── BROWSEROS_ANALYSIS_INSIGHTS.md     # Competitive intelligence from BrowserOS analysis
-├── AI_BROWSER_COMPETITIVE_STRATEGY.md # Technical strategy and roadmap
-├── VERIFIED_STATUS.md                 # System verification report
-├── 
-├── backend/                           # 🔥 MAIN AI SYSTEM
-│   ├── main.py                       # FastAPI server (30+ endpoints) ✅ WORKING
-│   ├── ai_client.py                  # Ollama + GPT-OSS 20B integration ✅ VERIFIED
-│   ├── browser_agent.py              # Core browser automation with workflows ✅ WORKING
-│   ├── content_extractor.py          # Page content processing ✅ WORKING
-│   ├── requirements.txt              # All dependencies ✅ VERIFIED WORKING
-│   │
-│   ├── tools/                        # 🚀 NEW: BrowserOS-inspired tool system
-│   │   ├── base.py                   # Tool architecture foundation ✅ IMPLEMENTED
-│   │   └── navigation.py             # Navigation tools (navigate, scroll, search) ✅ IMPLEMENTED
-│   │
-│   ├── accessibility_tree.py         # AI-powered element detection ✅ WORKING
-│   ├── task_classifier.py            # Intent analysis & complexity detection ✅ WORKING
-│   ├── visual_highlighter.py         # DOM highlighting system ✅ WORKING
-│   ├── form_intelligence.py          # AI form processing ✅ WORKING
-│   ├── context_memory.py             # Cross-tab persistent memory ✅ WORKING
-│   ├── visual_processor.py           # Screenshots & OCR ✅ WORKING
-│   │
-│   └── chromium/                     # Chromium source & BrowserOS analysis
-│       ├── src/                      # Full Chromium source (95GB) ✅ DOWNLOADED
-│       ├── BrowserOS/                # BrowserOS repo for patch analysis ✅ ANALYZED
-│       └── BrowserOS-agent/          # BrowserOS agent for architecture insights ✅ ANALYZED
+├── CLAUDE.md                    # This guidance file ✅ ACCURATE NOW
+├── backend/                     # Python backend system
+│   ├── main.py                  # FastAPI server ✅ WORKING (30+ endpoints)
+│   ├── ai_client.py             # Ollama integration ✅ WORKING (slow but functional) 
+│   ├── browser_agent.py         # Basic action execution ✅ WORKING (limited)
+│   ├── tools/                   # Tool framework ✅ REGISTERED (14 tools, execution unclear)
+│   ├── requirements.txt         # Dependencies ✅ WORKING
+│   └── [various modules]        # Many modules ❓ UNTESTED in practice
 │
-├── extension/                        # Browser extension (testing & development)
-│   ├── manifest.json                 # Chrome extension config ✅ WORKING  
-│   ├── sidepanel.html/js             # AI chat interface ✅ WORKING
-│   ├── background.js                 # Extension→backend communication ✅ WORKING
-│   └── content.js                    # Page interaction scripts ✅ WORKING
+├── extension/                   # Chrome extension
+│   ├── manifest.json            # Extension config ✅ WORKING
+│   ├── sidepanel.html/js        # AI chat UI ✅ WORKING (basic)
+│   ├── background.js            # Backend communication ❓ UNTESTED
+│   └── content.js               # Page interaction ❓ UNTESTED
 │
-└── README.md                         # Project overview
+└── [many docs]                  # Lots of documentation ❌ MOSTLY ASPIRATIONAL
 ```
 
-## 🚀 Current Technical Status (August 2025)
+## 🚀 **ACTUAL** Technical Status (January 2025)
 
-### ✅ Phase 1 & 2: Complete Production-Ready System
-**All systems are functional, tested, and ready for production:**
+### ✅ What Definitely Works
+- **FastAPI Backend**: Server starts and responds to health checks
+- **AI Integration**: GPT-OSS 20B responds via Ollama (confirmed with curl test)
+- **Basic Chat UI**: Browser extension sidepanel with AI chat interface  
+- **WebSocket Streaming**: Real-time AI responses in extension UI
+- **Tool Registration**: 14 tools registered in backend system
+- **Page Context**: Extension can read current page content
 
-- **🔥 FastAPI Backend**: 30+ endpoints, health check passes, all modules working
-- **🤖 AI Integration**: GPT-OSS 20B via Ollama verified and responding  
-- **🛠️ Tool System**: Complete BrowserOS-inspired 14-tool architecture implemented
-- **📡 WebSocket Streaming**: Real-time AI responses with progress indicators
-- **🌐 Browser Extension**: Chrome extension with full streaming support
-- **🎯 Task Planning**: Rolling-horizon planning with multi-step execution
-- **📊 Advanced Features**: Task classification (100% accuracy), visual highlighting, form intelligence
-- **🧪 Testing**: Comprehensive test suite with 100% pass rate
-- **📚 Documentation**: Complete setup guides and competitive analysis
+### 🟡 What Might Work But Needs Testing  
+- **Browser Automation**: Tools framework exists, execution needs verification
+- **Form Processing**: Code exists for form analysis/filling
+- **Visual Highlighting**: DOM highlighting system present
+- **Memory System**: Cross-tab memory management implemented
+- **Task Classification**: Intent analysis system built
 
-**Verification Commands:**
-```bash
-# Environment status
-conda activate ai_browser_env  # ✅ Python 3.13 environment ready
+### ❌ What Definitely Doesn't Work
+- **Custom Browser**: Still just Chrome extension, not custom Chromium
+- **AI Search Engine**: No replacement of default search
+- **Gmail/Calendar**: No integration with Google services  
+- **Multi-LLM**: Only local GPT-OSS, no cloud model support
+- **Ad Blocking**: No content filtering implemented
+- **Speed**: Much slower than cloud AI (10-15s vs 1-3s)
 
-# Backend server (verified working)
-cd backend && python main.py  # ✅ Starts on http://127.0.0.1:8000
+### 🔍 What Needs Honest Testing
+Many modules exist but their practical functionality is unverified:
+- Can we actually click buttons reliably?
+- Do workflows execute properly?
+- Does the tool system work end-to-end?
+- How accurate is the task classification?
+- Does the memory system persist data correctly?
 
-# Health check (confirmed functional)
-curl http://localhost:8000/health  # ✅ All systems healthy
+## 🏗️ Current Architecture (Reality Check)
 
-# AI integration (confirmed working)  
-curl -X POST http://localhost:8000/api/chat \
-  -H "Content-Type: application/json" \
-  -d '{"message": "Hello", "page_url": "https://example.com"}'
-# ✅ GPT-OSS 20B responds with intelligent actions
-```
-
-### 🎉 Phase 2: Complete - Production-Grade Streaming AI System
-**Advanced BrowserOS-inspired architecture fully implemented:**
-
-- **🛠️ Tool System**: Complete 14-tool system with 6 categories (navigation, interaction, extraction, planning, validation, utility)
-- **📡 Streaming Responses**: Real-time WebSocket streaming with progress indicators
-- **🧠 Rolling-Horizon Planning**: Multi-step task execution with intelligent replanning
-- **🎯 Task Classification**: 100% accurate simple/complex/followup task routing
-- **🔍 Enhanced Element Detection**: AI-powered accessibility tree integration
-- **📊 Comprehensive Testing**: 100% test pass rate across all systems
-
-### 🎯 System Capabilities (Production Ready)
-
-1. **Complete Tool System ✅**
-   - ✅ 14 sophisticated tools across 6 categories
-   - ✅ Navigation tools (navigate, scroll, search)
-   - ✅ Interaction tools (click, type, form filling, select)
-   - ✅ Planning tools (task classification, multi-step workflows) 
-   - ✅ Extraction tools (content analysis, data extraction, element finding)
-   - ✅ Validation tools (step validation, error recovery)
-   - ✅ Utility tools (state management, page refresh)
-
-2. **Real-Time Streaming AI ✅**
-   - ✅ WebSocket-based streaming with progress indicators
-   - ✅ Tool execution event streaming with visual feedback
-   - ✅ Multi-phase response flow (thinking → planning → execution → completion)
-   - ✅ Error handling and connection management
-
-3. **Intelligent Task Planning ✅**
-   - ✅ 100% accurate task classification (simple/complex/followup)
-   - ✅ Multi-step task decomposition with dependency management
-   - ✅ Execute → Validate → Replan loops with error recovery
-   - ✅ Streaming progress updates throughout execution
-
-4. **Production-Grade Integration ✅**
-   - ✅ Full extension→backend→AI→browser automation pipeline tested
-   - ✅ Real-time WebSocket communication with Chrome extension
-   - ✅ Comprehensive test suite with 100% pass rate
-   - ✅ Health monitoring and system status endpoints
-
-## 🏗️ Technical Architecture
-
-### Current Implementation (Local-First Approach)
+### What We Actually Have
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │ Chrome Extension│────│ FastAPI Backend │────│ Ollama + GPT-OSS│
-│ (Advanced UI)   │    │ (30+ APIs)      │    │ (20B Local)     │
+│ (Basic UI)      │    │ (Many endpoints)│    │ (Slow but local)│
 │                 │    │                 │    │                 │
-│ • Side Panel    │    │ • Tool System   │    │ • 100% Private │
-│ • Streaming UI  │    │ • Workflows     │    │ • Apple Silicon │
-│ • Visual Effects│    │ • AI Agent      │    │ • Offline Ready │
+│ • Side Panel    │    │ • Tool System   │    │ • 10-15s response│
+│ • WebSocket     │    │ • Workflows     │    │ • Privacy        │
+│ • Page Reading  │    │ • AI Client     │    │ • Offline        │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-### Future Evolution (Custom Browser)
+### What We're Aiming For Eventually
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ Custom Chromium │────│ Native AI APIs  │────│ Local GPT-OSS   │
-│ (Native AI)     │    │ (aiOS API)      │    │ (Optimized)     │
+│ Custom Chromium │────│ Native AI APIs  │────│ Optimized Models│
+│ (Built-in AI)   │    │ (Direct access) │    │ (Fast inference)│
 │                 │    │                 │    │                 │
-│ • Built-in AI   │    │ • DOM Access    │    │ • Metal GPU     │
-│ • Native Sidebar│    │ • Tool System   │    │ • Fine-tuned    │
-│ • No Extensions │    │ • Workflows     │    │ • Custom Models │
+│ • AI Search     │    │ • Gmail/Cal API │    │ • GPU Optimized │
+│ • Native UI     │    │ • Ad Blocking   │    │ • Multi-model   │
+│ • No Extensions │    │ • Full Automation│    │ • Smart Caching │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
-
-## 🧠 Key Insights from BrowserOS Analysis
-
-### What Makes BrowserOS Superior
-1. **Native Browser Integration**: 30+ Chromium patches add custom APIs
-2. **Sophisticated Agent Architecture**: Rolling-horizon planning with 15+ tools
-3. **Real-time Streaming**: Users see AI "thinking" and tool execution
-4. **Advanced Automation**: Multi-step workflows with error recovery
-
-### Our Competitive Advantages
-1. **Local AI Processing**: 2-4x faster than cloud APIs, complete privacy
-2. **No Subscription Costs**: Free unlimited usage vs $20/month for Comet
-3. **Apple Silicon Optimized**: Metal GPU acceleration for faster inference  
-4. **Offline Capable**: Works without internet connection
-
-### Architecture We're Adopting (But With Local AI)
-- **Tool System**: 15+ specialized tools with structured schemas
-- **Streaming Interface**: Real-time progress updates like ChatGPT
-- **Task Classification**: Simple vs complex task routing
-- **Multi-Step Planning**: Execute → Validate → Replan loops
-- **Visual Feedback**: Element highlighting and progress indicators
 
 ## 🛠️ Development Environment
 
-### Python Environment
+### Python Environment Setup
 ```bash
-# Conda environment (REQUIRED)
-conda activate ai_browser_env  # Python 3.13
+# Check if Python available
+python --version  # Need Python 3.8+
 
-# All dependencies installed and verified working
-pip install -r backend/requirements.txt  
+# Install dependencies (if needed)
+pip install -r backend/requirements.txt
+
+# Environment seems to be working without conda
 ```
 
-### AI Model Setup  
+### AI Model Setup (Critical)
 ```bash
-# Ollama + GPT-OSS 20B (VERIFIED WORKING)
-ollama serve                    # Start Ollama server
-ollama pull gpt-oss:20b        # 14GB model download
-ollama list                    # Verify model available
+# Install Ollama first
+# Download from https://ollama.ai/ or use package manager
+
+# Start Ollama
+ollama serve
+
+# Pull GPT-OSS model (14GB download)
+ollama pull gpt-oss:20b
+
+# Verify it's working
+ollama list
 ```
 
-### Browser Setup
+### Browser Extension Setup
 ```bash
-# Chrome extension (for development)
-# 1. Go to chrome://extensions/
-# 2. Enable "Developer mode"  
-# 3. Click "Load unpacked"
-# 4. Select ai_browser/extension/ folder
-# ✅ Extension loads and connects to backend
+# 1. Open Chrome and go to chrome://extensions/
+# 2. Enable "Developer mode" (top right toggle)
+# 3. Click "Load unpacked" 
+# 4. Select the ai_browser/extension/ folder
+# 5. Extension should appear in Chrome
 ```
 
-## 📊 Success Metrics & Goals
+## 🔧 Verification Commands That Actually Work
 
-### Technical Achievements ✅
-- [x] FastAPI backend with 30+ working endpoints
-- [x] GPT-OSS 20B integration verified functional
-- [x] Browser extension communicating with backend
-- [x] BrowserOS-inspired tool architecture implemented
-- [x] Advanced features: task classification, visual highlighting, etc.
-- [x] Comprehensive documentation and setup guides
-
-### User Experience Goals 🎯  
-- [ ] Faster AI responses than cloud-based browsers
-- [ ] Real-time streaming interface with progress indicators  
-- [ ] Multi-step task automation with visual feedback
-- [ ] Complete privacy (no data leaves user's machine)
-- [ ] Professional browser performance and reliability
-
-### Competitive Goals 🏆
-- [ ] Feature parity with Perplexity Comet
-- [ ] Superior performance (speed + privacy + cost)
-- [ ] Advanced automation beyond current AI browsers
-- [ ] Apple Silicon optimization advantage
-- [ ] Compelling local-first alternative
-
-## 🔧 Key Development Commands
-
-### Backend Development
+### Test Backend Server
 ```bash
 cd backend
-conda activate ai_browser_env
+python main.py  # Should start on http://127.0.0.1:8000
+# Check: http://localhost:8000/health in browser
+```
 
-# Start development server
-python main.py  # Server on http://127.0.0.1:8000
-
-# Test AI integration
+### Test AI Integration  
+```bash
+# This works but is slow (10-15 seconds):
 curl -X POST http://localhost:8000/api/chat \
   -H "Content-Type: application/json" \
-  -d '{"message": "Test message", "page_url": "https://example.com"}'
-
-# Health check
-curl http://localhost:8000/health
+  -d '{"message": "Hello", "page_url": "https://example.com"}'
 ```
 
-### Extension Development  
+### Test Browser Extension
 ```bash
-# Load in Chrome for testing
-# chrome://extensions/ → Load unpacked → Select extension/ folder
-
-# Test extension→backend communication
-# Open Chrome side panel, try AI chat
+# 1. Load extension in Chrome
+# 2. Open a webpage
+# 3. Open Chrome side panel (right sidebar) 
+# 4. Look for AI Browser icon
+# 5. Try typing "Hello" and sending
 ```
 
-### Model Management
-```bash
-# Ollama management
-ollama serve          # Start server
-ollama list          # Show models  
-ollama pull gpt-oss:20b  # Update model
-```
+## 🎯 Realistic Next Steps
 
-## 📚 Documentation Hierarchy
+### Immediate Priorities (Get Extension Working Well)
+1. **Test Browser Automation**: Verify click/type/form tools actually work
+2. **Fix Performance Issues**: Optimize Ollama model loading/inference 
+3. **Improve UI**: Make sidepanel more responsive and informative
+4. **Test WebSocket**: Ensure real-time streaming works reliably
+5. **Debug Tool Execution**: Test each of the 14 registered tools
 
-1. **CLAUDE.md** (this file) - Project overview and guidance
-2. **SETUP.md** - Complete installation instructions
-3. **BROWSEROS_ANALYSIS_INSIGHTS.md** - Competitive intelligence
-4. **AI_BROWSER_COMPETITIVE_STRATEGY.md** - Technical strategy
-5. **VERIFIED_STATUS.md** - System verification and testing
+### Medium Term (Build Toward Comet Parity)
+1. **Add Gmail/Calendar**: Integrate with Google APIs
+2. **Implement Search**: Replace default search with AI-powered results
+3. **Multi-LLM Support**: Add cloud model options for speed
+4. **Better Task Automation**: Test and improve workflow execution
+5. **Ad Blocking**: Add basic content filtering
 
-## 🚨 Critical Notes for Future Sessions
+### Long Term (Custom Browser)
+1. **Chromium Patches**: Study BrowserOS approach for custom browser
+2. **Native Integration**: Remove extension limitations
+3. **Performance Optimization**: GPU acceleration, model optimization
+4. **Cross-Platform**: Windows/Mac/mobile support
 
-### Always Remember
-- **This is building a REAL AI BROWSER, not just an extension**
-- **100% local processing - no cloud dependencies**
-- **Competing directly with Perplexity Comet**
-- **All core systems are verified working**
+## 📚 Documentation Status
 
-### When You Return
-1. **Read this CLAUDE.md file first** for complete context
-2. **Check SETUP.md** for environment setup
-3. **Review VERIFIED_STATUS.md** for technical status
-4. **Backend is fully functional** - start with `python main.py`
-5. **GPT-OSS 20B is working** - test with health check
-6. **Continue with tool system implementation** in `backend/tools/`
+### Accurate Documentation
+- **CLAUDE.md** (this file) - Now reflects reality
+- **README.md** - Basic project overview
+- **requirements.txt** - Working dependency list
 
-### Development Focus
-- **Phase 2**: Complete BrowserOS-inspired tool system  
-- **Streaming**: Add real-time progress updates
-- **Planning**: Implement multi-step task execution
-- **Integration**: Test full browser automation flow
-- **Performance**: Optimize for Apple Silicon
+### Questionable Documentation  
+Most other .md files appear to be aspirational rather than reflecting current reality:
+- VERIFIED_STATUS.md - Claims everything is working (needs verification)
+- AI_BROWSER_COMPETITIVE_STRATEGY.md - May contain unrealistic timelines
+- BROWSEROS_ANALYSIS_INSIGHTS.md - Competitive analysis (useful but not implementation)
+
+## 🚨 Important Warnings
+
+### For Future Development Sessions
+1. **Don't believe the hype**: Many claims in docs are aspirational
+2. **Test everything**: Verify actual functionality before making claims  
+3. **Speed is a major issue**: 10-15s AI responses vs 1-3s for cloud
+4. **Extension limitations**: Can't do everything a custom browser can
+5. **Chrome only**: Not a multi-platform solution yet
+
+### What Works vs What Needs Work
+- ✅ **Basic AI chat works** - but slow
+- ✅ **Backend starts up** - all endpoints exist
+- ✅ **Extension loads** - basic UI functional
+- ❓ **Automation tools** - framework exists, execution unclear
+- ❌ **Advanced features** - most are unverified
+- ❌ **Performance** - much slower than cloud alternatives
 
 ---
 
-**Status**: Advanced AI browser system with verified working foundation. Ready for Phase 2 implementation of sophisticated agent capabilities to compete with Perplexity Comet.
+**Current Status**: Working AI browser extension prototype with significant limitations compared to Perplexity Comet. Has privacy/cost advantages but major performance/feature gaps.
 
-**Last Updated**: December 2024
-**Verified Working**: All core systems functional and tested
+**Last Updated**: January 2025  
+**Realistic Assessment**: Functional prototype, not production-ready AI browser
