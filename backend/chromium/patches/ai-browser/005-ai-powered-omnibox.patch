@@ -1,0 +1,97 @@
+diff --git a/chrome/browser/ui/omnibox/omnibox_controller.cc b/chrome/browser/ui/omnibox/omnibox_controller.cc
+index 1234567..abcdefg 100644
+--- a/chrome/browser/ui/omnibox/omnibox_controller.cc
++++ b/chrome/browser/ui/omnibox/omnibox_controller.cc
+@@ -50,6 +50,7 @@
+ #include "components/omnibox/browser/zero_suggest_provider.h"
+ #include "components/open_from_clipboard/clipboard_recent_content.h"
+ #include "components/search_engines/template_url_service.h"
++#include "chrome/browser/ai/ai_service_factory.h"
+ #include "third_party/metrics_proto/omnibox_event.pb.h"
+ #include "ui/gfx/geometry/rect.h"
+ 
+@@ -150,6 +151,12 @@ void OmniboxController::StartAutocomplete(
+     const AutocompleteInput& input) const {
+   ClearPopupKeywordMode();
+ 
++  // AI Browser: Check if this looks like an AI query
++  if (IsAIQuery(input.text())) {
++    HandleAIQuery(input.text());
++    return;
++  }
++
+   size_t num_providers = 0;
+   if (provider_types & AutocompleteProvider::TYPE_BOOKMARK)
+     num_providers++;
+@@ -200,6 +207,35 @@ void OmniboxController::StartAutocomplete(
+   autocomplete_controller_->Start(input);
+ }
+ 
++bool OmniboxController::IsAIQuery(const std::u16string& text) const {
++  // Detect AI queries by common patterns
++  std::string text_utf8 = base::UTF16ToUTF8(text);
++  std::transform(text_utf8.begin(), text_utf8.end(), text_utf8.begin(), ::tolower);
++  
++  // AI query indicators
++  std::vector<std::string> ai_indicators = {
++    "what is", "how to", "explain", "summarize", "analyze", 
++    "help me", "can you", "tell me about", "search for",
++    "find information about", "research", "compare"
++  };
++  
++  for (const std::string& indicator : ai_indicators) {
++    if (text_utf8.find(indicator) != std::string::npos) {
++      return true;
++    }
++  }
++  
++  return text_utf8.length() > 20 && text_utf8.find('?') != std::string::npos;
++}
++
++void OmniboxController::HandleAIQuery(const std::u16string& query) const {
++  // Get AI service and process query
++  ai::AIService* ai_service = ai::AIServiceFactory::GetForProfile(profile_);
++  if (ai_service) {
++    // Convert to AI-powered search/analysis
++    // This will be handled by our AI backend
++  }
++}
++
+ void OmniboxController::OnResultChanged(AutocompleteController* controller,
+                                         bool default_match_changed) {
+   DCHECK(controller == autocomplete_controller_.get());
+diff --git a/chrome/browser/ui/omnibox/omnibox_controller.h b/chrome/browser/ui/omnibox/omnibox_controller.h
+index 2345678..bcdefgh 100644
+--- a/chrome/browser/ui/omnibox/omnibox_controller.h
++++ b/chrome/browser/ui/omnibox/omnibox_controller.h
+@@ -150,6 +150,10 @@ class OmniboxController : public AutocompleteController::Observer {
+   // autocomplete controller.
+   void InvalidateCurrentMatch();
+ 
++  // AI Browser: AI query detection and handling
++  bool IsAIQuery(const std::u16string& text) const;
++  void HandleAIQuery(const std::u16string& query) const;
++
+   Profile* profile_;
+ 
+   OmniboxEditModel* edit_model_;
+diff --git a/chrome/browser/autocomplete/chrome_autocomplete_provider_client.cc b/chrome/browser/autocomplete/chrome_autocomplete_provider_client.cc
+index 3456789..cdefghi 100644
+--- a/chrome/browser/autocomplete/chrome_autocomplete_provider_client.cc
++++ b/chrome/browser/autocomplete/chrome_autocomplete_provider_client.cc
+@@ -200,6 +200,15 @@ void ChromeAutocompleteProviderClient::Classify(
+     AutocompleteMatch* match,
+     GURL* alternate_nav_url) {
+   classifier->Classify(text, desired_tld, match, alternate_nav_url);
++  
++  // AI Browser: Boost local AI-powered results
++  if (match->type == AutocompleteMatchType::SEARCH_WHAT_YOU_TYPED) {
++    // Add AI analysis option
++    match->description = u"Search with AI analysis";
++    match->relevance += 100;  // Boost AI-powered searches
++    match->contents_class.push_back(
++        ACMatchClassification(0, ACMatchClassification::MATCH));
++  }
+ }
+ 
+ void ChromeAutocompleteProviderClient::DeleteMatchingURLsForKeywordFromHistory(

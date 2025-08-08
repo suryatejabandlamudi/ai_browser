@@ -1,0 +1,120 @@
+diff --git a/chrome/browser/ai/BUILD.gn b/chrome/browser/ai/BUILD.gn
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ai/BUILD.gn
+@@ -0,0 +1,25 @@
++# AI Service for local GPT-OSS 20B integration
++
++source_set("ai") {
++  sources = [
++    "ai_service.cc",
++    "ai_service.h",
++    "ai_service_factory.cc", 
++    "ai_service_factory.h",
++  ]
++
++  deps = [
++    "//base",
++    "//chrome/browser/profiles:profile",
++    "//components/keyed_service/content",
++    "//components/keyed_service/core",
++    "//content/public/browser",
++    "//services/network/public/cpp",
++    "//url",
++  ]
++
++  public_deps = [
++    "//base",
++    "//components/keyed_service/core",
++  ]
++}
+diff --git a/chrome/browser/ai/ai_service_factory.cc b/chrome/browser/ai/ai_service_factory.cc
+new file mode 100644
+index 0000000..abcdefg
+--- /dev/null
++++ b/chrome/browser/ai/ai_service_factory.cc
+@@ -0,0 +1,45 @@
++#include "chrome/browser/ai/ai_service_factory.h"
++
++#include "chrome/browser/ai/ai_service.h"
++#include "chrome/browser/profiles/profile.h"
++#include "components/keyed_service/content/browser_context_dependency_manager.h"
++
++namespace ai {
++
++// static
++AIService* AIServiceFactory::GetForProfile(Profile* profile) {
++  return static_cast<AIService*>(
++      GetInstance()->GetServiceForBrowserContext(profile, true));
++}
++
++// static
++AIServiceFactory* AIServiceFactory::GetInstance() {
++  static base::NoDestructor<AIServiceFactory> instance;
++  return instance.get();
++}
++
++AIServiceFactory::AIServiceFactory()
++    : BrowserContextKeyedServiceFactory(
++          "AIService",
++          BrowserContextDependencyManager::GetInstance()) {}
++
++AIServiceFactory::~AIServiceFactory() = default;
++
++KeyedService* AIServiceFactory::BuildServiceInstanceFor(
++    content::BrowserContext* context) const {
++  Profile* profile = Profile::FromBrowserContext(context);
++  
++  // Only create AI service for regular profiles
++  if (profile->IsOffTheRecord() || profile->IsGuestSession()) {
++    return nullptr;
++  }
++  
++  return new AIService();
++}
++
++bool AIServiceFactory::ServiceIsCreatedWithBrowserContext() const {
++  return true;  // Create immediately with profile
++}
++
++}  // namespace ai
+diff --git a/chrome/browser/ai/ai_service_factory.h b/chrome/browser/ai/ai_service_factory.h
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ai/ai_service_factory.h
+@@ -0,0 +1,33 @@
++#ifndef CHROME_BROWSER_AI_AI_SERVICE_FACTORY_H_
++#define CHROME_BROWSER_AI_AI_SERVICE_FACTORY_H_
++
++#include "base/memory/singleton.h"
++#include "components/keyed_service/content/browser_context_keyed_service_factory.h"
++
++class Profile;
++
++namespace ai {
++
++class AIService;
++
++class AIServiceFactory : public BrowserContextKeyedServiceFactory {
++ public:
++  static AIService* GetForProfile(Profile* profile);
++  static AIServiceFactory* GetInstance();
++
++  AIServiceFactory(const AIServiceFactory&) = delete;
++  AIServiceFactory& operator=(const AIServiceFactory&) = delete;
++
++ private:
++  friend struct base::DefaultSingletonTraits<AIServiceFactory>;
++
++  AIServiceFactory();
++  ~AIServiceFactory() override;
++
++  // BrowserContextKeyedServiceFactory:
++  KeyedService* BuildServiceInstanceFor(content::BrowserContext* context) const override;
++  bool ServiceIsCreatedWithBrowserContext() const override;
++};
++
++}  // namespace ai
++#endif  // CHROME_BROWSER_AI_AI_SERVICE_FACTORY_H_

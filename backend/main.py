@@ -40,6 +40,7 @@ from context_memory import CrossTabMemoryManager
 from visual_processor import VisualProcessor
 from streaming_agent import get_streaming_agent, StreamingMessage
 from tools.base import BrowserContext
+from ai_browser_agent import AIBrowserAgent
 
 # Configure structured logging
 structlog.configure(
@@ -70,6 +71,7 @@ visual_highlighter: Optional[VisualElementHighlighter] = None
 form_processor: Optional[IntelligentFormProcessor] = None
 memory_manager: Optional[CrossTabMemoryManager] = None
 visual_processor: Optional[VisualProcessor] = None
+ai_browser_agent: Optional[AIBrowserAgent] = None  # AI Browser Agent powered by GPT-OSS 20B
 
 # Import new tool system and rolling horizon agent
 try:
@@ -86,7 +88,7 @@ except ImportError as e:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    global ai_client, browser_agent, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent
+    global ai_client, browser_agent, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent, ai_browser_agent
     
     logger.info("Starting AI Browser Backend...")
     
@@ -103,6 +105,13 @@ async def lifespan(app: FastAPI):
     memory_manager = CrossTabMemoryManager()
     visual_processor = VisualProcessor()
     
+    # Initialize AI Browser Agent powered by GPT-OSS 20B
+    ai_browser_agent = AIBrowserAgent(
+        ai_client=ai_client,
+        browser_agent=browser_agent,
+        tools_registry=tool_registry if TOOLS_AVAILABLE else None
+    )
+    
     # Initialize new rolling horizon agent
     if TOOLS_AVAILABLE:
         rolling_horizon_agent = RollingHorizonAgent()
@@ -111,9 +120,20 @@ async def lifespan(app: FastAPI):
     # Initialize memory manager
     await memory_manager.initialize()
     
-    # Test Ollama connection
+    # Test Ollama connection and warm up models
     if await ai_client.test_connection():
         logger.info("✅ GPT-OSS 20B connection verified")
+        
+        # Warm up primary model for faster first responses
+        logger.info("🔥 Warming up local AI models...")
+        if await ai_client.warm_up_model():
+            logger.info("✅ GPT-OSS 20B model warmed up successfully")
+        else:
+            logger.warning("⚠️ Model warmup failed - first requests may be slower")
+            
+        # Also try to warm up fallback model
+        if await ai_client.warm_up_model("llama2:7b"):
+            logger.info("✅ Llama2:7b fallback model ready")
     else:
         logger.error("❌ Failed to connect to Ollama/GPT-OSS")
         raise RuntimeError("Cannot start without AI model connection")
@@ -271,6 +291,12 @@ class VisualAnalysisRequest(BaseModel):
     screenshot_path: str
     analysis_types: Optional[List[str]] = None
 
+class AutonomousTaskRequest(BaseModel):
+    task: str
+    current_url: Optional[str] = ""
+    page_content: Optional[str] = ""
+    max_actions: Optional[int] = 20
+
 # API Routes
 @app.get("/health")
 async def health_check():
@@ -302,7 +328,8 @@ async def health_check():
             "visual_highlighter": visual_highlighter is not None,
             "form_processor": form_processor is not None,
             "memory_manager": memory_manager is not None,
-            "visual_processor": visual_processor is not None
+            "visual_processor": visual_processor is not None,
+            "ai_browser_agent": ai_browser_agent is not None
         },
         "tools": tools_info,
         "timestamp": datetime.utcnow().isoformat()
@@ -1561,6 +1588,98 @@ async def get_streaming_status():
     except Exception as e:
         logger.error("Failed to get streaming status", error=str(e))
         raise HTTPException(status_code=500, detail=f"Streaming status failed: {str(e)}")
+
+# AI BROWSER AGENT ENDPOINTS - Autonomous Task Execution
+@app.post("/api/agent/execute-task")
+async def execute_autonomous_task(request: AutonomousTaskRequest):
+    """
+    Execute autonomous browser tasks - this competes directly with Perplexity Comet
+    Key advantage: 100% local GPT-OSS 20B processing, no data sent to cloud
+    """
+    try:
+        logger.info("Autonomous task request", task=request.task)
+        
+        # Execute task with streaming progress
+        results = []
+        async for progress in ai_browser_agent.execute_autonomous_task(
+            user_request=request.task,
+            current_url=request.current_url,
+            page_content=request.page_content
+        ):
+            results.append(progress)
+        
+        return {
+            "success": True,
+            "task": request.task,
+            "progress": results,
+            "model": "GPT-OSS 20B",
+            "privacy": "100% Local Processing"
+        }
+        
+    except Exception as e:
+        logger.error("Autonomous task execution failed", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Task execution failed: {str(e)}")
+
+@app.get("/api/agent/status")
+async def get_agent_status():
+    """Get current AI Browser Agent status"""
+    try:
+        return ai_browser_agent.get_agent_status()
+    except Exception as e:
+        logger.error("Failed to get agent status", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Agent status failed: {str(e)}")
+
+@app.websocket("/ws/agent-tasks/{client_id}")
+async def autonomous_task_websocket(websocket: WebSocket, client_id: str):
+    """
+    WebSocket endpoint for streaming autonomous task execution
+    Real-time progress updates as the agent works
+    """
+    await websocket.accept()
+    
+    try:
+        logger.info("Autonomous task WebSocket connected", client_id=client_id)
+        
+        while True:
+            # Wait for task request
+            data = await websocket.receive_text()
+            message_data = json.loads(data)
+            
+            if message_data.get("type") == "execute_task":
+                task = message_data.get("task", "")
+                current_url = message_data.get("current_url", "")
+                page_content = message_data.get("page_content", "")
+                
+                if not task:
+                    await websocket.send_text(json.dumps({
+                        "type": "error",
+                        "message": "No task provided"
+                    }))
+                    continue
+                
+                # Stream task execution progress
+                async for progress in ai_browser_agent.execute_autonomous_task(
+                    user_request=task,
+                    current_url=current_url,
+                    page_content=page_content
+                ):
+                    await websocket.send_text(json.dumps({
+                        "type": "progress",
+                        "data": progress,
+                        "timestamp": datetime.now().isoformat()
+                    }))
+                
+                # Send completion signal
+                await websocket.send_text(json.dumps({
+                    "type": "task_stream_complete",
+                    "timestamp": datetime.now().isoformat()
+                }))
+                
+    except WebSocketDisconnect:
+        logger.info("Autonomous task WebSocket disconnected", client_id=client_id)
+    except Exception as e:
+        logger.error("Autonomous task WebSocket error", client_id=client_id, error=str(e))
+        await websocket.close(code=1000)
 
 if __name__ == "__main__":
     # Run the server

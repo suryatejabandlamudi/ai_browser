@@ -1,0 +1,86 @@
+diff --git a/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc b/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc
+index abcdefg..1234567 100644
+--- a/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc
++++ b/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc
+@@ -25,6 +25,7 @@
+ #include "chrome/browser/ui/views/side_panel/side_panel_web_ui_view.h"
+ #include "chrome/browser/ui/webui/side_panel/bookmarks/bookmarks_side_panel_ui.h"
+ #include "chrome/browser/ui/webui/side_panel/customize_chrome/customize_chrome_section.h"
++#include "chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h"
+ #include "chrome/common/webui_url_constants.h"
+ #include "ui/actions/actions.h"
+ #include "ui/base/models/image_model.h"
+@@ -150,6 +151,16 @@ SidePanelCoordinator::SidePanelCoordinator(BrowserView* browser_view)
+       SidePanelEntry::Id::kBookmarks,
+       base::BindRepeating(&SidePanelCoordinator::CreateBookmarksWebUIEntry,
+                           base::Unretained(this)));
++
++  // Add AI Chat panel for local GPT-OSS 20B
++  global_registry_->Register(std::make_unique<SidePanelEntry>(
++      SidePanelEntry::Id::kAIChat,
++      u"AI Chat",
++      ui::ImageModel::FromVectorIcon(kChatIcon, ui::kColorIcon),
++      base::BindRepeating(&SidePanelCoordinator::CreateAIChatWebUIEntry,
++                          base::Unretained(this)),
++      base::BindRepeating(&SidePanelCoordinator::GetAIChatAvailability,
++                          base::Unretained(this))));
+ }
+ 
+ SidePanelCoordinator::~SidePanelCoordinator() {
+@@ -280,6 +291,20 @@ std::unique_ptr<views::View> SidePanelCoordinator::CreateBookmarksWebUIEntry() 
+   return std::make_unique<SidePanelWebUIViewT<BookmarksSidePanelUI>>(browser_view_->browser());
+ }
+ 
++std::unique_ptr<views::View> SidePanelCoordinator::CreateAIChatWebUIEntry() {
++  auto ai_chat_view = std::make_unique<SidePanelWebUIViewT<AIChatSidePanelUI>>(browser_view_->browser());
++  ai_chat_view->SetProperty(views::kElementIdentifierKey, kAIChatSidePanelElementId);
++  return ai_chat_view;
++}
++
++SidePanelEntry::Availability SidePanelCoordinator::GetAIChatAvailability() {
++  // Always available - this is a core feature of our AI browser
++  return SidePanelEntry::Availability::kAvailable;
++}
++
++bool SidePanelCoordinator::IsAIChatVisible() const {
++  return IsSidePanelEntryShowing(SidePanelEntry::Id::kAIChat);
++}
++
+ void SidePanelCoordinator::OnTabStripModelChanged(
+     TabStripModel* tab_strip_model,
+     const TabStripModelChange& change,
+diff --git a/chrome/browser/ui/views/side_panel/side_panel_coordinator.h b/chrome/browser/ui/views/side_panel/side_panel_coordinator.h
+index 2345678..bcdefgh 100644
+--- a/chrome/browser/ui/views/side_panel/side_panel_coordinator.h
++++ b/chrome/browser/ui/views/side_panel/side_panel_coordinator.h
+@@ -120,6 +120,8 @@ class SidePanelCoordinator : public BrowserUserData<SidePanelCoordinator>,
+   void OnEntryHidden(SidePanelEntry* entry) override;
+   void OnEntryShown(SidePanelEntry* entry) override;
+ 
++  bool IsAIChatVisible() const;
++
+  private:
+   friend class BrowserUserData<SidePanelCoordinator>;
+   friend class SidePanelCoordinatorTest;
+@@ -134,6 +136,9 @@ class SidePanelCoordinator : public BrowserUserData<SidePanelCoordinator>,
+   std::unique_ptr<views::View> CreateBookmarksWebUIEntry();
+   std::unique_ptr<views::View> CreateReadingListWebUIEntry();
+ 
++  std::unique_ptr<views::View> CreateAIChatWebUIEntry();
++  SidePanelEntry::Availability GetAIChatAvailability();
++
+   // Updates the side panel visibility based on the current state.
+   void UpdateSidePanelVisibility();
+ 
+diff --git a/chrome/browser/ui/side_panel/side_panel_entry_id.h b/chrome/browser/ui/side_panel/side_panel_entry_id.h
+index 3456789..cdefghi 100644
+--- a/chrome/browser/ui/side_panel/side_panel_entry_id.h
++++ b/chrome/browser/ui/side_panel/side_panel_entry_id.h
+@@ -12,6 +12,7 @@ struct SidePanelEntry {
+     kReadingList = 0,
+     kBookmarks,
+     kHistoryClusters,
++    kAIChat,
+     kUserNote,
+     kWebView,
+     kExtension,

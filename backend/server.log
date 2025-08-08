@@ -79,3 +79,459 @@ INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     127.0.0.1:64019 - "GET /health HTTP/1.1" 200 OK
 INFO:     127.0.0.1:64044 - "POST /api/chat HTTP/1.1" 200 OK
+WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [58075]
+2025-08-07 22:57:23 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 22:57:23 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 22:57:23 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 22:57:23 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 22:57:23 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 22:57:23 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 22:57:23 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 22:57:23 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 22:57:23 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 22:57:23 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 22:57:23 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 22:57:23 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 22:57:23 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 22:57:23 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 22:57:23 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 22:57:23 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 22:57:23 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60286]
+INFO:     Waiting for application startup.
+[2m2025-08-08T05:57:23.891720Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T05:57:23.891793Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T05:57:23.891846Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60286]
+2025-08-07 22:57:44 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 22:57:44 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 22:57:44 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 22:57:44 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 22:57:44 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 22:57:44 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 22:57:44 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 22:57:44 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 22:57:44 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 22:57:44 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 22:57:44 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 22:57:44 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 22:57:44 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 22:57:44 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 22:57:44 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 22:57:44 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 22:57:44 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60311]
+INFO:     Waiting for application startup.
+[2m2025-08-08T05:57:44.687149Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T05:57:44.687229Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T05:57:44.687281Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60311]
+2025-08-07 22:59:43 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 22:59:43 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 22:59:43 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 22:59:43 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 22:59:43 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 22:59:43 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 22:59:43 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 22:59:43 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 22:59:43 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 22:59:43 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 22:59:43 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 22:59:43 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 22:59:43 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 22:59:43 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 22:59:43 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 22:59:43 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 22:59:43 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60382]
+INFO:     Waiting for application startup.
+[2m2025-08-08T05:59:43.775219Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T05:59:43.775292Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T05:59:43.775348Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60382]
+2025-08-07 23:00:02 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:00:02 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:00:02 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:00:02 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:00:02 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:00:02 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:00:02 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:00:02 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:00:02 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:00:02 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:00:02 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:00:02 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:00:02 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:00:02 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:00:02 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:00:02 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:00:02 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60407]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:00:02.304310Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:00:02.304394Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:00:02.304447Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60407]
+2025-08-07 23:00:20 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:00:20 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:00:20 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:00:20 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:00:20 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:00:20 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:00:20 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:00:20 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:00:20 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:00:20 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:00:20 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:00:20 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:00:20 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:00:20 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:00:20 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:00:20 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:00:20 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60433]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:00:21.027540Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:00:21.027617Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:00:21.027670Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+INFO:     Application startup complete.
+WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [60433]
+2025-08-07 23:01:02 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:01:02 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:01:02 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:01:02 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:01:02 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:01:02 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:01:02 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:01:02 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:01:02 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:01:02 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:01:02 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:01:02 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:01:02 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:01:02 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:01:02 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:01:02 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:01:02 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60587]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:01:02.981319Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:01:02.981394Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:01:02.981445Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 120, in lifespan
+    if await ai_client.warm_up_model():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x103b5c980>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x103b3d1f0>, 49028.0694245)])']
+connector: <aiohttp.connector.TCPConnector object at 0x103b5c590>
+WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
+2025-08-07 23:01:22 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:01:22 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:01:22 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:01:22 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:01:22 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:01:22 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:01:22 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:01:22 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:01:22 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:01:22 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:01:22 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:01:22 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:01:22 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:01:22 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:01:22 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:01:22 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:01:22 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60620]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:01:22.498000Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:01:22.498077Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:01:22.498131Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 120, in lifespan
+    if await ai_client.warm_up_model():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x1051fc980>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1051e0770>, 49044.709417791)])']
+connector: <aiohttp.connector.TCPConnector object at 0x1051fc590>
+WARNING:  StatReload detected changes in 'ai_search_engine.py'. Reloading...
+2025-08-07 23:02:29 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:02:29 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:02:29 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:02:29 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:02:29 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:02:29 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:02:29 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:02:29 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:02:29 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:02:29 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:02:29 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:02:29 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:02:29 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:02:29 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:02:29 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:02:29 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:02:29 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60739]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:02:29.679374Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:02:29.679452Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:02:29.679505Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 121, in lifespan
+    logger.info("🔥 Warming up local AI models...")
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x105cd0830>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x1059c5a90>, 49114.341333458)])']
+connector: <aiohttp.connector.TCPConnector object at 0x105cd0440>
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-07 23:02:48 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:02:48 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:02:48 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:02:48 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:02:48 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:02:48 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:02:48 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:02:48 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:02:48 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:02:48 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:02:48 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:02:48 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:02:48 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:02:48 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:02:48 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:02:48 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:02:48 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60825]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:02:48.510922Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:02:48.511011Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:02:48.511069Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 125, in lifespan
+    if await ai_client.warm_up_model():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x10787c830>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x107579b50>, 49130.673878333)])']
+connector: <aiohttp.connector.TCPConnector object at 0x10787c440>
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-07 23:04:35 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:04:35 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:04:35 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:04:35 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:04:35 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:04:35 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:04:35 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:04:35 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:04:35 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:04:35 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:04:35 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:04:35 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:04:35 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:04:35 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:04:35 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:04:35 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:04:35 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [60964]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:04:35.564977Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:04:35.565054Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:04:35.565109Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 109, in lifespan
+    ai_search_engine = AISearchEngine(ai_client)
+                       ^^^^^^^^^^^^^^
+NameError: name 'AISearchEngine' is not defined
+
+ERROR:    Application startup failed. Exiting.
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-07 23:04:52 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:04:52 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:04:52 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:04:52 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:04:52 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:04:52 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:04:52 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:04:52 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:04:52 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:04:52 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:04:52 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:04:52 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:04:52 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:04:52 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:04:52 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:04:52 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:04:52 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [61045]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:04:52.905268Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:04:52.905350Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:04:52.905405Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 129, in lifespan
+    if await ai_client.warm_up_model():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x103844980>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x10353aab0>, 49255.216412291)])']
+connector: <aiohttp.connector.TCPConnector object at 0x103844590>
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-07 23:05:30 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-07 23:05:30 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-07 23:05:30 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-07 23:05:30 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-07 23:05:30 [info     ] Tool registered                category=interaction tool=click
+2025-08-07 23:05:30 [info     ] Tool registered                category=interaction tool=type
+2025-08-07 23:05:30 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-07 23:05:30 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-07 23:05:30 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-07 23:05:30 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-07 23:05:30 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-07 23:05:30 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-07 23:05:30 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-07 23:05:30 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-07 23:05:30 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-07 23:05:30 [warning  ] EasyOCR not available - install easyocr
+2025-08-07 23:05:30 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+INFO:     Started server process [61149]
+INFO:     Waiting for application startup.
+[2m2025-08-08T06:05:30.894267Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:05:30.894357Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T06:05:30.894418Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 129, in lifespan
+    if await ai_client.warm_up_model():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x104590c20>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x10414ebd0>, 49295.765642708)])']
+connector: <aiohttp.connector.TCPConnector object at 0x104590830>

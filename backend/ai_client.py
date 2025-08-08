@@ -17,18 +17,100 @@ class AIClient:
     def __init__(self, 
                  base_url: str = "http://localhost:11434",
                  model: str = "gpt-oss:20b",
-                 timeout: int = 30):
+                 timeout: int = 60):  # Increased timeout for better stability
         self.base_url = base_url
         self.model = model
         self.timeout = timeout
         self.session = None
         
+        # Simple conversation caching for repeated queries
+        self._conversation_cache = {}  
+        self.cache_size = 50  # Keep it reasonable
+        
     async def _get_session(self) -> aiohttp.ClientSession:
-        """Get or create aiohttp session"""
+        """Get or create aiohttp session with optimized settings"""
         if not self.session or self.session.closed:
-            timeout = aiohttp.ClientTimeout(total=self.timeout)
-            self.session = aiohttp.ClientSession(timeout=timeout)
+            # Optimized connection settings for better performance
+            connector = aiohttp.TCPConnector(
+                limit=100,  # Connection pool size
+                limit_per_host=30,  # Per-host connection limit
+                keepalive_timeout=60,  # Keep connections alive longer
+                enable_cleanup_closed=True
+            )
+            timeout = aiohttp.ClientTimeout(total=self.timeout, connect=10)
+            self.session = aiohttp.ClientSession(
+                timeout=timeout,
+                connector=connector,
+                headers={"User-Agent": "AI-Browser/1.0"}
+            )
         return self.session
+    
+    def _cache_key(self, message: str, context: Dict[str, Any] = None) -> str:
+        """Generate cache key for conversation caching"""
+        import hashlib
+        context_str = str(context) if context else ""
+        return hashlib.md5(f"{message}{context_str}".encode()).hexdigest()
+    
+    def _get_cached_response(self, cache_key: str) -> Optional[Dict[str, Any]]:
+        """Get cached response if available"""
+        return self._conversation_cache.get(cache_key)
+    
+    def _cache_response(self, cache_key: str, response: Dict[str, Any]):
+        """Cache response with size limit"""
+        if len(self._conversation_cache) >= self.cache_size:
+            # Remove oldest entry
+            oldest_key = next(iter(self._conversation_cache))
+            del self._conversation_cache[oldest_key]
+        
+        self._conversation_cache[cache_key] = {
+            **response,
+            "timestamp": asyncio.get_event_loop().time()
+        }
+    
+    def select_optimal_local_model(self, task_complexity: str = "medium") -> str:
+        """Select optimal LOCAL model based on task complexity - privacy-first approach"""
+        # Always use local models only - this is our core value proposition
+        if task_complexity == "simple" and self._is_local_model_available("llama2:7b"):
+            return "llama2:7b"  # Faster for simple tasks
+        else:
+            return self.primary_model  # GPT-OSS 20B for everything else
+    
+    def _is_local_model_available(self, model_name: str) -> bool:
+        """Check if local model is available via Ollama"""
+        return model_name in self.local_models
+    
+    async def warm_up_model(self, model_name: str = None) -> bool:
+        """Pre-load model to reduce first-request latency"""
+        if not self.model_warmup_enabled:
+            return True
+            
+        target_model = model_name or self.primary_model
+        
+        try:
+            # Send a minimal request to ensure model is loaded
+            session = await self._get_session()
+            url = f"{self.base_url}/api/generate"
+            
+            payload = {
+                "model": target_model,
+                "prompt": "Hi",
+                "options": {
+                    "num_predict": 1,
+                    "temperature": 0.1
+                }
+            }
+            
+            async with session.post(url, json=payload) as response:
+                if response.status == 200:
+                    logger.info(f"Model {target_model} warmed up successfully")
+                    return True
+                else:
+                    logger.warning(f"Model warmup failed for {target_model}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"Model warmup error for {target_model}: {str(e)}")
+            return False
         
     async def test_connection(self) -> bool:
         """Test connection to Ollama and GPT-OSS model"""
@@ -121,7 +203,7 @@ class AIClient:
                    message: str, 
                    context: Optional[Dict[str, Any]] = None,
                    max_tokens: int = 1000) -> Dict[str, Any]:
-        """Send chat message to AI model"""
+        """Send chat message to GPT-OSS 20B - our privacy-first local AI"""
         try:
             session = await self._get_session()
             url = f"{self.base_url}/v1/chat/completions"
@@ -135,13 +217,13 @@ class AIClient:
             messages.append({"role": "user", "content": message})
             
             payload = {
-                "model": self.model,
+                "model": self.model,  # Always GPT-OSS 20B
                 "messages": messages,
                 "max_tokens": max_tokens,
                 "temperature": 0.7
             }
             
-            logger.debug("Sending chat request", message_preview=message[:100])
+            logger.debug("Sending chat request to GPT-OSS 20B", message_preview=message[:100])
             
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
@@ -152,17 +234,18 @@ class AIClient:
                         "content": choice.get("message", {}).get("content", ""),
                         "raw_response": choice.get("message", {}).get("content", ""),
                         "usage": data.get("usage", {}),
-                        "model": self.model
+                        "model": self.model,
+                        "privacy": "100% Local"  # Our key advantage!
                     }
                 else:
                     error_text = await response.text()
-                    logger.error("AI chat request failed", 
+                    logger.error("GPT-OSS 20B request failed", 
                                status=response.status, 
                                error=error_text)
-                    raise Exception(f"AI API error: {response.status} - {error_text}")
+                    raise Exception(f"GPT-OSS API error: {response.status} - {error_text}")
                     
         except Exception as e:
-            logger.error("Chat request failed", error=str(e))
+            logger.error("GPT-OSS chat request failed", error=str(e))
             raise
     
     async def stream_chat(self, 
