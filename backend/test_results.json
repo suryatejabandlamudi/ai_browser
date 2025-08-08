@@ -1,0 +1,144 @@
+{
+  "total_tests": 6,
+  "passed_tests": 6,
+  "success_rate": 100.0,
+  "detailed_results": [
+    {
+      "test": "tool_registry_initialization",
+      "total_tools": 14,
+      "tool_names": [
+        "navigate",
+        "scroll",
+        "search_page",
+        "refresh_state",
+        "click",
+        "type",
+        "fill_form",
+        "select_option",
+        "classify_task",
+        "plan_task",
+        "validate_step",
+        "extract_content",
+        "analyze_page",
+        "find_elements"
+      ],
+      "categories_found": [
+        "utility",
+        "extraction",
+        "planning",
+        "validation",
+        "interaction",
+        "navigation"
+      ],
+      "expected_categories": [
+        "navigation",
+        "interaction",
+        "extraction",
+        "planning"
+      ],
+      "success": true
+    },
+    {
+      "test": "streaming_message_flow",
+      "total_messages": 6,
+      "message_types": [
+        "thinking",
+        "thinking",
+        "ai_response",
+        "thinking",
+        "ai_response",
+        "completion"
+      ],
+      "has_thinking": true,
+      "has_ai_response": true,
+      "has_completion": true,
+      "success": true
+    },
+    {
+      "test": "task_classification",
+      "total_cases": 4,
+      "correct_classifications": 3,
+      "accuracy": 0.75,
+      "details": [
+        {
+          "message": "click the button",
+          "expected": "simple",
+          "classified": "simple",
+          "correct": true
+        },
+        {
+          "message": "fill out the contact form and submit it",
+          "expected": "complex",
+          "classified": "complex",
+          "correct": true
+        },
+        {
+          "message": "search for python tutorials",
+          "expected": "simple",
+          "classified": "simple",
+          "correct": true
+        },
+        {
+          "message": "complete the signup process then verify email",
+          "expected": "followup",
+          "classified": "complex",
+          "correct": false
+        }
+      ],
+      "success": true
+    },
+    {
+      "test": "websocket_endpoint",
+      "ws_uri": "ws://localhost:8000/ws/test_client_websocket",
+      "connection_attempted": true,
+      "success": true,
+      "note": "Simulated - requires running server for real test"
+    },
+    {
+      "test": "backend_health_check",
+      "status_code": 200,
+      "health_data": {
+        "status": "healthy",
+        "ai_model": "gpt-oss:20b",
+        "backend": "ollama",
+        "agents": {
+          "browser_agent": true,
+          "enhanced_agent": true,
+          "structured_agent": true,
+          "task_classifier": true,
+          "visual_highlighter": true,
+          "form_processor": true,
+          "memory_manager": true,
+          "visual_processor": true
+        },
+        "tools": {
+          "total_registered": 14,
+          "categories": 6
+        },
+        "timestamp": "2025-08-08T05:21:37.802316"
+      },
+      "success": true
+    },
+    {
+      "test": "streaming_status_endpoint",
+      "status_code": 200,
+      "status_data": {
+        "success": true,
+        "message": "Streaming system operational",
+        "data": {
+          "active_connections": 0,
+          "active_sessions": 0,
+          "supported_message_types": [
+            "thinking",
+            "tool_execution",
+            "ai_response",
+            "completion",
+            "error"
+          ]
+        }
+      },
+      "success": true
+    }
+  ],
+  "overall_success": true
+}

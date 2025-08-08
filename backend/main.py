@@ -38,6 +38,8 @@ from visual_highlighter import VisualElementHighlighter
 from form_intelligence import IntelligentFormProcessor
 from context_memory import CrossTabMemoryManager
 from visual_processor import VisualProcessor
+from streaming_agent import get_streaming_agent, StreamingMessage
+from tools.base import BrowserContext
 
 # Configure structured logging
 structlog.configure(
@@ -279,7 +281,7 @@ async def health_check():
         from tools import tool_registry
         tools_info = {
             "total_registered": len(tool_registry.tools),
-            "categories": len(tool_registry.tools_by_type)
+            "categories": len(tool_registry.tools_by_category)
         }
     except ImportError:
         tools_info = {
@@ -1490,6 +1492,75 @@ async def get_available_tools():
     except Exception as e:
         logger.error("Failed to get available tools", error=str(e))
         raise HTTPException(status_code=500, detail=f"Failed to get tools: {str(e)}")
+
+# WebSocket Endpoints for Streaming AI Responses
+
+@app.websocket("/ws/{client_id}")
+async def websocket_endpoint(websocket: WebSocket, client_id: str):
+    """
+    WebSocket endpoint for real-time streaming AI responses.
+    Competes directly with Perplexity Comet's streaming interface.
+    """
+    streaming_agent = get_streaming_agent(ai_client)
+    await streaming_agent.connect_client(websocket, client_id)
+    
+    try:
+        while True:
+            # Wait for user messages
+            data = await websocket.receive_text()
+            message_data = json.loads(data)
+            
+            user_message = message_data.get("message", "")
+            page_url = message_data.get("page_url", "")
+            page_content = message_data.get("page_content", "")
+            
+            if not user_message:
+                continue
+            
+            # Create browser context
+            context = BrowserContext(
+                current_url=page_url,
+                page_content=page_content,
+                current_tab_id=message_data.get("tab_id"),
+                page_title=message_data.get("page_title"),
+                user_intent=user_message
+            )
+            
+            # Stream AI response
+            async for response_msg in streaming_agent.stream_ai_response(
+                client_id=client_id,
+                user_message=user_message,
+                context=context,
+                session_id=message_data.get("session_id")
+            ):
+                await streaming_agent.connection_manager.send_message(client_id, response_msg)
+                
+    except WebSocketDisconnect:
+        streaming_agent.disconnect_client(client_id)
+        logger.info(f"Client {client_id} disconnected")
+    except Exception as e:
+        logger.error(f"WebSocket error for client {client_id}", error=str(e))
+        streaming_agent.disconnect_client(client_id)
+
+@app.get("/api/streaming/status")
+async def get_streaming_status():
+    """Get status of streaming connections and active sessions"""
+    try:
+        streaming_agent = get_streaming_agent(ai_client)
+        
+        return {
+            "success": True,
+            "message": "Streaming system operational",
+            "data": {
+                "active_connections": len(streaming_agent.connection_manager.active_connections),
+                "active_sessions": len(streaming_agent.active_sessions),
+                "supported_message_types": ["thinking", "tool_execution", "ai_response", "completion", "error"]
+            }
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get streaming status", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Streaming status failed: {str(e)}")
 
 if __name__ == "__main__":
     # Run the server

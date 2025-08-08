@@ -117,60 +117,176 @@ class AIBrowserSidePanel {
     }
     
     initializeWebSocket() {
-        // Try to connect to WebSocket for streaming responses
+        // Initialize WebSocket connection for streaming AI responses
+        this.connectWebSocket();
+    }
+    
+    connectWebSocket() {
+        if (this.websocket) {
+            this.websocket.close();
+        }
+        
+        const clientId = this.generateClientId();
+        const wsUrl = `ws://127.0.0.1:8000/ws/${clientId}`;
+        
         try {
-            this.websocket = new WebSocket('ws://localhost:8000/ws');
+            this.websocket = new WebSocket(wsUrl);
             
             this.websocket.onopen = () => {
-                console.log('WebSocket connected for streaming');
-                this.updateStatus('ready', 'Connected with streaming');
+                console.log('WebSocket connected for streaming AI responses');
+                this.updateStatus('ready', 'Connected - Ready for AI assistance');
+                
+                // Show connection success message
+                this.addSystemMessage('🚀 Connected to AI Browser - Ready for intelligent automation!');
             };
             
             this.websocket.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                this.handleStreamingMessage(data);
+                this.handleStreamingMessage(JSON.parse(event.data));
             };
             
             this.websocket.onclose = () => {
                 console.log('WebSocket disconnected');
-                this.websocket = null;
+                this.updateStatus('disconnected', 'Disconnected - Attempting to reconnect...');
+                this.addSystemMessage('❌ Connection lost - Reconnecting...', 'error');
+                // Attempt to reconnect after 3 seconds
+                setTimeout(() => this.connectWebSocket(), 3000);
             };
             
             this.websocket.onerror = (error) => {
-                console.log('WebSocket error, falling back to HTTP requests');
-                this.websocket = null;
+                console.error('WebSocket error:', error);
+                this.updateStatus('error', 'Connection error');
+                this.addSystemMessage('⚠️ Connection error - Check if backend is running', 'error');
             };
+            
         } catch (error) {
-            console.log('WebSocket not available, using HTTP requests');
-            this.websocket = null;
+            console.error('Failed to initialize WebSocket:', error);
+            this.updateStatus('error', 'Failed to connect to AI backend');
+            this.addSystemMessage('❌ Failed to connect to AI backend - Check if server is running', 'error');
         }
     }
     
-    handleStreamingMessage(data) {
-        if (data.type === 'chat_chunk') {
-            if (!this.currentStreamingMessage) {
-                // First chunk - create new AI message
+    generateClientId() {
+        return 'client_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    generateSessionId() {
+        return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+    
+    handleStreamingMessage(message) {
+        console.log('Streaming message received:', message);
+        
+        const { type, content, data, timestamp } = message;
+        
+        switch (type) {
+            case 'connection':
+                this.addSystemMessage(content, 'success');
+                break;
+                
+            case 'thinking':
                 this.removeTypingIndicator();
-                this.currentStreamingMessage = this.addMessage('', 'ai', true);
-            }
-            
-            // Append chunk to current streaming message
-            const contentDiv = this.currentStreamingMessage.querySelector('.message-content');
-            contentDiv.textContent += data.content;
-            
-            // Auto-scroll to bottom
-            this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
-        } else if (data.type === 'chat_complete') {
-            // Streaming complete
-            this.currentStreamingMessage = null;
-            this.isProcessing = false;
-            this.updateSendButton();
-            
-            // Handle actions if any
-            if (data.actions && data.actions.length > 0) {
-                this.handleActions(data.actions);
-            }
+                this.updateCurrentStreamingMessage(content, 'thinking');
+                break;
+                
+            case 'tool_execution':
+                this.updateCurrentStreamingMessage(content, 'tool');
+                break;
+                
+            case 'ai_response':
+                this.addAIMessage(content, data);
+                this.clearCurrentStreamingMessage();
+                break;
+                
+            case 'completion':
+                this.addSystemMessage(content, 'success');
+                this.clearCurrentStreamingMessage();
+                this.finishProcessing();
+                break;
+                
+            case 'error':
+                this.addSystemMessage(content, 'error');
+                this.clearCurrentStreamingMessage();
+                this.finishProcessing();
+                break;
+                
+            default:
+                console.log('Unknown message type:', type);
         }
+    }
+    
+    updateCurrentStreamingMessage(content, messageType) {
+        // Update or create current streaming message
+        if (this.currentStreamingMessage) {
+            this.currentStreamingMessage.querySelector('.message-content').innerHTML = this.formatMessageContent(content);
+        } else {
+            this.currentStreamingMessage = this.createStreamingMessage(content, messageType);
+            this.elements.chatContainer.appendChild(this.currentStreamingMessage);
+        }
+        
+        this.scrollToBottom();
+    }
+    
+    createStreamingMessage(content, messageType) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ai-message streaming ${messageType}`;
+        
+        const icon = this.getMessageIcon(messageType);
+        
+        messageDiv.innerHTML = `
+            <div class="message-header">
+                <span class="message-icon">${icon}</span>
+                <span class="message-timestamp">${new Date().toLocaleTimeString()}</span>
+                <div class="streaming-indicator">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+            <div class="message-content">${this.formatMessageContent(content)}</div>
+        `;
+        
+        return messageDiv;
+    }
+    
+    getMessageIcon(messageType) {
+        const icons = {
+            'thinking': '🤔',
+            'tool': '🔧',
+            'ai': '🤖',
+            'system': '💡',
+            'success': '✅',
+            'error': '❌'
+        };
+        return icons[messageType] || '💬';
+    }
+    
+    clearCurrentStreamingMessage() {
+        if (this.currentStreamingMessage) {
+            this.currentStreamingMessage.classList.remove('streaming');
+            this.currentStreamingMessage.querySelector('.streaming-indicator')?.remove();
+            this.currentStreamingMessage = null;
+        }
+    }
+    
+    addSystemMessage(content, type = 'info') {
+        return this.addMessage(content, 'system', false, type);
+    }
+    
+    addAIMessage(content, data = null) {
+        const message = this.addMessage(content, 'ai', false);
+        
+        // Handle additional data (like actions, tools results, etc.)
+        if (data && data.ai_actions && data.ai_actions.length > 0) {
+            this.handleActions(data.ai_actions);
+        }
+        
+        return message;
+    }
+    
+    finishProcessing() {
+        this.isProcessing = false;
+        this.updateSendButton();
+        this.removeTypingIndicator();
     }
 
     async sendMessage() {
@@ -194,12 +310,12 @@ class AIBrowserSidePanel {
             // Use WebSocket for streaming if available
             if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
                 this.websocket.send(JSON.stringify({
-                    type: 'chat',
                     message: message,
-                    context: {
-                        page_url: this.currentTab?.url,
-                        page_content: this.pageContent
-                    }
+                    page_url: this.currentTab?.url,
+                    page_content: this.pageContent,
+                    tab_id: this.currentTab?.id?.toString(),
+                    page_title: this.currentTab?.title,
+                    session_id: this.generateSessionId()
                 }));
             } else {
                 // Fallback to HTTP request
