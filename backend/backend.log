@@ -1,445 +1,164 @@
-2025-08-08 09:38:41 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 09:38:41 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 09:38:41 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 09:38:41 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 09:38:41 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 09:38:41 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=find_elements
+2025-08-08 15:47:59 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 15:47:59 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 15:47:59 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 15:47:59 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 15:47:59 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 15:47:59 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=find_elements
 ✅ Registered 14 AI browser tools
-2025-08-08 09:38:41 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 09:38:41 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 09:38:41 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T16:38:41.622663Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__main__[0m][0m
-[2m2025-08-08T16:38:41.623071Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__main__[0m][0m
+2025-08-08 15:47:59 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 15:47:59 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 15:47:59 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+[2m2025-08-08T22:47:59.591744Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__main__[0m][0m
+[2m2025-08-08T22:47:59.592092Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__main__[0m][0m
 INFO:     Will watch for changes in these directories: ['/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend']
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-INFO:     Started reloader process [65814] using StatReload
-2025-08-08 09:38:41 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 09:38:41 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 09:38:41 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 09:38:41 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 09:38:41 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 09:38:41 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 09:38:41 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 09:38:41 [info     ] Tool registered                category=extraction tool=find_elements
+INFO:     Started reloader process [4213] using StatReload
+2025-08-08 15:47:59 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 15:47:59 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 15:47:59 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 15:47:59 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 15:47:59 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 15:47:59 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 15:47:59 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 15:47:59 [info     ] Tool registered                category=extraction tool=find_elements
 ✅ Registered 14 AI browser tools
-2025-08-08 09:38:41 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 09:38:41 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 09:38:41 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T16:38:41.911215Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T16:38:41.911429Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T16:38:41.930696Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T16:38:41.930904Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [65825]
+2025-08-08 15:47:59 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 15:47:59 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 15:47:59 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+[2m2025-08-08T22:47:59.872137Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:47:59.872351Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:47:59.892197Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
+[2m2025-08-08T22:47:59.892407Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
+INFO:     Started server process [4224]
 INFO:     Waiting for application startup.
-[2m2025-08-08T16:38:41.942257Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T16:38:41.942332Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T16:38:41.942380Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T16:38:50.512651Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
+[2m2025-08-08T22:47:59.906134Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:47:59.906199Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:47:59.906246Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:48:09.776220Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
 INFO:     Application startup complete.
-INFO:     127.0.0.1:53096 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53122 - "POST /api/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53203 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53251 - "OPTIONS /api/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53251 - "POST /api/chat HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/net/cert/root_store_proto_full/root_store_pb2.py'. Reloading...
+INFO:     127.0.0.1:59706 - "GET /health HTTP/1.1" 200 OK
+ERROR:main:[2m2025-08-08T22:48:21.625029Z[0m [[31m[1merror    [0m] [1mChat request failed           [0m [[0m[1m[34mmain[0m][0m [36merror[0m=[35m"'content'"[0m
+INFO:     127.0.0.1:59735 - "POST /api/chat HTTP/1.1" 500 Internal Server Error
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [65825]
-2025-08-08 12:20:48 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 12:20:48 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 12:20:48 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 12:20:48 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 12:20:48 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 12:20:48 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 12:20:48 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 12:20:48 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 12:20:48 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 12:20:48 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 12:20:48 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 12:20:48 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 12:20:48 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 12:20:48 [info     ] Tool registered                category=extraction tool=find_elements
+INFO:     Finished server process [4224]
+2025-08-08 15:48:57 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 15:48:57 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 15:48:57 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 15:48:57 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 15:48:57 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 15:48:57 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 15:48:57 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 15:48:57 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 15:48:57 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 15:48:57 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 15:48:57 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 15:48:57 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 15:48:57 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 15:48:57 [info     ] Tool registered                category=extraction tool=find_elements
 ✅ Registered 14 AI browser tools
-2025-08-08 12:20:48 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 12:20:48 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 12:20:48 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T19:20:48.748332Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:20:48.749187Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:20:48.850519Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T19:20:48.851033Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [90780]
+2025-08-08 15:48:57 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 15:48:57 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 15:48:57 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+[2m2025-08-08T22:48:57.564679Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:48:57.565151Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:48:57.595786Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
+[2m2025-08-08T22:48:57.596053Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
+INFO:     Started server process [4556]
 INFO:     Waiting for application startup.
-[2m2025-08-08T19:20:48.937778Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:20:48.938040Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:20:48.938189Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:21:49.236726Z[0m [[31m[1merror    [0m] [1mAI model connection test error[0m [[0m[1m[34mai_client[0m][0m [36merror[0m=[35m[0m
-[2m2025-08-08T19:21:49.256261Z[0m [[31m[1merror    [0m] [1m❌ Failed to connect to Ollama/GPT-OSS[0m [[0m[1m[34mmain[0m][0m
-ERROR:    Traceback (most recent call last):
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
-    async with self.lifespan_context(app) as maybe_state:
-               ~~~~~~~~~~~~~~~~~~~~~^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 177, in lifespan
-    raise RuntimeError("Cannot start without AI model connection")
-RuntimeError: Cannot start without AI model connection
-
-ERROR:    Application startup failed. Exiting.
-Unclosed client session
-client_session: <aiohttp.client.ClientSession object at 0x120f752b0>
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/net/base/isolation_info_pb2.py'. Reloading...
-2025-08-08 12:27:58 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 12:27:58 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 12:27:58 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 12:27:58 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 12:27:58 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 12:27:58 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 12:27:58 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 12:27:58 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 12:27:58 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 12:27:58 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 12:27:58 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 12:27:58 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 12:27:58 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 12:27:58 [info     ] Tool registered                category=extraction tool=find_elements
-✅ Registered 14 AI browser tools
-2025-08-08 12:27:58 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 12:27:58 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 12:27:58 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T19:27:58.709476Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:27:58.710155Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:27:58.784217Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T19:27:58.784717Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [95758]
-INFO:     Waiting for application startup.
-[2m2025-08-08T19:27:58.851464Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:27:58.851764Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:27:58.851941Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:28:09.150828Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
+[2m2025-08-08T22:48:57.607026Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:48:57.607093Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:48:57.607141Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:49:01.153461Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
 INFO:     Application startup complete.
-INFO:     127.0.0.1:55280 - "POST /api/chat HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:55301 - "POST /api/chat HTTP/1.1" 422 Unprocessable Content
-INFO:     127.0.0.1:55325 - "GET /health HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/net/cert/root_store_proto_full/root_store_pb2.py'. Reloading...
+INFO:     127.0.0.1:59856 - "POST /api/chat HTTP/1.1" 200 OK
+ERROR:main:[2m2025-08-08T22:49:33.270408Z[0m [[31m[1merror    [0m] [1mFailed to get tools info      [0m [[0m[1m[34mmain[0m][0m [36merror[0m=[35m"cannot import name 'get_available_tools' from 'tools' (/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/tools/__init__.py)"[0m
+INFO:     127.0.0.1:59914 - "GET /api/tools HTTP/1.1" 500 Internal Server Error
+WARNING:  StatReload detected changes in 'tools/__init__.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [95758]
-2025-08-08 12:40:08 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 12:40:08 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 12:40:08 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 12:40:08 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 12:40:08 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 12:40:08 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 12:40:08 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 12:40:08 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 12:40:08 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 12:40:08 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 12:40:08 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 12:40:08 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 12:40:08 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 12:40:08 [info     ] Tool registered                category=extraction tool=find_elements
+INFO:     Finished server process [4556]
+2025-08-08 15:49:50 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 15:49:50 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 15:49:50 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 15:49:50 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 15:49:50 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 15:49:50 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 15:49:50 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 15:49:50 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 15:49:50 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 15:49:50 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 15:49:50 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 15:49:50 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 15:49:50 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 15:49:50 [info     ] Tool registered                category=extraction tool=find_elements
 ✅ Registered 14 AI browser tools
-2025-08-08 12:40:08 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 12:40:08 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 12:40:08 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T19:40:08.721712Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:40:08.722441Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:40:08.909435Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T19:40:08.909927Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [481]
+2025-08-08 15:49:50 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 15:49:50 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 15:49:50 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+[2m2025-08-08T22:49:50.544603Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:49:50.544952Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:49:50.566797Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
+[2m2025-08-08T22:49:50.567010Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
+INFO:     Started server process [4827]
 INFO:     Waiting for application startup.
-[2m2025-08-08T19:40:09.047455Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:40:09.047731Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:40:09.047872Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:41:09.179004Z[0m [[31m[1merror    [0m] [1mAI model connection test error[0m [[0m[1m[34mai_client[0m][0m [36merror[0m=[35m[0m
-[2m2025-08-08T19:41:09.187152Z[0m [[31m[1merror    [0m] [1m❌ Failed to connect to Ollama/GPT-OSS[0m [[0m[1m[34mmain[0m][0m
-ERROR:    Traceback (most recent call last):
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
-    async with self.lifespan_context(app) as maybe_state:
-               ~~~~~~~~~~~~~~~~~~~~~^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 177, in lifespan
-    raise RuntimeError("Cannot start without AI model connection")
-RuntimeError: Cannot start without AI model connection
-
-ERROR:    Application startup failed. Exiting.
-Unclosed client session
-client_session: <aiohttp.client.ClientSession object at 0x11ae752b0>
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/net/base/isolation_info_pb2.py'. Reloading...
-2025-08-08 12:48:44 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 12:48:44 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 12:48:44 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 12:48:44 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 12:48:44 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 12:48:44 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 12:48:44 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 12:48:44 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 12:48:44 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 12:48:44 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 12:48:44 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 12:48:44 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 12:48:44 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 12:48:44 [info     ] Tool registered                category=extraction tool=find_elements
-✅ Registered 14 AI browser tools
-2025-08-08 12:48:44 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 12:48:44 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 12:48:44 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T19:48:44.980693Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:48:44.981206Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T19:48:45.020169Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T19:48:45.020566Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [4345]
-INFO:     Waiting for application startup.
-[2m2025-08-08T19:48:45.041941Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:48:45.042074Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:48:45.042166Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T19:48:57.995465Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
+[2m2025-08-08T22:49:50.578715Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:49:50.578779Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:49:50.578827Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:49:54.655315Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
 INFO:     Application startup complete.
-INFO:     127.0.0.1:57067 - "GET /health HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/net/cert/root_store_proto_full/root_store_pb2.py'. Reloading...
+[2m2025-08-08T22:50:40.882929Z[0m [[31m[1merror    [0m] [1mFailed to get tools info      [0m [[0m[1m[34mmain[0m][0m [36merror[0m=[35m"'list' object has no attribute 'items'"[0m
+INFO:     127.0.0.1:60004 - "GET /api/tools HTTP/1.1" 500 Internal Server Error
+WARNING:  StatReload detected changes in 'tools/__init__.py'. Reloading...
 INFO:     Shutting down
 INFO:     Waiting for application shutdown.
 INFO:     Application shutdown complete.
-INFO:     Finished server process [4345]
-2025-08-08 14:45:45 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 14:45:45 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 14:45:45 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 14:45:45 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 14:45:45 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 14:45:45 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 14:45:45 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 14:45:45 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 14:45:45 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 14:45:45 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 14:45:45 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 14:45:45 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 14:45:45 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 14:45:45 [info     ] Tool registered                category=extraction tool=find_elements
+INFO:     Finished server process [4827]
+2025-08-08 15:51:02 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 15:51:02 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 15:51:02 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 15:51:02 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 15:51:02 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 15:51:02 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 15:51:02 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 15:51:02 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 15:51:02 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 15:51:02 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 15:51:02 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 15:51:02 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 15:51:02 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 15:51:02 [info     ] Tool registered                category=extraction tool=find_elements
 ✅ Registered 14 AI browser tools
-2025-08-08 14:45:45 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 14:45:45 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 14:45:45 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T21:45:45.902282Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:45:45.902990Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:45:45.988305Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T21:45:45.989082Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [10325]
+2025-08-08 15:51:02 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 15:51:02 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 15:51:02 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+[2m2025-08-08T22:51:02.294678Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:51:02.295031Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T22:51:02.318895Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
+[2m2025-08-08T22:51:02.319119Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
+INFO:     Started server process [4966]
 INFO:     Waiting for application startup.
-[2m2025-08-08T21:45:46.097185Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:45:46.097491Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:45:46.097683Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:46:05.785721Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
+[2m2025-08-08T22:51:02.331183Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:51:02.331249Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:51:02.331298Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T22:51:06.135495Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
 INFO:     Application startup complete.
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/net/third_party/quiche/src/quiche/quic/core/proto/crypto_server_config_pb2.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [10325]
-2025-08-08 14:49:28 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 14:49:28 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 14:49:28 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 14:49:28 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 14:49:28 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 14:49:28 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 14:49:28 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 14:49:28 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 14:49:28 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 14:49:28 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 14:49:28 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 14:49:28 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 14:49:28 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 14:49:28 [info     ] Tool registered                category=extraction tool=find_elements
-✅ Registered 14 AI browser tools
-2025-08-08 14:49:28 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 14:49:28 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 14:49:28 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T21:49:28.735953Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:49:28.736917Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:49:28.842422Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T21:49:28.842933Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [13703]
-INFO:     Waiting for application startup.
-[2m2025-08-08T21:49:28.892202Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:49:28.892490Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:49:28.892666Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:49:33.988641Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
-INFO:     Application startup complete.
-INFO:     127.0.0.1:57295 - "GET /health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57471 - "POST /api/chat HTTP/1.1" 200 OK
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/components/variations/proto/variations_seed_pb2.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [13703]
-2025-08-08 14:51:59 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 14:51:59 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 14:51:59 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 14:51:59 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 14:51:59 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 14:51:59 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 14:51:59 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 14:51:59 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 14:51:59 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 14:51:59 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 14:51:59 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 14:51:59 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 14:51:59 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 14:51:59 [info     ] Tool registered                category=extraction tool=find_elements
-✅ Registered 14 AI browser tools
-2025-08-08 14:51:59 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 14:51:59 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 14:51:59 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T21:51:59.448243Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:51:59.448903Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:51:59.533110Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T21:51:59.533606Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [15728]
-INFO:     Waiting for application startup.
-[2m2025-08-08T21:51:59.580747Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:51:59.580992Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:51:59.581150Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:52:04.994203Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
-INFO:     Application startup complete.
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/modules/audio_processing/debug_pb2.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [15728]
-2025-08-08 14:52:36 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 14:52:36 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 14:52:36 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 14:52:36 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 14:52:36 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 14:52:36 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 14:52:36 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 14:52:36 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 14:52:36 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 14:52:36 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 14:52:36 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 14:52:36 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 14:52:36 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 14:52:36 [info     ] Tool registered                category=extraction tool=find_elements
-✅ Registered 14 AI browser tools
-2025-08-08 14:52:36 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 14:52:36 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 14:52:36 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T21:52:36.774842Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:52:36.775630Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:52:36.863269Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T21:52:36.863778Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [16345]
-INFO:     Waiting for application startup.
-[2m2025-08-08T21:52:36.912910Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:52:36.913190Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:52:36.913359Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:52:39.084660Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
-INFO:     Application startup complete.
-WARNING:  StatReload detected changes in 'chromium/src/out/AIBrowser/pyproto/modules/audio_coding/audio_network_adaptor/config_pb2.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [16345]
-2025-08-08 14:54:57 [info     ] Tool registered                category=navigation tool=navigate
-2025-08-08 14:54:57 [info     ] Tool registered                category=navigation tool=scroll
-2025-08-08 14:54:57 [info     ] Tool registered                category=extraction tool=search_page
-2025-08-08 14:54:57 [info     ] Tool registered                category=utility tool=refresh_state
-2025-08-08 14:54:57 [info     ] Tool registered                category=interaction tool=click
-2025-08-08 14:54:57 [info     ] Tool registered                category=interaction tool=type
-2025-08-08 14:54:57 [info     ] Tool registered                category=interaction tool=fill_form
-2025-08-08 14:54:57 [info     ] Tool registered                category=interaction tool=select_option
-2025-08-08 14:54:57 [info     ] Tool registered                category=planning tool=classify_task
-2025-08-08 14:54:57 [info     ] Tool registered                category=planning tool=plan_task
-2025-08-08 14:54:57 [info     ] Tool registered                category=validation tool=validate_step
-2025-08-08 14:54:57 [info     ] Tool registered                category=extraction tool=extract_content
-2025-08-08 14:54:57 [info     ] Tool registered                category=extraction tool=analyze_page
-2025-08-08 14:54:57 [info     ] Tool registered                category=extraction tool=find_elements
-✅ Registered 14 AI browser tools
-2025-08-08 14:54:57 [warning  ] Tesseract OCR not available - install pytesseract and pillow
-2025-08-08 14:54:57 [warning  ] EasyOCR not available - install easyocr
-2025-08-08 14:54:57 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
-[2m2025-08-08T21:54:57.917169Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:54:57.917881Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
-[2m2025-08-08T21:54:58.017328Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
-[2m2025-08-08T21:54:58.017817Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
-INFO:     Started server process [17331]
-INFO:     Waiting for application startup.
-[2m2025-08-08T21:54:58.073018Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:54:58.073287Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:54:58.073432Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
-[2m2025-08-08T21:55:02.482975Z[0m [[33m[1mwarning  [0m] [1mModel warmup failed for llama2:7b[0m [[0m[1m[34mai_client[0m][0m
-INFO:     Application startup complete.
-WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [17331]
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-    from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=7)
-                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 122, in spawn_main
-    exitcode = _main(fd, parent_sentinel)
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 131, in _main
-    prepare(preparation_data)
-    ~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 246, in prepare
-    _fixup_main_from_path(data['init_main_from_path'])
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
-    main_content = runpy.run_path(main_path,
-                                  run_name="__mp_main__")
-  File "<frozen runpy>", line 287, in run_path
-  File "<frozen runpy>", line 98, in _run_module_code
-  File "<frozen runpy>", line 88, in _run_code
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 20, in <module>
-    from ai_client import AIClient
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 15, in <module>
-    from optimized_ai_client import OptimizedAIClient
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/optimized_ai_client.py", line 13, in <module>
-    import httpx
-ModuleNotFoundError: No module named 'httpx'
-WARNING:  StatReload detected changes in 'ai_client.py'. Reloading...
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-    from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=7)
-                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 122, in spawn_main
-    exitcode = _main(fd, parent_sentinel)
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 131, in _main
-    prepare(preparation_data)
-    ~~~~~~~^^^^^^^^^^^^^^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 246, in prepare
-    _fixup_main_from_path(data['init_main_from_path'])
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
-    main_content = runpy.run_path(main_path,
-                                  run_name="__mp_main__")
-  File "<frozen runpy>", line 287, in run_path
-  File "<frozen runpy>", line 98, in _run_module_code
-  File "<frozen runpy>", line 88, in _run_code
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 20, in <module>
-    from ai_client import AIClient
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 15, in <module>
-    from optimized_ai_client import OptimizedAIClient
-  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/optimized_ai_client.py", line 13, in <module>
-    import httpx
-ModuleNotFoundError: No module named 'httpx'
+[2m2025-08-08T22:51:06.137519Z[0m [[31m[1merror    [0m] [1mFailed to get tools info      [0m [[0m[1m[34mmain[0m][0m [36merror[0m=[35m"object of type 'int' has no len()"[0m
+INFO:     127.0.0.1:60073 - "GET /api/tools HTTP/1.1" 500 Internal Server Error

@@ -21,6 +21,25 @@ def initialize_tools():
 # Auto-initialize when module is imported
 initialize_tools()
 
+def get_available_tools():
+    """Get information about available tools"""
+    all_tools_list = tool_registry.get_all_tools()
+    tools_by_category = {}
+    tool_names = []
+    
+    for tool in all_tools_list:
+        category = tool.category.value if hasattr(tool, 'category') else 'general'
+        if category not in tools_by_category:
+            tools_by_category[category] = []
+        tools_by_category[category].append(tool.name)
+        tool_names.append(tool.name)
+    
+    return {
+        'total_tools': len(all_tools_list),
+        'tools_by_category': tools_by_category,
+        'tool_names': tool_names
+    }
+
 __all__ = [
     'tool_registry',
     'streaming_executor', 
@@ -28,5 +47,6 @@ __all__ = [
     'ToolCategory',
     'ToolResult',
     'BrowserContext',
-    'initialize_tools'
+    'initialize_tools',
+    'get_available_tools'
 ]

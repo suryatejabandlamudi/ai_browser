@@ -402,7 +402,7 @@ async def chat_with_ai(request: ChatRequest):
         actions = await browser_agent.parse_actions(ai_response.get("raw_response", ""))
         
         return ChatResponse(
-            response=ai_response["content"],
+            response=ai_response.get("response") or ai_response.get("content", ""),
             actions=actions,
             metadata={
                 "model": "gpt-oss:20b",
