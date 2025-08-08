@@ -9,6 +9,7 @@ import json
 import logging
 from typing import Dict, List, Optional, Any
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 import structlog
 import uvicorn
@@ -68,10 +69,22 @@ form_processor: Optional[IntelligentFormProcessor] = None
 memory_manager: Optional[CrossTabMemoryManager] = None
 visual_processor: Optional[VisualProcessor] = None
 
+# Import new tool system and rolling horizon agent
+try:
+    from tools import tool_registry, BrowserContext
+    from rolling_horizon_agent import RollingHorizonAgent
+    rolling_horizon_agent: Optional[RollingHorizonAgent] = None
+    TOOLS_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Advanced tool system not available: {e}")
+    TOOLS_AVAILABLE = False
+    tool_registry = None
+    rolling_horizon_agent = None
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    global ai_client, browser_agent, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor
+    global ai_client, browser_agent, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent
     
     logger.info("Starting AI Browser Backend...")
     
@@ -87,6 +100,11 @@ async def lifespan(app: FastAPI):
     form_processor = IntelligentFormProcessor()
     memory_manager = CrossTabMemoryManager()
     visual_processor = VisualProcessor()
+    
+    # Initialize new rolling horizon agent
+    if TOOLS_AVAILABLE:
+        rolling_horizon_agent = RollingHorizonAgent()
+        logger.info(f"🤖 Rolling Horizon Agent initialized with {len(tool_registry.get_all_tools())} tools")
     
     # Initialize memory manager
     await memory_manager.initialize()
@@ -1297,6 +1315,181 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as e:
         logger.error("WebSocket error", error=str(e))
         await websocket.close(code=1000)
+
+# New Advanced AI Agent Endpoints (Phase 2)
+@app.post("/api/agent/rolling-horizon/execute")
+async def execute_with_rolling_horizon(request: ChatRequest):
+    """Execute task using advanced rolling-horizon planning agent"""
+    try:
+        if not TOOLS_AVAILABLE or not rolling_horizon_agent:
+            raise HTTPException(status_code=503, detail="Advanced agent system not available")
+        
+        logger.info("Rolling horizon execution", message=request.message[:100])
+        
+        # Create browser context from request
+        browser_context = BrowserContext(
+            current_url=request.page_url,
+            page_title=getattr(request, 'page_title', None),
+            page_content=request.page_content if hasattr(request, 'page_content') else None
+        )
+        
+        # Execute task with rolling horizon agent
+        result = await rolling_horizon_agent.execute_task(
+            user_message=request.message,
+            browser_context=browser_context
+        )
+        
+        return {
+            "success": result["success"],
+            "message": result["message"],
+            "strategy": result.get("strategy", "rolling_horizon"),
+            "data": result
+        }
+        
+    except Exception as e:
+        logger.error("Rolling horizon execution failed", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Execution failed: {str(e)}")
+
+@app.websocket("/ws/agent/stream")
+async def websocket_agent_stream(websocket: WebSocket):
+    """WebSocket endpoint for streaming agent execution with real-time updates"""
+    await websocket.accept()
+    
+    try:
+        logger.info("Agent streaming WebSocket connected")
+        
+        while True:
+            # Receive message from client
+            data = await websocket.receive_text()
+            message_data = json.loads(data)
+            
+            if message_data.get("type") == "execute_task":
+                user_message = message_data.get("message", "")
+                context_data = message_data.get("context", {})
+                
+                # Create browser context
+                browser_context = BrowserContext(
+                    current_url=context_data.get("page_url"),
+                    page_title=context_data.get("page_title"), 
+                    page_content=context_data.get("page_content")
+                )
+                
+                # Define streaming handler
+                async def stream_handler(event):
+                    """Send streaming events to WebSocket client"""
+                    await websocket.send_text(json.dumps(event.to_dict()))
+                
+                try:
+                    if TOOLS_AVAILABLE and rolling_horizon_agent:
+                        # Use advanced rolling horizon agent
+                        result = await rolling_horizon_agent.execute_task(
+                            user_message=user_message,
+                            browser_context=browser_context,
+                            stream_handler=stream_handler
+                        )
+                    else:
+                        # Fallback to basic chat
+                        await websocket.send_text(json.dumps({
+                            "type": "thinking_started",
+                            "data": {"message": "Processing your request..."},
+                            "timestamp": datetime.now().isoformat()
+                        }))
+                        
+                        ai_response = await ai_client.chat(user_message)
+                        result = {
+                            "success": True,
+                            "message": ai_response.get("content", "Task completed"),
+                            "strategy": "basic_chat"
+                        }
+                    
+                    # Send final result
+                    await websocket.send_text(json.dumps({
+                        "type": "execution_complete",
+                        "data": result,
+                        "timestamp": datetime.now().isoformat()
+                    }))
+                    
+                except Exception as e:
+                    await websocket.send_text(json.dumps({
+                        "type": "execution_error",
+                        "data": {"error": str(e)},
+                        "timestamp": datetime.now().isoformat()
+                    }))
+            
+            elif message_data.get("type") == "tool_execute":
+                # Direct tool execution
+                tool_name = message_data.get("tool_name")
+                tool_params = message_data.get("parameters", {})
+                
+                if TOOLS_AVAILABLE and tool_registry:
+                    try:
+                        # Create minimal context
+                        context = BrowserContext()
+                        
+                        # Execute tool with streaming
+                        from tools import streaming_executor
+                        
+                        async def tool_stream_handler(event):
+                            await websocket.send_text(json.dumps({
+                                "type": "tool_event",
+                                "data": event.model_dump(),
+                                "timestamp": datetime.now().isoformat()
+                            }))
+                        
+                        streaming_executor.add_event_handler(tool_stream_handler)
+                        
+                        result = await streaming_executor.execute_tool(tool_name, tool_params, context)
+                        
+                        await websocket.send_text(json.dumps({
+                            "type": "tool_complete",
+                            "data": {
+                                "tool_name": tool_name,
+                                "success": result.success,
+                                "message": result.message,
+                                "result": result.data
+                            },
+                            "timestamp": datetime.now().isoformat()
+                        }))
+                        
+                    except Exception as e:
+                        await websocket.send_text(json.dumps({
+                            "type": "tool_error",
+                            "data": {"tool_name": tool_name, "error": str(e)},
+                            "timestamp": datetime.now().isoformat()
+                        }))
+                        
+    except WebSocketDisconnect:
+        logger.info("Agent streaming WebSocket disconnected")
+    except Exception as e:
+        logger.error("Agent streaming WebSocket error", error=str(e))
+        await websocket.close(code=1000)
+
+@app.get("/api/tools/available")
+async def get_available_tools():
+    """Get list of all available tools"""
+    try:
+        if not TOOLS_AVAILABLE or not tool_registry:
+            return {
+                "tools_available": False,
+                "message": "Advanced tool system not loaded",
+                "tools": []
+            }
+        
+        tools = tool_registry.format_tools_for_ai()
+        
+        return {
+            "tools_available": True,
+            "total_tools": len(tools),
+            "tools": tools,
+            "categories": {
+                category.value: len(tool_registry.get_tools_by_category(category))
+                for category in tool_registry.tools_by_category.keys()
+            }
+        }
+        
+    except Exception as e:
+        logger.error("Failed to get available tools", error=str(e))
+        raise HTTPException(status_code=500, detail=f"Failed to get tools: {str(e)}")
 
 if __name__ == "__main__":
     # Run the server
