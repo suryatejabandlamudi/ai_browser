@@ -725,3 +725,4 @@ client_session: <aiohttp.client.ClientSession object at 0x103e71160>
 Unclosed connector
 connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x103e44c50>, 55701.018424541)])']
 connector: <aiohttp.connector.TCPConnector object at 0x103e70d70>
+INFO:     Stopping reloader process [57871]

@@ -27,6 +27,12 @@ class AIClient:
         self._conversation_cache = {}  
         self.cache_size = 50  # Keep it reasonable
         
+        # Model settings
+        self.primary_model = model
+        self.fallback_model = model
+        self.model_warmup_enabled = True
+        self.local_models = ["gpt-oss:20b"]
+        
     async def _get_session(self) -> aiohttp.ClientSession:
         """Get or create aiohttp session with optimized settings"""
         if not self.session or self.session.closed:
