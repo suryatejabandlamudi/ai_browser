@@ -59,6 +59,28 @@ structlog.configure(
 
 logger = structlog.get_logger(__name__)
 
+# Advanced AI systems (optional, requires additional dependencies)
+try:
+    from intelligent_browsing import create_intelligent_browsing
+    INTELLIGENT_BROWSING_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Intelligent browsing system not available: {e}")
+    INTELLIGENT_BROWSING_AVAILABLE = False
+
+try:
+    from vector_knowledge_base import create_vector_knowledge_base
+    VECTOR_DB_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Vector knowledge base not available: {e}")
+    VECTOR_DB_AVAILABLE = False
+
+try:
+    from multimodal_ai import create_multimodal_ai
+    MULTIMODAL_AI_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Multi-modal AI not available: {e}")
+    MULTIMODAL_AI_AVAILABLE = False
+
 # Global instances
 ai_client: Optional[AIClient] = None
 browser_agent: Optional[BrowserAgent] = None
@@ -72,6 +94,9 @@ form_processor: Optional[IntelligentFormProcessor] = None
 memory_manager: Optional[CrossTabMemoryManager] = None
 visual_processor: Optional[VisualProcessor] = None
 ai_browser_agent: Optional[AIBrowserAgent] = None  # AI Browser Agent powered by GPT-OSS 20B
+intelligent_browsing: Optional[Any] = None  # Advanced page understanding
+vector_knowledge_base: Optional[Any] = None  # Local vector database
+multimodal_ai: Optional[Any] = None  # Multi-modal AI system
 
 # Import new tool system and rolling horizon agent
 try:
@@ -88,7 +113,7 @@ except ImportError as e:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    global ai_client, browser_agent, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent, ai_browser_agent
+    global ai_client, browser_agent, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent, ai_browser_agent, intelligent_browsing, vector_knowledge_base, multimodal_ai
     
     logger.info("Starting AI Browser Backend...")
     
@@ -111,6 +136,19 @@ async def lifespan(app: FastAPI):
         browser_agent=browser_agent,
         tools_registry=tool_registry if TOOLS_AVAILABLE else None
     )
+    
+    # Initialize advanced AI systems
+    if INTELLIGENT_BROWSING_AVAILABLE:
+        intelligent_browsing = await create_intelligent_browsing(ai_client)
+        logger.info("🧠 Intelligent browsing system initialized")
+    
+    if VECTOR_DB_AVAILABLE:
+        vector_knowledge_base = await create_vector_knowledge_base()
+        logger.info("📚 Vector knowledge base initialized")
+    
+    if MULTIMODAL_AI_AVAILABLE:
+        multimodal_ai = await create_multimodal_ai(ai_client)
+        logger.info("🎨 Multi-modal AI system initialized")
     
     # Initialize new rolling horizon agent
     if TOOLS_AVAILABLE:
@@ -1680,6 +1718,206 @@ async def autonomous_task_websocket(websocket: WebSocket, client_id: str):
     except Exception as e:
         logger.error("Autonomous task WebSocket error", client_id=client_id, error=str(e))
         await websocket.close(code=1000)
+
+# === Advanced AI Features API Endpoints ===
+
+class PageAnalysisRequest(BaseModel):
+    url: str
+    html_content: str
+    user_context: Optional[Dict[str, Any]] = None
+
+class SearchUnderstandingRequest(BaseModel):
+    query: str
+    context: Optional[Dict[str, Any]] = None
+
+class SearchSuggestionsRequest(BaseModel):
+    partial_query: str
+    history: Optional[List[str]] = None
+
+class SemanticSearchRequest(BaseModel):
+    query: str
+    limit: Optional[int] = 10
+    filters: Optional[Dict[str, Any]] = None
+
+class ImageAnalysisRequest(BaseModel):
+    image_url: str
+    image_data_base64: Optional[str] = None
+    user_context: Optional[Dict[str, Any]] = None
+
+@app.post("/api/intelligence/analyze-page")
+async def analyze_page_intelligence(request: PageAnalysisRequest):
+    """Comprehensive AI-powered page analysis"""
+    if not INTELLIGENT_BROWSING_AVAILABLE or not intelligent_browsing:
+        raise HTTPException(status_code=503, detail="Intelligent browsing not available")
+    
+    try:
+        analysis = await intelligent_browsing.analyze_page(
+            request.url, request.html_content, request.user_context
+        )
+        return {"success": True, "analysis": asdict(analysis)}
+    except Exception as e:
+        logger.error("Page intelligence analysis failed", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/intelligence/understand-search")
+async def understand_search_query(request: SearchUnderstandingRequest):
+    """Understand search intent and provide intelligent context"""
+    if not INTELLIGENT_BROWSING_AVAILABLE or not intelligent_browsing:
+        raise HTTPException(status_code=503, detail="Intelligent browsing not available")
+    
+    try:
+        context = await intelligent_browsing.smart_search_understanding(
+            request.query, request.context
+        )
+        return {"success": True, "search_context": asdict(context)}
+    except Exception as e:
+        logger.error("Search understanding failed", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/intelligence/search-suggestions")
+async def generate_search_suggestions(request: SearchSuggestionsRequest):
+    """Generate intelligent search suggestions"""
+    if not INTELLIGENT_BROWSING_AVAILABLE or not intelligent_browsing:
+        raise HTTPException(status_code=503, detail="Intelligent browsing not available")
+    
+    try:
+        suggestions = await intelligent_browsing.generate_search_suggestions(
+            request.partial_query, request.history
+        )
+        return {"success": True, "suggestions": suggestions}
+    except Exception as e:
+        logger.error("Search suggestion generation failed", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/knowledge/add-page")
+async def add_page_to_knowledge_base(request: PageAnalysisRequest):
+    """Add page content to vector knowledge base"""
+    if not VECTOR_DB_AVAILABLE or not vector_knowledge_base:
+        raise HTTPException(status_code=503, detail="Vector knowledge base not available")
+    
+    try:
+        # Extract title from HTML if not provided
+        from bs4 import BeautifulSoup
+        soup = BeautifulSoup(request.html_content, 'html.parser')
+        title = soup.find('title')
+        title_text = title.get_text(strip=True) if title else "Untitled"
+        
+        chunks_added = await vector_knowledge_base.add_page_content(
+            request.url, title_text, request.html_content, request.user_context
+        )
+        return {"success": True, "chunks_added": chunks_added}
+    except Exception as e:
+        logger.error("Failed to add page to knowledge base", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/knowledge/semantic-search")
+async def semantic_search_knowledge(request: SemanticSearchRequest):
+    """Perform semantic search over knowledge base"""
+    if not VECTOR_DB_AVAILABLE or not vector_knowledge_base:
+        raise HTTPException(status_code=503, detail="Vector knowledge base not available")
+    
+    try:
+        results = await vector_knowledge_base.semantic_search(
+            request.query, request.limit, request.filters
+        )
+        return {"success": True, "results": [asdict(result) for result in results]}
+    except Exception as e:
+        logger.error("Semantic search failed", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/knowledge/keyword-search") 
+async def keyword_search_knowledge(request: SemanticSearchRequest):
+    """Perform keyword search over knowledge base"""
+    if not VECTOR_DB_AVAILABLE or not vector_knowledge_base:
+        raise HTTPException(status_code=503, detail="Vector knowledge base not available")
+    
+    try:
+        results = await vector_knowledge_base.keyword_search(
+            request.query, request.limit, request.filters
+        )
+        return {"success": True, "results": [asdict(result) for result in results]}
+    except Exception as e:
+        logger.error("Keyword search failed", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/knowledge/stats")
+async def get_knowledge_base_stats():
+    """Get vector knowledge base statistics"""
+    if not VECTOR_DB_AVAILABLE or not vector_knowledge_base:
+        raise HTTPException(status_code=503, detail="Vector knowledge base not available")
+    
+    try:
+        stats = vector_knowledge_base.get_stats()
+        return {"success": True, "stats": stats}
+    except Exception as e:
+        logger.error("Failed to get knowledge base stats", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/multimodal/analyze-image")
+async def analyze_image_content(request: ImageAnalysisRequest):
+    """Analyze image content with AI and OCR"""
+    if not MULTIMODAL_AI_AVAILABLE or not multimodal_ai:
+        raise HTTPException(status_code=503, detail="Multi-modal AI not available")
+    
+    try:
+        import base64
+        image_data = None
+        if request.image_data_base64:
+            image_data = base64.b64decode(request.image_data_base64)
+        
+        analysis = await multimodal_ai.analyze_image(
+            request.image_url, image_data, request.user_context
+        )
+        return {"success": True, "analysis": asdict(analysis)}
+    except Exception as e:
+        logger.error("Image analysis failed", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/multimodal/analyze-page-media")
+async def analyze_page_media_content(request: PageAnalysisRequest):
+    """Analyze all media content on a page"""
+    if not MULTIMODAL_AI_AVAILABLE or not multimodal_ai:
+        raise HTTPException(status_code=503, detail="Multi-modal AI not available")
+    
+    try:
+        analysis = await multimodal_ai.analyze_page_media(
+            request.url, request.html_content
+        )
+        return {"success": True, "media_analysis": analysis}
+    except Exception as e:
+        logger.error("Page media analysis failed", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/multimodal/capabilities")
+async def get_multimodal_capabilities():
+    """Get available multi-modal capabilities"""
+    if not MULTIMODAL_AI_AVAILABLE or not multimodal_ai:
+        return {"success": True, "capabilities": {"multimodal_available": False}}
+    
+    try:
+        capabilities = multimodal_ai.get_capabilities()
+        return {"success": True, "capabilities": capabilities}
+    except Exception as e:
+        logger.error("Failed to get multimodal capabilities", error=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/features/advanced")
+async def get_advanced_features_status():
+    """Get status of all advanced AI features"""
+    return {
+        "success": True,
+        "features": {
+            "intelligent_browsing": INTELLIGENT_BROWSING_AVAILABLE and intelligent_browsing is not None,
+            "vector_knowledge_base": VECTOR_DB_AVAILABLE and vector_knowledge_base is not None,
+            "multimodal_ai": MULTIMODAL_AI_AVAILABLE and multimodal_ai is not None,
+            "ai_browser_agent": ai_browser_agent is not None,
+            "tools_system": TOOLS_AVAILABLE and tool_registry is not None
+        },
+        "feature_counts": {
+            "total_tools": len(tool_registry.get_all_tools()) if TOOLS_AVAILABLE and tool_registry else 0,
+            "vector_db_chunks": vector_knowledge_base.get_stats().get("total_chunks", 0) if VECTOR_DB_AVAILABLE and vector_knowledge_base else 0
+        }
+    }
 
 if __name__ == "__main__":
     # Run the server

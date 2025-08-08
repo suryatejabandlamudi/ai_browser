@@ -535,3 +535,193 @@ client_session: <aiohttp.client.ClientSession object at 0x104590c20>
 Unclosed connector
 connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x10414ebd0>, 49295.765642708)])']
 connector: <aiohttp.connector.TCPConnector object at 0x104590830>
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-08 09:17:26 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 09:17:26 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 09:17:26 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 09:17:26 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 09:17:26 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 09:17:26 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 09:17:26 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 09:17:26 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 09:17:26 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 09:17:26 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 09:17:26 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 09:17:26 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 09:17:26 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 09:17:26 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-08 09:17:26 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 09:17:26 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 09:17:26 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=7)
+                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 131, in _main
+    prepare(preparation_data)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                                  run_name="__mp_main__")
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 45, in <module>
+    from vector_knowledge_base import create_vector_knowledge_base
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/vector_knowledge_base.py", line 11, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-08 09:17:44 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 09:17:44 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 09:17:44 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 09:17:44 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 09:17:44 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 09:17:44 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 09:17:44 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 09:17:44 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 09:17:44 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 09:17:44 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 09:17:44 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 09:17:44 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 09:17:44 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 09:17:44 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-08 09:17:44 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 09:17:44 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 09:17:44 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+Traceback (most recent call last):
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 54, in <module>
+    from vector_knowledge_base import create_vector_knowledge_base
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/vector_knowledge_base.py", line 11, in <module>
+    import numpy as np
+ModuleNotFoundError: No module named 'numpy'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from multiprocessing.spawn import spawn_main; spawn_main(tracker_fd=5, pipe_handle=7)
+                                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 131, in _main
+    prepare(preparation_data)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 246, in prepare
+    _fixup_main_from_path(data['init_main_from_path'])
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/multiprocessing/spawn.py", line 297, in _fixup_main_from_path
+    main_content = runpy.run_path(main_path,
+                                  run_name="__mp_main__")
+  File "<frozen runpy>", line 287, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 57, in <module>
+    logger.warning(f"Vector knowledge base not available: {e}")
+    ^^^^^^
+NameError: name 'logger' is not defined
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-08 09:18:02 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 09:18:02 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 09:18:02 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 09:18:02 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 09:18:02 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 09:18:02 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 09:18:02 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 09:18:02 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 09:18:02 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 09:18:02 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 09:18:02 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 09:18:02 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 09:18:02 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 09:18:02 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-08 09:18:02 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 09:18:02 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 09:18:02 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+[2m2025-08-08T16:18:02.340956Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T16:18:02.343555Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T16:18:02.371359Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
+[2m2025-08-08T16:18:02.371608Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
+INFO:     Started server process [64587]
+INFO:     Waiting for application startup.
+[2m2025-08-08T16:18:02.380233Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T16:18:02.380297Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T16:18:02.380342Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 154, in lifespan
+    if TOOLS_AVAILABLE:
+           ^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x105c54d70>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x10594ef90>, 55653.769393458)])']
+connector: <aiohttp.connector.TCPConnector object at 0x105c54980>
+WARNING:  StatReload detected changes in 'main.py'. Reloading...
+2025-08-08 09:18:53 [info     ] Tool registered                category=navigation tool=navigate
+2025-08-08 09:18:53 [info     ] Tool registered                category=navigation tool=scroll
+2025-08-08 09:18:53 [info     ] Tool registered                category=extraction tool=search_page
+2025-08-08 09:18:53 [info     ] Tool registered                category=utility tool=refresh_state
+2025-08-08 09:18:53 [info     ] Tool registered                category=interaction tool=click
+2025-08-08 09:18:53 [info     ] Tool registered                category=interaction tool=type
+2025-08-08 09:18:53 [info     ] Tool registered                category=interaction tool=fill_form
+2025-08-08 09:18:53 [info     ] Tool registered                category=interaction tool=select_option
+2025-08-08 09:18:53 [info     ] Tool registered                category=planning tool=classify_task
+2025-08-08 09:18:53 [info     ] Tool registered                category=planning tool=plan_task
+2025-08-08 09:18:53 [info     ] Tool registered                category=validation tool=validate_step
+2025-08-08 09:18:53 [info     ] Tool registered                category=extraction tool=extract_content
+2025-08-08 09:18:53 [info     ] Tool registered                category=extraction tool=analyze_page
+2025-08-08 09:18:53 [info     ] Tool registered                category=extraction tool=find_elements
+✅ Registered 14 AI browser tools
+2025-08-08 09:18:53 [warning  ] Tesseract OCR not available - install pytesseract and pillow
+2025-08-08 09:18:53 [warning  ] EasyOCR not available - install easyocr
+2025-08-08 09:18:53 [warning  ] PaddleOCR not available - install paddlepaddle and paddleocr
+[2m2025-08-08T16:18:53.809395Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T16:18:53.809815Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34m__mp_main__[0m][0m
+[2m2025-08-08T16:18:53.839750Z[0m [[33m[1mwarning  [0m] [1mVector knowledge base not available: No module named 'numpy'[0m [[0m[1m[34mmain[0m][0m
+[2m2025-08-08T16:18:53.840001Z[0m [[33m[1mwarning  [0m] [1mMulti-modal AI not available: No module named 'PIL'[0m [[0m[1m[34mmain[0m][0m
+INFO:     Started server process [64760]
+INFO:     Waiting for application startup.
+[2m2025-08-08T16:18:53.851504Z[0m [[33m[1mwarning  [0m] [1mTesseract OCR not available - install pytesseract and pillow[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T16:18:53.851573Z[0m [[33m[1mwarning  [0m] [1mEasyOCR not available - install easyocr[0m [[0m[1m[34mvisual_processor[0m][0m
+[2m2025-08-08T16:18:53.851621Z[0m [[33m[1mwarning  [0m] [1mPaddleOCR not available - install paddlepaddle and paddleocr[0m [[0m[1m[34mvisual_processor[0m][0m
+ERROR:    Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/site-packages/starlette/routing.py", line 694, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "/opt/homebrew/Caskroom/miniconda/base/lib/python3.13/contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/main.py", line 167, in lifespan
+    if await ai_client.warm_up_model():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/suryatejabandlamudi/personal_projects/apple/ai_browser/backend/ai_client.py", line 84, in warm_up_model
+    if not self.model_warmup_enabled:
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AIClient' object has no attribute 'model_warmup_enabled'
+
+ERROR:    Application startup failed. Exiting.
+Unclosed client session
+client_session: <aiohttp.client.ClientSession object at 0x103e71160>
+Unclosed connector
+connections: ['deque([(<aiohttp.client_proto.ResponseHandler object at 0x103e44c50>, 55701.018424541)])']
+connector: <aiohttp.connector.TCPConnector object at 0x103e70d70>
