@@ -1,0 +1,20 @@
+{
+  "format_version": "1.1",
+  "package_name": "gn/gn/mac-arm64",
+  "version_file": ".versions/gn.cipd_version",
+  "install_mode": "copy",
+  "actual_install_mode": "copy",
+  "files": [
+    {
+      "name": "gn",
+      "size": 2036304,
+      "executable": true,
+      "hash": "JHddb0LciRA6-B1AjoK67CJ0DllMqyQgL7x8U9VNm0YC"
+    },
+    {
+      "name": ".versions/gn.cipd_version",
+      "size": 104,
+      "hash": "ly3NaCyfnxVQE6axR0COK-mupYBxJM5RqdrdPrhS4pcC"
+    }
+  ]
+}
