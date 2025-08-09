@@ -339,56 +339,6 @@ class BrowserAgent:
             # Generic input selector
             clean_target = target.replace(' ', '_').lower()
             return f"input[name*='{clean_target}'], input[placeholder*='{target}'], textarea[name*='{clean_target}'], #{clean_target}, .{clean_target}"
-                    
-                    return {
-                        "success": True,
-                        "message": f"Type action prepared: '{text}' in {element.get('name', target)}",
-                        "data": {
-                            "action": "type",
-                            "text": text,
-                            "target": target,
-                            "selector_type": "accessibility",
-                            "selector_value": primary_selector or target,
-                            "selectors": selectors,
-                            "element_info": {
-                                "id": element.get("id"),
-                                "name": element.get("name"),
-                                "role": element.get("role"),
-                                "placeholder": element.get("properties", {}).get("placeholder")
-                            },
-                            "match_confidence": best_match["confidence"],
-                            "instructions": f"Type '{text}' in {element.get('name', 'input field')}"
-                        }
-                    }
-            
-            # Fallback to original implementation
-            return {
-                "success": True,
-                "message": f"Type action prepared: '{text}'" + (f" in {target}" if target else ""),
-                "data": {
-                    "action": "type",
-                    "text": text,
-                    "target": target,
-                    "selector_type": "auto",  # Auto-detect input field
-                    "instructions": f"Type '{text}'" + (f" in field '{target}'" if target else " in focused input field")
-                }
-            }
-            
-        except Exception as e:
-            logger.warning("Failed to use accessibility tree for type action", error=str(e))
-            
-            # Fallback to original implementation
-            return {
-                "success": True,
-                "message": f"Type action prepared: '{text}'" + (f" in {target}" if target else ""),
-                "data": {
-                    "action": "type",
-                    "text": text,
-                    "target": target,
-                    "selector_type": "auto",
-                    "instructions": f"Type '{text}'" + (f" in field '{target}'" if target else " in focused input field")
-                }
-            }
     
     async def _handle_navigate(self, parameters: Dict[str, Any], page_url: str) -> Dict[str, Any]:
         """Handle navigate action"""
