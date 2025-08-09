@@ -217,7 +217,7 @@ class BrowserAgent:
             }
     
     async def _handle_click(self, parameters: Dict[str, Any], page_url: str) -> Dict[str, Any]:
-        """Handle click action with enhanced accessibility-based element finding"""
+        """Handle click action - finds element and generates real browser action"""
         target = parameters.get('target', '')
         
         if not target:
@@ -228,73 +228,61 @@ class BrowserAgent:
             }
         
         try:
-            # Try to use accessibility tree for enhanced element finding
-            from accessibility_tree import accessibility_extractor
+            # Find the best selector for the target
+            selector = self._find_element_selector(target, page_url)
             
-            # Extract accessibility tree for the page
-            tree = await accessibility_extractor.extract_accessibility_tree(page_url)
-            
-            # Search for elements matching the target description
-            matches = await accessibility_extractor.find_elements_by_description(tree, target)
-            
-            if matches:
-                # Use the best match
-                best_match = matches[0]
-                element = best_match["node"]
-                
-                # Get multiple selector options
-                selectors = element.get("selectors", [])
-                primary_selector = selectors[0] if selectors else None
-                
-                return {
-                    "success": True,
-                    "message": f"Click action prepared for target: {target} (found with {best_match['confidence']:.1%} confidence)",
-                    "data": {
-                        "action": "click",
-                        "selector_type": "accessibility",
-                        "selector_value": primary_selector or target,
-                        "selectors": selectors,  # Multiple fallback selectors
-                        "element_info": {
-                            "id": element.get("id"),
-                            "name": element.get("name"),
-                            "role": element.get("role"),
-                            "bounds": element.get("bounds")
-                        },
-                        "match_confidence": best_match["confidence"],
-                        "match_reasons": best_match["reasons"],
-                        "instructions": f"Click on {element.get('name', target)} ({element.get('role', 'element')})"
-                    }
-                }
-            else:
-                # Fallback to basic text-based selector
-                return {
-                    "success": True,
-                    "message": f"Click action prepared for target: {target} (basic selector)",
-                    "data": {
-                        "action": "click",
-                        "selector_type": "text",
-                        "selector_value": target,
-                        "instructions": f"Find and click element containing text '{target}' or with matching selector"
-                    }
-                }
-                
-        except Exception as e:
-            logger.warning("Failed to use accessibility tree for click action", error=str(e))
-            
-            # Fallback to original implementation
+            # Return real action that extension can execute
             return {
                 "success": True,
-                "message": f"Click action prepared for target: {target}",
+                "message": f"Click action ready for execution",
                 "data": {
-                    "action": "click",
-                    "selector_type": "text",  # or "id", "class", "css"
-                    "selector_value": target,
-                    "instructions": f"Find and click element containing text '{target}' or with matching selector"
+                    "action_type": "CLICK",
+                    "selector": selector,
+                    "target_description": target,
+                    "executable": True
                 }
             }
+        except Exception as e:
+            logger.error("Click action failed", error=str(e))
+            return {
+                "success": False,
+                "message": f"Failed to prepare click action: {str(e)}",
+                "data": None
+            }
+    
+    def _find_element_selector(self, target: str, page_url: str) -> str:
+        """Find the best CSS selector for the target element"""
+        target_lower = target.lower()
+        
+        # Common selector patterns based on target description
+        if 'button' in target_lower:
+            if 'login' in target_lower:
+                return "button[type='submit'], input[type='submit'], .login-btn, #login, [aria-label*='login'], button:contains('Login'), button:contains('Sign in')"
+            elif 'search' in target_lower:
+                return "button[type='submit'], input[type='submit'], .search-btn, #search-btn, [aria-label*='search'], button:contains('Search')"
+            elif 'submit' in target_lower:
+                return "button[type='submit'], input[type='submit'], .submit-btn, button:contains('Submit')"
+            else:
+                return f"button:contains('{target}'), input[value*='{target}'], [aria-label*='{target}']"
+        
+        elif 'link' in target_lower or 'click' in target_lower:
+            return f"a:contains('{target}'), [href*='{target.replace(' ', '-')}'], [title*='{target}']"
+        
+        elif 'input' in target_lower or 'field' in target_lower:
+            if 'email' in target_lower:
+                return "input[type='email'], input[name*='email'], #email, .email"
+            elif 'password' in target_lower:
+                return "input[type='password'], input[name*='password'], #password, .password"
+            else:
+                return f"input[placeholder*='{target}'], input[name*='{target.replace(' ', '_')}'], #{target.replace(' ', '-')}"
+        
+        else:
+            # Generic selector - try multiple approaches
+            clean_target = target.replace(' ', '-').lower()
+            return f"#{clean_target}, .{clean_target}, [data-testid*='{clean_target}'], [aria-label*='{target}'], *:contains('{target}')"
     
     async def _handle_type(self, parameters: Dict[str, Any], page_url: str) -> Dict[str, Any]:
-        """Handle type action with enhanced accessibility-based field finding"""
+        """Handle type action - finds input field and generates real browser action"""
         text = parameters.get('text', '')
         target = parameters.get('target', '')
         
@@ -306,28 +294,51 @@ class BrowserAgent:
             }
         
         try:
-            # If target is specified, try to find it using accessibility tree
-            if target:
-                from accessibility_tree import accessibility_extractor
-                
-                # Extract accessibility tree for the page
-                tree = await accessibility_extractor.extract_accessibility_tree(page_url)
-                
-                # Search for input fields matching the target description
-                search_query = f"{target} input textbox field"
-                matches = await accessibility_extractor.find_elements_by_description(tree, search_query)
-                
-                # Filter for input-type elements
-                input_matches = [m for m in matches if m["node"].get("role") in ["textbox", "combobox"]]
-                
-                if input_matches:
-                    # Use the best input match
-                    best_match = input_matches[0]
-                    element = best_match["node"]
-                    
-                    # Get selector options
-                    selectors = element.get("selectors", [])
-                    primary_selector = selectors[0] if selectors else None
+            # Find the best selector for the input field
+            selector = self._find_input_selector(target, page_url)
+            
+            # Return real action that extension can execute
+            return {
+                "success": True,
+                "message": f"Type action ready for execution",
+                "data": {
+                    "action_type": "TYPE",
+                    "selector": selector,
+                    "text": text,
+                    "target_description": target,
+                    "executable": True
+                }
+            }
+        except Exception as e:
+            logger.error("Type action failed", error=str(e))
+            return {
+                "success": False,
+                "message": f"Failed to prepare type action: {str(e)}",
+                "data": None
+            }
+    
+    def _find_input_selector(self, target: str, page_url: str) -> str:
+        """Find the best CSS selector for input fields"""
+        if not target:
+            return "input:not([type='hidden']), textarea"
+            
+        target_lower = target.lower()
+        
+        # Common input field patterns
+        if 'email' in target_lower:
+            return "input[type='email'], input[name*='email'], input[placeholder*='email'], #email, .email-field"
+        elif 'password' in target_lower:
+            return "input[type='password'], input[name*='password'], input[placeholder*='password'], #password, .password-field"
+        elif 'search' in target_lower:
+            return "input[type='search'], input[name*='search'], input[placeholder*='search'], #search, .search-field"
+        elif 'username' in target_lower or 'user' in target_lower:
+            return "input[name*='username'], input[name*='user'], input[placeholder*='username'], #username, .username-field"
+        elif 'message' in target_lower or 'comment' in target_lower:
+            return "textarea, input[name*='message'], input[placeholder*='message'], #message, .message-field"
+        else:
+            # Generic input selector
+            clean_target = target.replace(' ', '_').lower()
+            return f"input[name*='{clean_target}'], input[placeholder*='{target}'], textarea[name*='{clean_target}'], #{clean_target}, .{clean_target}"
                     
                     return {
                         "success": True,

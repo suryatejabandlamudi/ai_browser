@@ -18,7 +18,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from ai_client import AIClient
-from browser_agent import BrowserAgent
+from real_browser_agent import real_browser_agent
 try:
     from browser_agent_enhanced import BrowserAgentEnhanced
 except ImportError:
@@ -83,7 +83,7 @@ except ImportError as e:
 
 # Global instances
 ai_client: Optional[AIClient] = None
-browser_agent: Optional[BrowserAgent] = None
+# Using real_browser_agent instead
 enhanced_agent: Optional[BrowserAgentEnhanced] = None
 structured_agent: Optional[StructuredAgent] = None
 content_extractor: Optional[ContentExtractor] = None
@@ -113,13 +113,13 @@ except ImportError as e:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    global ai_client, browser_agent, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent, ai_browser_agent, intelligent_browsing, vector_knowledge_base, multimodal_ai
+    global ai_client, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent, ai_browser_agent, intelligent_browsing, vector_knowledge_base, multimodal_ai
     
     logger.info("Starting AI Browser Backend...")
     
     # Initialize components
     ai_client = AIClient()
-    browser_agent = BrowserAgent()
+    # Using real_browser_agent (imported globally)
     enhanced_agent = BrowserAgentEnhanced(ai_client) if BrowserAgentEnhanced else None
     structured_agent = StructuredAgent(ai_client) if StructuredAgent else None
     content_extractor = ContentExtractor()
@@ -133,7 +133,7 @@ async def lifespan(app: FastAPI):
     # Initialize AI Browser Agent powered by GPT-OSS 20B
     ai_browser_agent = AIBrowserAgent(
         ai_client=ai_client,
-        browser_agent=browser_agent,
+        browser_agent=real_browser_agent,
         tools_registry=tool_registry if TOOLS_AVAILABLE else None
     )
     
@@ -181,8 +181,7 @@ async def lifespan(app: FastAPI):
     
     # Cleanup
     logger.info("Shutting down AI Browser Backend...")
-    if browser_agent:
-        await browser_agent.cleanup()
+    # No cleanup needed for real_browser_agent
     if memory_manager:
         await memory_manager.cleanup()
 
@@ -359,7 +358,7 @@ async def health_check():
         "ai_model": "gpt-oss:20b",
         "backend": "ollama",
         "agents": {
-            "browser_agent": browser_agent is not None,
+            "browser_agent": real_browser_agent is not None,
             "enhanced_agent": enhanced_agent is not None,
             "structured_agent": structured_agent is not None,
             "task_classifier": task_classifier is not None,
@@ -398,8 +397,8 @@ async def chat_with_ai(request: ChatRequest):
             context=context
         )
         
-        # Parse potential actions from AI response
-        actions = await browser_agent.parse_actions(ai_response.get("raw_response", ""))
+        # No action parsing for now - just return AI response
+        actions = []
         
         return ChatResponse(
             response=ai_response.get("response") or ai_response.get("content", ""),
@@ -532,7 +531,7 @@ async def execute_action(request: ActionRequest):
                    action=request.action_type, 
                    url=request.page_url)
         
-        result = await browser_agent.execute_action(
+        result = await real_browser_agent.execute_action(
             action_type=request.action_type,
             parameters=request.parameters,
             page_url=request.page_url
@@ -557,13 +556,69 @@ async def get_available_tools():
         
         return {
             "tools": tools_info,
-            "total_tools": sum(len(tools) for tools in tools_info.values()),
-            "tool_categories": list(tools_info.keys())
+            "total_tools": tools_info.get('total_tools', 0),
+            "tools_by_category": tools_info.get('tools_by_category', {}),
+            "tool_names": tools_info.get('tool_names', [])
         }
         
     except Exception as e:
         logger.error("Failed to get tools info", error=str(e))
         raise HTTPException(status_code=500, detail=f"Failed to get tools info: {str(e)}")
+
+@app.websocket("/ws/chat")
+async def websocket_chat(websocket: WebSocket):
+    """WebSocket endpoint for real-time AI chat"""
+    await websocket.accept()
+    logger.info("WebSocket connection established")
+    
+    try:
+        while True:
+            # Receive message from client
+            data = await websocket.receive_text()
+            message_data = json.loads(data)
+            
+            user_message = message_data.get('message', '')
+            page_url = message_data.get('page_url', '')
+            
+            logger.info("WebSocket message received", message=user_message[:50])
+            
+            # Send typing indicator
+            await websocket.send_text(json.dumps({
+                'type': 'thinking',
+                'content': 'Thinking...',
+                'timestamp': datetime.now().isoformat()
+            }))
+            
+            # Get AI response
+            context = {}
+            if page_url:
+                context['page_url'] = page_url
+                
+            ai_response = await ai_client.chat(
+                message=user_message,
+                context=context
+            )
+            
+            # Send AI response
+            await websocket.send_text(json.dumps({
+                'type': 'ai_response',
+                'content': ai_response.get('response') or ai_response.get('content', ''),
+                'timestamp': datetime.now().isoformat(),
+                'model': 'gpt-oss:20b'
+            }))
+            
+    except WebSocketDisconnect:
+        logger.info("WebSocket disconnected")
+    except Exception as e:
+        logger.error("WebSocket error", error=str(e))
+        try:
+            await websocket.send_text(json.dumps({
+                'type': 'error',
+                'content': f'Error: {str(e)}',
+                'timestamp': datetime.now().isoformat()
+            }))
+        except:
+            pass
 
 @app.get("/api/agent/stats")
 async def get_agent_stats():
@@ -592,12 +647,8 @@ async def create_workflow(request: WorkflowRequest):
     try:
         logger.info("Creating workflow", name=request.name, actions_count=len(request.actions))
         
-        workflow_id = await browser_agent.create_workflow(
-            name=request.name,
-            actions=request.actions,
-            user_intent=request.user_intent,
-            page_url=request.page_url
-        )
+        # Temporary: Workflow functionality not yet implemented
+        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
         
         return WorkflowResponse(
             success=True,
@@ -620,7 +671,7 @@ async def execute_workflow(workflow_id: str):
     try:
         logger.info("Executing workflow", workflow_id=workflow_id)
         
-        result = await browser_agent.execute_workflow(workflow_id)
+        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
         
         return WorkflowResponse(
             success=result["success"],
@@ -637,7 +688,7 @@ async def execute_workflow(workflow_id: str):
 async def get_workflow_status(workflow_id: str):
     """Get the status of a workflow"""
     try:
-        result = browser_agent.get_workflow_status(workflow_id)
+        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
         
         if not result["success"]:
             raise HTTPException(status_code=404, detail=result["message"])
@@ -654,7 +705,7 @@ async def get_workflow_status(workflow_id: str):
 async def pause_workflow(workflow_id: str):
     """Pause an active workflow"""
     try:
-        result = browser_agent.pause_workflow(workflow_id)
+        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
         
         if not result["success"]:
             raise HTTPException(status_code=404, detail=result["message"])
@@ -671,7 +722,7 @@ async def pause_workflow(workflow_id: str):
 async def resume_workflow(workflow_id: str):
     """Resume a paused workflow"""
     try:
-        result = browser_agent.resume_workflow(workflow_id)
+        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
         
         if not result["success"]:
             raise HTTPException(status_code=404, detail=result["message"])
@@ -688,34 +739,7 @@ async def resume_workflow(workflow_id: str):
 async def list_workflows():
     """List all active and recent workflows"""
     try:
-        active_workflows = []
-        for workflow_id, workflow in browser_agent.active_workflows.items():
-            active_workflows.append({
-                "id": workflow_id,
-                "name": workflow.name,
-                "status": workflow.status,
-                "current_step": workflow.current_step,
-                "total_steps": len(workflow.steps),
-                "created_at": workflow.created_at.isoformat()
-            })
-        
-        recent_workflows = []
-        for workflow in browser_agent.workflow_history[-10:]:  # Last 10 workflows
-            recent_workflows.append({
-                "id": workflow.id,
-                "name": workflow.name,
-                "status": workflow.status,
-                "total_steps": len(workflow.steps),
-                "completed_steps": sum(1 for s in workflow.steps if s.status == "completed"),
-                "created_at": workflow.created_at.isoformat()
-            })
-        
-        return {
-            "active_workflows": active_workflows,
-            "recent_workflows": recent_workflows,
-            "total_active": len(active_workflows),
-            "total_history": len(browser_agent.workflow_history)
-        }
+        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
         
     except Exception as e:
         logger.error("Failed to list workflows", error=str(e))
@@ -1340,7 +1364,7 @@ async def websocket_endpoint(websocket: WebSocket):
                         }))
                     
                     # Execute the workflow
-                    result = await browser_agent.execute_workflow(workflow_id)
+                    raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
                     
                     # Send final result
                     await websocket.send_text(json.dumps({
@@ -1363,7 +1387,7 @@ async def websocket_endpoint(websocket: WebSocket):
                 workflow_id = message_data.get("workflow_id")
                 if workflow_id:
                     try:
-                        result = browser_agent.get_workflow_status(workflow_id)
+                        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
                         await websocket.send_text(json.dumps({
                             "type": "workflow_status_response",
                             "workflow_id": workflow_id,

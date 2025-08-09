@@ -127,7 +127,7 @@ class AIBrowserSidePanel {
         }
         
         const clientId = this.generateClientId();
-        const wsUrl = `ws://127.0.0.1:8000/ws/${clientId}`;
+        const wsUrl = `ws://127.0.0.1:8000/ws/chat`;
         
         try {
             this.websocket = new WebSocket(wsUrl);
@@ -195,6 +195,8 @@ class AIBrowserSidePanel {
             case 'ai_response':
                 this.addAIMessage(content, data);
                 this.clearCurrentStreamingMessage();
+                // Check if we need to execute browser actions
+                await this.checkForBrowserActions(content);
                 break;
                 
             case 'completion':
@@ -465,6 +467,148 @@ class AIBrowserSidePanel {
         
         this.elements.chatContainer.appendChild(feedbackDiv);
         this.scrollToBottom();
+    }
+    
+    async checkForBrowserActions(aiResponse) {
+        // Analyze AI response to determine if browser actions are needed
+        const actionKeywords = [
+            'click', 'type', 'fill', 'submit', 'navigate', 'scroll',
+            'press', 'select', 'choose', 'enter', 'input'
+        ];
+        
+        const responseText = aiResponse.toLowerCase();
+        const needsAction = actionKeywords.some(keyword => responseText.includes(keyword));
+        
+        if (needsAction) {
+            await this.generateAndExecuteBrowserAction(aiResponse);
+        }
+    }
+    
+    async generateAndExecuteBrowserAction(aiResponse) {
+        try {
+            this.addActionFeedback('🔄 Analyzing page for browser actions...', 'info');
+            
+            // Determine action type and parameters from AI response
+            const actionInfo = this.parseActionFromResponse(aiResponse);
+            
+            if (actionInfo) {
+                // Get executable action from backend
+                const response = await fetch('http://localhost:8000/api/action', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action_type: actionInfo.type,
+                        parameters: actionInfo.parameters,
+                        page_url: this.currentTab?.url || '',
+                        page_content: this.pageContent
+                    })
+                });
+                
+                if (response.ok) {
+                    const actionResult = await response.json();
+                    
+                    if (actionResult.success && actionResult.result && actionResult.result.executable) {
+                        // Execute the real browser action
+                        await this.executeRealBrowserAction(actionResult.result);
+                    } else {
+                        this.addActionFeedback('⚠️ Could not generate executable browser action', 'error');
+                    }
+                } else {
+                    this.addActionFeedback('❌ Failed to connect to browser automation backend', 'error');
+                }
+            }
+        } catch (error) {
+            console.error('Error generating browser action:', error);
+            this.addActionFeedback(`❌ Browser action failed: ${error.message}`, 'error');
+        }
+    }
+    
+    parseActionFromResponse(aiResponse) {
+        const responseText = aiResponse.toLowerCase();
+        
+        // Click actions
+        if (responseText.includes('click')) {
+            const clickTargets = [
+                'button', 'login', 'submit', 'search', 'link', 'sign in', 'sign up'
+            ];
+            
+            for (const target of clickTargets) {
+                if (responseText.includes(target)) {
+                    return {
+                        type: 'click',
+                        parameters: { target: target + ' button' }
+                    };
+                }
+            }
+            
+            return {
+                type: 'click', 
+                parameters: { target: 'button' }
+            };
+        }
+        
+        // Type actions
+        if (responseText.includes('type') || responseText.includes('enter') || responseText.includes('input')) {
+            // Extract text to type (simple pattern matching)
+            const typeMatch = responseText.match(/type\s+['"](.*?)['"]|enter\s+['"](.*?)['"]|input\s+['"](.*?)['"]/);
+            const textToType = typeMatch ? (typeMatch[1] || typeMatch[2] || typeMatch[3]) : 'test text';
+            
+            // Extract target field
+            let target = 'input field';
+            if (responseText.includes('email')) target = 'email field';
+            else if (responseText.includes('message')) target = 'message field';
+            else if (responseText.includes('search')) target = 'search field';
+            else if (responseText.includes('name')) target = 'name field';
+            
+            return {
+                type: 'type',
+                parameters: { text: textToType, target: target }
+            };
+        }
+        
+        // Navigate actions
+        if (responseText.includes('navigate') || responseText.includes('go to')) {
+            const urlMatch = responseText.match(/(?:navigate to|go to)\s+(\S+)/);
+            const url = urlMatch ? urlMatch[1] : 'https://google.com';
+            
+            return {
+                type: 'navigate',
+                parameters: { url: url }
+            };
+        }
+        
+        return null;
+    }
+    
+    async executeRealBrowserAction(actionData) {
+        try {
+            this.addActionFeedback(`🔧 Executing ${actionData.type} action...`, 'info');
+            
+            // Execute via Chrome extension background script
+            const result = await chrome.runtime.sendMessage({
+                type: 'EXECUTE_ACTION',
+                data: {
+                    type: actionData.type,
+                    selector: actionData.selector,
+                    text: actionData.text,
+                    url: actionData.url,
+                    direction: actionData.direction,
+                    amount: actionData.amount
+                }
+            });
+            
+            if (result && result.success) {
+                this.addActionFeedback(`✅ ${actionData.type} action completed: ${result.data.message}`, 'success');
+            } else {
+                this.addActionFeedback(`❌ ${actionData.type} action failed: ${result?.data?.message || 'Unknown error'}`, 'error');
+            }
+            
+        } catch (error) {
+            console.error('Error executing browser action:', error);
+            this.addActionFeedback(`❌ Failed to execute browser action: ${error.message}`, 'error');
+        }
     }
     
     async handleQuickAction(action) {
