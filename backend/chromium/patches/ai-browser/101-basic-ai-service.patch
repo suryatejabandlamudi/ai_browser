@@ -1,0 +1,121 @@
+diff --git a/chrome/browser/BUILD.gn b/chrome/browser/BUILD.gn
+index 1234567..abcdefg 100644
+--- a/chrome/browser/BUILD.gn
++++ b/chrome/browser/BUILD.gn
+@@ -100,6 +100,7 @@ static_library("browser") {
+     "//chrome/browser/accessibility",
+     "//chrome/browser/after_startup_task_utils",
+     "//chrome/browser/android",
++    "//chrome/browser/ai",
+     "//chrome/browser/apps",
+     "//chrome/browser/ash",
+     "//chrome/browser/autocomplete",
+diff --git a/chrome/browser/ai/BUILD.gn b/chrome/browser/ai/BUILD.gn
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ai/BUILD.gn
+@@ -0,0 +1,25 @@
++# Copyright 2025 The Chromium Authors
++# Use of this source code is governed by a BSD-style license that can be
++# found in the LICENSE file.
++
++import("//build/config/features.gni")
++
++static_library("ai") {
++  sources = [
++    "ai_service.cc",
++    "ai_service.h",
++  ]
++
++  deps = [
++    "//base",
++    "//content/public/browser",
++    "//net",
++    "//url",
++  ]
++
++  public_deps = [
++    "//base",
++  ]
++
++  configs += [ "//build/config/compiler:wexit_time_destructors" ]
++}
+diff --git a/chrome/browser/ai/ai_service.h b/chrome/browser/ai/ai_service.h
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ai/ai_service.h
+@@ -0,0 +1,30 @@
++// Copyright 2025 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#ifndef CHROME_BROWSER_AI_AI_SERVICE_H_
++#define CHROME_BROWSER_AI_AI_SERVICE_H_
++
++#include <string>
++#include "base/callback.h"
++
++namespace ai {
++
++class AIService {
++ public:
++  AIService();
++  ~AIService();
++
++  // Send message to AI backend
++  void SendMessage(const std::string& message,
++                   const std::string& page_url,
++                   base::OnceCallback<void(const std::string&)> callback);
++
++  // Check if AI service is available
++  bool IsAvailable() const;
++
++ private:
++};
++
++}  // namespace ai
++
++#endif  // CHROME_BROWSER_AI_AI_SERVICE_H_
+diff --git a/chrome/browser/ai/ai_service.cc b/chrome/browser/ai/ai_service.cc
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ai/ai_service.cc
+@@ -0,0 +1,35 @@
++// Copyright 2025 The Chromium Authors
++// Use of this source code is governed by a BSD-style license that can be
++// found in the LICENSE file.
++
++#include "chrome/browser/ai/ai_service.h"
++
++#include "base/logging.h"
++#include "base/json/json_writer.h"
++#include "net/base/url_util.h"
++
++namespace ai {
++
++AIService::AIService() {
++  LOG(INFO) << "AI Service initialized";
++}
++
++AIService::~AIService() = default;
++
++void AIService::SendMessage(const std::string& message,
++                            const std::string& page_url,
++                            base::OnceCallback<void(const std::string&)> callback) {
++  // Simple implementation - in production this would call the backend API
++  LOG(INFO) << "AI Service received message: " << message;
++  
++  // For now, return a simple response
++  std::string response = "AI response to: " + message;
++  std::move(callback).Run(response);
++}
++
++bool AIService::IsAvailable() const {
++  // Check if local AI backend is running on localhost:8000
++  return true;  // Simplified for now
++}
++
++}  // namespace ai

@@ -255,16 +255,35 @@ Respond in JSON format:
         try:
             response = await self.ai_client.chat(analysis_prompt, max_tokens=400)
             
-            # Parse JSON response
-            content = response.get("content", "")
+            # Parse JSON response - fix: use "response" key not "content"
+            content = response.get("response", response.get("content", ""))
+            
+            if not content.strip():
+                raise ValueError("Empty response from AI")
+                
             if "```json" in content:
                 json_start = content.find("```json") + 7
                 json_end = content.find("```", json_start)
+                if json_end == -1:
+                    json_end = len(content)
                 json_str = content[json_start:json_end].strip()
             else:
-                json_str = content
+                json_str = content.strip()
             
-            analysis = json.loads(json_str)
+            # If the AI didn't return JSON, create a default structure
+            try:
+                analysis = json.loads(json_str)
+            except json.JSONDecodeError:
+                logger.warning("AI returned non-JSON, creating fallback analysis", response=content[:200])
+                analysis = {
+                    "complexity": "moderate",
+                    "estimated_steps": 3,
+                    "approach": f"Complete the task: {user_request}",
+                    "challenges": ["AI did not return valid JSON"],
+                    "requires_navigation": True,
+                    "requires_interaction": True,
+                    "success_criteria": "Task completed successfully"
+                }
             
             # Add reasoning log
             self.active_tasks[list(self.active_tasks.keys())[-1]].thinking_log.append(

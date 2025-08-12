@@ -1,0 +1,48 @@
+{
+  "format_version": "1.1",
+  "package_name": "chromium/chrome/test/data/variations/cipd",
+  "install_mode": "copy",
+  "actual_install_mode": "copy",
+  "files": [
+    {
+      "name": "BUILD.gn",
+      "size": 464,
+      "hash": "vcXzTyc5RkaBI-d7MM9CwlpTNRYJelTwy6kCXOcRaMYC"
+    },
+    {
+      "name": "CONTRIBUTING",
+      "size": 198,
+      "hash": "dO4e06_5Jf1qq3kXZhYxbOPErY5Hb8gjG-5c4de0s5EC"
+    },
+    {
+      "name": "README.md",
+      "size": 1713,
+      "hash": "GbW8jLXQlHo6TAJQBcSEwUPO-ooQvE27SR8oHfKYxgwC"
+    },
+    {
+      "name": "cl_info.txt",
+      "size": 14,
+      "hash": "z0aiaLhMRG-MLSyH1TOoQkZRyGJ3mNu0e6Br5cCsacQC"
+    },
+    {
+      "name": "single_group_per_study_prefer_existing_behavior/seed.json",
+      "size": 534913,
+      "hash": "AHi4ssnDRo6s-raE2gjYcyNzAm5QA5RjFIn1wl2SkacC"
+    },
+    {
+      "name": "single_group_per_study_prefer_existing_behavior/seed.textproto",
+      "size": 5709472,
+      "hash": "FttrAokVIpBBBbtsyWDzXFttUF-I5zD16WE1VfupsxkC"
+    },
+    {
+      "name": "single_group_per_study_prefer_new_behavior/seed.json",
+      "size": 552313,
+      "hash": "paeau6ZF1UP5NJAV0sv3rZjIyVL_t6niLXv4_mmtcVEC"
+    },
+    {
+      "name": "single_group_per_study_prefer_new_behavior/seed.textproto",
+      "size": 5884347,
+      "hash": "2ZQbCM0mOBA0p5fQ_fV2RlFn6IQiTdzn4Xku8qM02IEC"
+    }
+  ]
+}

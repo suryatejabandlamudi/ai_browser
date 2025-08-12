@@ -1,0 +1,64 @@
+{
+  "format_version": "1.1",
+  "package_name": "chromium/third_party/updater/chrome_mac_universal",
+  "install_mode": "copy",
+  "actual_install_mode": "copy",
+  "files": [
+    {
+      "name": "GoogleUpdater_test.app/Contents/Helpers/GoogleSoftwareUpdate.bundle/Contents/Helpers/ksadmin",
+      "size": 4665008,
+      "executable": true,
+      "hash": "-xRkiLcjlOaFVMSIaiuAr7RVpU2IKt9iDPzzzLC61-8C"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/Helpers/GoogleSoftwareUpdate.bundle/Contents/Helpers/ksinstall",
+      "size": 3556152,
+      "executable": true,
+      "hash": "E0AgEhQQubYvdcbxPJqtbpEyI34ofc7eMArVD0wvKXwC"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/Helpers/GoogleSoftwareUpdate.bundle/Contents/Info.plist",
+      "size": 1085,
+      "hash": "StJYBwU8E_Ww7R1M2J9QDyk-I-xynEynIPt-h4rFRLsC"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/Helpers/GoogleSoftwareUpdate.bundle/Contents/MacOS/GoogleSoftwareUpdate",
+      "size": 49560,
+      "executable": true,
+      "hash": "qNaTr9KXnqR2ZKpDFtnv_DcEt59RAmTsF82h3olmY4kC"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/Helpers/GoogleSoftwareUpdate.bundle/Contents/Resources/GoogleSoftwareUpdateAgent.app/Contents/Info.plist",
+      "size": 1106,
+      "hash": "xjjDuYOIzgy7EHsZjEZsszUlWbVWzUbrhKofaYNAZF4C"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/Helpers/GoogleSoftwareUpdate.bundle/Contents/Resources/GoogleSoftwareUpdateAgent.app/Contents/MacOS/GoogleSoftwareUpdateAgent",
+      "size": 5045008,
+      "executable": true,
+      "hash": "J01JTWyRXdJJrfHlRfCx7d1RZu9zu6RTpwEgwxYbE8AC"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/Helpers/launcher",
+      "size": 103024,
+      "executable": true,
+      "hash": "4AFkyok4UC2j9vrJpsazyqBNRtG9Q8tmDdLfy3kWjB0C"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/Info.plist",
+      "size": 1370,
+      "hash": "TFh0eHxsEHSiaDF-2QaVQO5uBdPBnSYUrdS-XIvGA0MC"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/MacOS/GoogleUpdater_test",
+      "size": 9810192,
+      "executable": true,
+      "hash": "Pu4UV5JrLeXKOHPtKUk4bFMItCTmAF8dAOBnO7mQ5sQC"
+    },
+    {
+      "name": "GoogleUpdater_test.app/Contents/PkgInfo",
+      "size": 8,
+      "hash": "glAhkclISwTWhTdPmHmgBmBpxJuKyuegSwHTjQfo7KAC"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Features Test</title>
+</head>
+<body>
+    <h1>AI Features Test</h1>
+    <div id="results"></div>
+    
+    <script>
+        const results = document.getElementById('results');
+        
+        function addResult(test, result) {
+            const div = document.createElement('div');
+            div.innerHTML = `<strong>${test}:</strong> ${result}`;
+            results.appendChild(div);
+        }
+        
+        // Test for AI APIs
+        if (typeof window.ai !== 'undefined') {
+            addResult('window.ai', 'Available');
+            
+            if (window.ai.languageModel) {
+                addResult('AI Language Model', 'Available');
+            } else {
+                addResult('AI Language Model', 'Not Available');
+            }
+            
+            if (window.ai.rewriter) {
+                addResult('AI Rewriter', 'Available');
+            } else {
+                addResult('AI Rewriter', 'Not Available');
+            }
+            
+            if (window.ai.summarizer) {
+                addResult('AI Summarizer', 'Available');
+            } else {
+                addResult('AI Summarizer', 'Not Available');
+            }
+        } else {
+            addResult('window.ai', 'Not Available');
+        }
+        
+        // Check navigator.ml
+        if (typeof navigator.ml !== 'undefined') {
+            addResult('navigator.ml', 'Available');
+        } else {
+            addResult('navigator.ml', 'Not Available');
+        }
+        
+        // Check for origin trial tokens
+        const metaTags = document.querySelectorAll('meta[http-equiv="origin-trial"]');
+        addResult('Origin Trial Tokens', metaTags.length > 0 ? 'Found' : 'None');
+        
+        // Check user agent
+        addResult('User Agent', navigator.userAgent);
+    </script>
+</body>
+</html>

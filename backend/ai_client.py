@@ -11,8 +11,8 @@ from typing import Dict, List, Optional, Any, AsyncIterator
 import aiohttp
 import structlog
 
-# Import optimized components
-from optimized_ai_client import OptimizedAIClient
+# Import optimized components - DISABLED DUE TO BUGS
+# from optimized_ai_client import OptimizedAIClient
 
 logger = structlog.get_logger(__name__)
 
@@ -26,8 +26,9 @@ class AIClient:
         self.timeout = timeout
         self.session = None
         
-        # PERFORMANCE OPTIMIZATION: Use optimized client
-        self.optimized_client = OptimizedAIClient()
+        # PERFORMANCE OPTIMIZATION: DISABLED DUE TO BUGS
+        # self.optimized_client = OptimizedAIClient()
+        self.optimized_client = None
         
         # Legacy caching for compatibility
         self._conversation_cache = {}  
@@ -39,8 +40,8 @@ class AIClient:
         self.model_warmup_enabled = True
         self.local_models = ["gpt-oss:20b"]
         
-        # Performance tracking
-        self.performance_enabled = True
+        # Performance tracking - DISABLED OPTIMIZED CLIENT
+        self.performance_enabled = False
         
     async def _get_session(self) -> aiohttp.ClientSession:
         """Get or create aiohttp session with optimized settings"""
