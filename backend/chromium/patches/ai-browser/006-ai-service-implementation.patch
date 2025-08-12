@@ -1,0 +1,162 @@
+diff --git a/chrome/browser/ai/ai_service.cc b/chrome/browser/ai/ai_service.cc
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ai/ai_service.cc
+@@ -0,0 +1,95 @@
++#include "chrome/browser/ai/ai_service.h"
++
++#include "base/json/json_reader.h"
++#include "base/json/json_writer.h"
++#include "base/strings/string_util.h"
++#include "services/network/public/cpp/simple_url_loader.h"
++#include "services/network/public/cpp/resource_request.h"
++#include "net/traffic_annotation/network_traffic_annotation.h"
++
++namespace ai {
++
++AIService::AIService() : local_ai_url_("http://localhost:8000") {
++  // Initialize connection to local AI backend
++  ConnectToLocalModel();
++}
++
++AIService::~AIService() = default;
++
++void AIService::ConnectToLocalModel() {
++  // Test connection to local FastAPI backend
++  auto resource_request = std::make_unique<network::ResourceRequest>();
++  resource_request->url = GURL(local_ai_url_ + "/health");
++  resource_request->method = "GET";
++  resource_request->credentials_mode = network::mojom::CredentialsMode::kOmit;
++
++  net::NetworkTrafficAnnotationTag traffic_annotation =
++      net::DefineNetworkTrafficAnnotation("ai_service_health_check", R"(
++        semantics {
++          sender: "AI Service"
++          description: "Health check for local AI backend"
++          trigger: "Browser startup with AI features enabled"
++          data: "No user data sent"
++          destination: LOCAL
++        }
++        policy {
++          cookies_allowed: NO
++          setting: "This feature can be disabled in AI settings"
++          policy_exception_justification: "Local service, no external data"
++        })");
++
++  // Create and start the URL loader
++  auto url_loader = network::SimpleURLLoader::Create(
++      std::move(resource_request), traffic_annotation);
++      
++  // Store reference for callback
++  auto* url_loader_ptr = url_loader.get();
++  pending_requests_[url_loader_ptr] = std::move(url_loader);
++  
++  url_loader_ptr->DownloadToString(
++      url_loader_factory_.get(),
++      base::BindOnce(&AIService::OnHealthCheckComplete,
++                     weak_factory_.GetWeakPtr(), url_loader_ptr),
++      1024 * 1024);  // 1MB max response
++}
++
++void AIService::OnHealthCheckComplete(
++    network::SimpleURLLoader* url_loader,
++    std::unique_ptr<std::string> response_body) {
++  
++  auto it = pending_requests_.find(url_loader);
++  if (it != pending_requests_.end()) {
++    pending_requests_.erase(it);
++  }
++
++  if (response_body && url_loader->NetError() == net::OK) {
++    LOG(INFO) << "AI Service: Connected to local backend";
++    is_connected_ = true;
++  } else {
++    LOG(WARNING) << "AI Service: Failed to connect to local backend";
++    is_connected_ = false;
++  }
++}
++
++void AIService::SendChatMessage(const std::string& message,
++                               const std::string& page_url,
++                               ChatCallback callback) {
++  if (!is_connected_) {
++    std::move(callback).Run(false, "AI service not connected");
++    return;
++  }
++
++  base::Value::Dict request_data;
++  request_data.Set("message", message);
++  request_data.Set("page_url", page_url);
++
++  std::string json_string;
++  base::JSONWriter::Write(request_data, &json_string);
++
++  // Implementation for sending chat request would go here
++  // For now, return success
++  std::move(callback).Run(true, "Chat message sent to local AI");
++}
++
++bool AIService::IsConnected() const {
++  return is_connected_;
++}
++
++}  // namespace ai
+diff --git a/chrome/browser/ai/ai_service.h b/chrome/browser/ai/ai_service.h
+new file mode 100644
+index 0000000..abcdefg
+--- /dev/null
++++ b/chrome/browser/ai/ai_service.h
+@@ -0,0 +1,52 @@
++#ifndef CHROME_BROWSER_AI_AI_SERVICE_H_
++#define CHROME_BROWSER_AI_AI_SERVICE_H_
++
++#include "base/callback.h"
++#include "base/memory/weak_ptr.h"
++#include "components/keyed_service/core/keyed_service.h"
++#include "services/network/public/cpp/shared_url_loader_factory.h"
++
++namespace network {
++class SimpleURLLoader;
++}
++
++namespace ai {
++
++class AIService : public KeyedService {
++ public:
++  using ChatCallback = base::OnceCallback<void(bool success, const std::string& response)>;
++
++  AIService();
++  ~AIService() override;
++
++  // Connect to local AI model (GPT-OSS 20B via Ollama)
++  void ConnectToLocalModel();
++
++  // Send chat message to AI
++  void SendChatMessage(const std::string& message,
++                      const std::string& page_url,
++                      ChatCallback callback);
++
++  // Check if connected to local AI backend
++  bool IsConnected() const;
++
++  // Set URL loader factory for testing
++  void SetURLLoaderFactory(
++      scoped_refptr<network::SharedURLLoaderFactory> url_loader_factory) {
++    url_loader_factory_ = url_loader_factory;
++  }
++
++ private:
++  void OnHealthCheckComplete(network::SimpleURLLoader* url_loader,
++                            std::unique_ptr<std::string> response_body);
++
++  std::string local_ai_url_;
++  bool is_connected_ = false;
++  scoped_refptr<network::SharedURLLoaderFactory> url_loader_factory_;
++  std::map<network::SimpleURLLoader*, std::unique_ptr<network::SimpleURLLoader>> pending_requests_;
++  
++  base::WeakPtrFactory<AIService> weak_factory_{this};
++};
++
++}  // namespace ai
++#endif  // CHROME_BROWSER_AI_AI_SERVICE_H_

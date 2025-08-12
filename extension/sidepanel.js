@@ -173,7 +173,7 @@ class AIBrowserSidePanel {
         return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
     
-    handleStreamingMessage(message) {
+    async handleStreamingMessage(message) {
         console.log('Streaming message received:', message);
         
         const { type, content, data, timestamp } = message;

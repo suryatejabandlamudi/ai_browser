@@ -1,0 +1,178 @@
+diff --git a/chrome/browser/ai/ai_service_unittest.cc b/chrome/browser/ai/ai_service_unittest.cc
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ai/ai_service_unittest.cc
+@@ -0,0 +1,120 @@
++#include "chrome/browser/ai/ai_service.h"
++#include "chrome/browser/ai/ai_service_factory.h"
++
++#include "base/test/bind.h"
++#include "chrome/test/base/testing_profile.h"
++#include "content/public/test/browser_task_environment.h"
++#include "services/network/public/cpp/weak_wrapper_shared_url_loader_factory.h"
++#include "services/network/test/test_url_loader_factory.h"
++#include "testing/gtest/include/gtest/gtest.h"
++
++namespace ai {
++
++class AIServiceTest : public testing::Test {
++ public:
++  AIServiceTest() = default;
++  ~AIServiceTest() override = default;
++
++  void SetUp() override {
++    profile_ = std::make_unique<TestingProfile>();
++    test_url_loader_factory_ = std::make_unique<network::TestURLLoaderFactory>();
++    test_shared_loader_factory_ =
++        base::MakeRefCounted<network::WeakWrapperSharedURLLoaderFactory>(
++            test_url_loader_factory_.get());
++  }
++
++  void TearDown() override {
++    test_url_loader_factory_.reset();
++    profile_.reset();
++  }
++
++ protected:
++  content::BrowserTaskEnvironment task_environment_;
++  std::unique_ptr<TestingProfile> profile_;
++  std::unique_ptr<network::TestURLLoaderFactory> test_url_loader_factory_;
++  scoped_refptr<network::SharedURLLoaderFactory> test_shared_loader_factory_;
++};
++
++TEST_F(AIServiceTest, ServiceCreation) {
++  AIService* service = AIServiceFactory::GetForProfile(profile_.get());
++  ASSERT_NE(service, nullptr);
++  EXPECT_FALSE(service->IsConnected());  // Initially not connected
++}
++
++TEST_F(AIServiceTest, HealthCheckSuccess) {
++  AIService* service = AIServiceFactory::GetForProfile(profile_.get());
++  service->SetURLLoaderFactory(test_shared_loader_factory_);
++  
++  // Mock successful health check response
++  test_url_loader_factory_->AddResponse(
++      "http://localhost:8000/health",
++      R"({"status": "healthy", "ai_model": "gpt-oss:20b"})");
++  
++  service->ConnectToLocalModel();
++  task_environment_.RunUntilIdle();
++  
++  EXPECT_TRUE(service->IsConnected());
++}
++
++TEST_F(AIServiceTest, HealthCheckFailure) {
++  AIService* service = AIServiceFactory::GetForProfile(profile_.get());
++  service->SetURLLoaderFactory(test_shared_loader_factory_);
++  
++  // Mock failed health check response
++  test_url_loader_factory_->AddResponse(
++      "http://localhost:8000/health", "", net::HTTP_INTERNAL_SERVER_ERROR);
++  
++  service->ConnectToLocalModel();
++  task_environment_.RunUntilIdle();
++  
++  EXPECT_FALSE(service->IsConnected());
++}
++
++TEST_F(AIServiceTest, SendChatMessageWhenDisconnected) {
++  AIService* service = AIServiceFactory::GetForProfile(profile_.get());
++  
++  bool callback_called = false;
++  bool success = true;
++  std::string response;
++  
++  service->SendChatMessage(
++      "Test message", "https://example.com",
++      base::BindOnce([&](bool s, const std::string& r) {
++        callback_called = true;
++        success = s;
++        response = r;
++      }));
++  
++  EXPECT_TRUE(callback_called);
++  EXPECT_FALSE(success);
++  EXPECT_EQ(response, "AI service not connected");
++}
++
++TEST_F(AIServiceTest, SendChatMessageWhenConnected) {
++  AIService* service = AIServiceFactory::GetForProfile(profile_.get());
++  service->SetURLLoaderFactory(test_shared_loader_factory_);
++  
++  // Mock successful health check first
++  test_url_loader_factory_->AddResponse(
++      "http://localhost:8000/health",
++      R"({"status": "healthy"})");
++  
++  service->ConnectToLocalModel();
++  task_environment_.RunUntilIdle();
++  
++  bool callback_called = false;
++  bool success = false;
++  std::string response;
++  
++  service->SendChatMessage(
++      "Test message", "https://example.com",
++      base::BindOnce([&](bool s, const std::string& r) {
++        callback_called = true;
++        success = s;
++        response = r;
++      }));
++  
++  EXPECT_TRUE(callback_called);
++  EXPECT_TRUE(success);
++  EXPECT_EQ(response, "Chat message sent to local AI");
++}
++
++}  // namespace ai
+diff --git a/chrome/browser/ai/ai_service_factory_unittest.cc b/chrome/browser/ai/ai_service_factory_unittest.cc
+new file mode 100644
+index 0000000..abcdefg
+--- /dev/null
++++ b/chrome/browser/ai/ai_service_factory_unittest.cc
+@@ -0,0 +1,45 @@
++#include "chrome/browser/ai/ai_service_factory.h"
++#include "chrome/browser/ai/ai_service.h"
++
++#include "chrome/test/base/testing_profile.h"
++#include "content/public/test/browser_task_environment.h"
++#include "testing/gtest/include/gtest/gtest.h"
++
++namespace ai {
++
++class AIServiceFactoryTest : public testing::Test {
++ public:
++  AIServiceFactoryTest() = default;
++  ~AIServiceFactoryTest() override = default;
++
++  void SetUp() override {
++    profile_ = std::make_unique<TestingProfile>();
++  }
++
++ protected:
++  content::BrowserTaskEnvironment task_environment_;
++  std::unique_ptr<TestingProfile> profile_;
++};
++
++TEST_F(AIServiceFactoryTest, GetForProfile) {
++  AIService* service = AIServiceFactory::GetForProfile(profile_.get());
++  ASSERT_NE(service, nullptr);
++  
++  // Second call should return same instance
++  AIService* service2 = AIServiceFactory::GetForProfile(profile_.get());
++  EXPECT_EQ(service, service2);
++}
++
++TEST_F(AIServiceFactoryTest, OffTheRecordProfile) {
++  Profile* otr_profile = profile_->GetPrimaryOTRProfile(/*create_if_needed=*/true);
++  AIService* service = AIServiceFactory::GetForProfile(otr_profile);
++  EXPECT_EQ(service, nullptr);  // Should not create for OTR profiles
++}
++
++TEST_F(AIServiceFactoryTest, ServiceIsCreatedWithBrowserContext) {
++  AIServiceFactory* factory = AIServiceFactory::GetInstance();
++  EXPECT_TRUE(factory->ServiceIsCreatedWithBrowserContext());
++}
++
++}  // namespace ai

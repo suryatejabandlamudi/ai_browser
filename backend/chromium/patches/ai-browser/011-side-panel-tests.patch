@@ -1,0 +1,172 @@
+diff --git a/chrome/browser/ui/views/side_panel/side_panel_coordinator_ai_chat_test.cc b/chrome/browser/ui/views/side_panel/side_panel_coordinator_ai_chat_test.cc
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ui/views/side_panel/side_panel_coordinator_ai_chat_test.cc
+@@ -0,0 +1,85 @@
++#include "chrome/browser/ui/views/side_panel/side_panel_coordinator.h"
++
++#include "chrome/browser/ai/ai_service_factory.h"
++#include "chrome/browser/ui/browser.h"
++#include "chrome/browser/ui/browser_window.h"
++#include "chrome/browser/ui/side_panel/side_panel_entry_id.h"
++#include "chrome/browser/ui/views/frame/browser_view.h"
++#include "chrome/test/base/in_process_browser_test.h"
++#include "content/public/test/browser_test.h"
++
++class SidePanelAIChatBrowserTest : public InProcessBrowserTest {
++ public:
++  SidePanelAIChatBrowserTest() = default;
++  ~SidePanelAIChatBrowserTest() override = default;
++
++  void SetUpOnMainThread() override {
++    InProcessBrowserTest::SetUpOnMainThread();
++    browser_view_ = BrowserView::GetBrowserViewForBrowser(browser());
++    coordinator_ = browser_view_->side_panel_coordinator();
++  }
++
++ protected:
++  BrowserView* browser_view_ = nullptr;
++  SidePanelCoordinator* coordinator_ = nullptr;
++};
++
++IN_PROC_BROWSER_TEST_F(SidePanelAIChatBrowserTest, AIChatEntryExists) {
++  // Verify that AI Chat entry is registered
++  auto* global_registry = coordinator_->GetGlobalSidePanelRegistry();
++  ASSERT_NE(global_registry, nullptr);
++  
++  auto* ai_chat_entry = global_registry->GetEntryForId(SidePanelEntry::Id::kAIChat);
++  ASSERT_NE(ai_chat_entry, nullptr);
++  EXPECT_EQ(ai_chat_entry->name(), u"AI Chat");
++}
++
++IN_PROC_BROWSER_TEST_F(SidePanelAIChatBrowserTest, AIChatAvailability) {
++  // Test that AI Chat is available
++  EXPECT_EQ(coordinator_->GetAIChatAvailability(), 
++            SidePanelEntry::Availability::kAvailable);
++}
++
++IN_PROC_BROWSER_TEST_F(SidePanelAIChatBrowserTest, ShowAIChatPanel) {
++  // Initially AI Chat should not be visible
++  EXPECT_FALSE(coordinator_->IsAIChatVisible());
++  
++  // Show AI Chat panel
++  coordinator_->Show(SidePanelEntry::Id::kAIChat);
++  
++  // AI Chat should now be visible
++  EXPECT_TRUE(coordinator_->IsAIChatVisible());
++}
++
++IN_PROC_BROWSER_TEST_F(SidePanelAIChatBrowserTest, CreateAIChatWebUIEntry) {
++  // Test that we can create the AI Chat WebUI entry
++  std::unique_ptr<views::View> ai_chat_view = coordinator_->CreateAIChatWebUIEntry();
++  ASSERT_NE(ai_chat_view, nullptr);
++  
++  // Verify it has the correct element identifier
++  EXPECT_EQ(ai_chat_view->GetProperty(views::kElementIdentifierKey), 
++            kAIChatSidePanelElementId);
++}
++
++IN_PROC_BROWSER_TEST_F(SidePanelAIChatBrowserTest, AIServiceIntegration) {
++  // Test that AI service is available for the profile
++  ai::AIService* ai_service = ai::AIServiceFactory::GetForProfile(browser()->profile());
++  ASSERT_NE(ai_service, nullptr);
++}
++
++// Test keyboard shortcut functionality
++IN_PROC_BROWSER_TEST_F(SidePanelAIChatBrowserTest, KeyboardShortcut) {
++  // Initially panel should not be visible
++  EXPECT_FALSE(coordinator_->IsSidePanelShowing());
++  
++  // Simulate Cmd+Shift+L keyboard shortcut
++  // This would be implemented in the actual command handling system
++  coordinator_->Toggle(SidePanelEntry::Id::kAIChat);
++  
++  // Panel should now be showing with AI Chat
++  EXPECT_TRUE(coordinator_->IsSidePanelShowing());
++  EXPECT_TRUE(coordinator_->IsAIChatVisible());
++  
++  // Toggle again should hide
++  coordinator_->Toggle(SidePanelEntry::Id::kAIChat);
++  EXPECT_FALSE(coordinator_->IsSidePanelShowing());
++}
+diff --git a/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui_test.cc b/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui_test.cc
+new file mode 100644
+index 0000000..abcdefg
+--- /dev/null
++++ b/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui_test.cc
+@@ -0,0 +1,70 @@
++#include "chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h"
++
++#include "chrome/browser/ai/ai_service_factory.h"
++#include "chrome/test/base/testing_profile.h"
++#include "chrome/test/base/web_ui_browser_test.h"
++#include "content/public/browser/web_ui_controller.h"
++#include "content/public/test/browser_test.h"
++#include "content/public/test/scoped_web_ui_controller_factory_registration.h"
++
++namespace {
++
++class TestAIChatSidePanelUIFactory : public content::WebUIControllerFactory {
++ public:
++  std::unique_ptr<content::WebUIController> CreateWebUIControllerForURL(
++      content::WebUI* web_ui,
++      const GURL& url) override {
++    if (url.host() == chrome::kChromeUIAIChatHost) {
++      return std::make_unique<AIChatSidePanelUI>(web_ui);
++    }
++    return nullptr;
++  }
++
++  content::WebUI::TypeID GetWebUIType(content::BrowserContext* browser_context,
++                                     const GURL& url) override {
++    if (url.host() == chrome::kChromeUIAIChatHost) {
++      return reinterpret_cast<content::WebUI::TypeID>(1);
++    }
++    return content::WebUI::kNoWebUI;
++  }
++
++  bool UseWebUIForURL(content::BrowserContext* browser_context,
++                     const GURL& url) override {
++    return url.host() == chrome::kChromeUIAIChatHost;
++  }
++};
++
++}  // namespace
++
++class AIChatSidePanelUITest : public WebUIBrowserTest {
++ public:
++  AIChatSidePanelUITest() = default;
++  ~AIChatSidePanelUITest() override = default;
++
++  void SetUpOnMainThread() override {
++    WebUIBrowserTest::SetUpOnMainThread();
++    factory_registration_ =
++        std::make_unique<content::ScopedWebUIControllerFactoryRegistration>(
++            &factory_, content::WebUIControllerFactory::GetInstance());
++  }
++
++  void TearDownOnMainThread() override {
++    factory_registration_.reset();
++    WebUIBrowserTest::TearDownOnMainThread();
++  }
++
++ protected:
++  TestAIChatSidePanelUIFactory factory_;
++  std::unique_ptr<content::ScopedWebUIControllerFactoryRegistration>
++      factory_registration_;
++};
++
++IN_PROC_BROWSER_TEST_F(AIChatSidePanelUITest, LoadAIChatUI) {
++  // Navigate to the AI Chat WebUI
++  GURL ai_chat_url(chrome::kChromeUIAIChatURL);
++  ASSERT_TRUE(NavigateToURL(ai_chat_url));
++  
++  // Verify the page loaded successfully
++  EXPECT_EQ(web_ui()->GetWebContents()->GetLastCommittedURL(), ai_chat_url);
++  
++  // Verify we have the correct WebUI controller
++  AIChatSidePanelUI* ai_chat_ui = 
++      static_cast<AIChatSidePanelUI*>(web_ui()->GetController());
++  ASSERT_NE(ai_chat_ui, nullptr);
++}

@@ -1,0 +1,187 @@
+diff --git a/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.cc b/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.cc
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.cc
+@@ -0,0 +1,85 @@
++#include "chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h"
++
++#include "chrome/browser/ai/ai_service_factory.h"
++#include "chrome/browser/profiles/profile.h"
++#include "chrome/common/webui_url_constants.h"
++#include "chrome/grit/generated_resources.h"
++#include "content/public/browser/web_ui_data_source.h"
++#include "content/public/browser/web_ui_message_handler.h"
++
++namespace {
++
++class AIChatUIHandler : public content::WebUIMessageHandler {
++ public:
++  AIChatUIHandler() = default;
++  ~AIChatUIHandler() override = default;
++
++  void RegisterMessages() override {
++    web_ui()->RegisterDeprecatedMessageCallback(
++        "sendMessage",
++        base::BindRepeating(&AIChatUIHandler::HandleSendMessage,
++                           base::Unretained(this)));
++    web_ui()->RegisterDeprecatedMessageCallback(
++        "getPageContent",
++        base::BindRepeating(&AIChatUIHandler::HandleGetPageContent,
++                           base::Unretained(this)));
++  }
++
++ private:
++  void HandleSendMessage(const base::Value::List& args) {
++    if (args.size() < 2) return;
++    
++    const std::string& message = args[0].GetString();
++    const std::string& callback_id = args[1].GetString();
++    
++    Profile* profile = Profile::FromWebUI(web_ui());
++    ai::AIService* ai_service = ai::AIServiceFactory::GetForProfile(profile);
++    
++    if (!ai_service || !ai_service->IsConnected()) {
++      ResolveJavascriptCallback(
++          base::Value(callback_id),
++          base::Value("Error: AI service not available"));
++      return;
++    }
++    
++    // Get current page URL for context
++    content::WebContents* web_contents = web_ui()->GetWebContents();
++    std::string page_url = web_contents ? web_contents->GetLastCommittedURL().spec() : "";
++    
++    ai_service->SendChatMessage(
++        message, page_url,
++        base::BindOnce(&AIChatUIHandler::OnChatResponse,
++                       weak_factory_.GetWeakPtr(), callback_id));
++  }
++  
++  void HandleGetPageContent(const base::Value::List& args) {
++    if (args.empty()) return;
++    
++    const std::string& callback_id = args[0].GetString();
++    
++    // Get accessibility tree content from current page
++    content::WebContents* web_contents = web_ui()->GetWebContents();
++    if (web_contents) {
++      // Extract page title and URL for context
++      base::Value::Dict page_info;
++      page_info.Set("title", web_contents->GetTitle());
++      page_info.Set("url", web_contents->GetLastCommittedURL().spec());
++      
++      ResolveJavascriptCallback(base::Value(callback_id), base::Value(std::move(page_info)));
++    }
++  }
++  
++  void OnChatResponse(const std::string& callback_id, bool success, const std::string& response) {
++    ResolveJavascriptCallback(
++        base::Value(callback_id),
++        base::Value(success ? response : "Error: " + response));
++  }
++  
++  base::WeakPtrFactory<AIChatUIHandler> weak_factory_{this};
++};
++
++}  // namespace
++
++AIChatSidePanelUI::AIChatSidePanelUI(content::WebUI* web_ui)
++    : content::WebUIController(web_ui) {
++  
++  // Create data source
++  content::WebUIDataSource* source = content::WebUIDataSource::Create(
++      chrome::kChromeUIAIChatHost);
++  
++  // Add HTML content
++  source->SetDefaultResource(IDR_AI_CHAT_SIDE_PANEL_HTML);
++  source->AddResourcePath("ai_chat_side_panel.js", IDR_AI_CHAT_SIDE_PANEL_JS);
++  source->AddResourcePath("ai_chat_side_panel.css", IDR_AI_CHAT_SIDE_PANEL_CSS);
++  
++  // Add strings
++  source->AddLocalizedString("aiChatTitle", IDS_AI_CHAT_TITLE);
++  source->AddLocalizedString("aiChatPlaceholder", IDS_AI_CHAT_PLACEHOLDER);
++  source->AddLocalizedString("aiChatSend", IDS_AI_CHAT_SEND);
++  
++  // Enable trusted types
++  source->DisableTrustedTypesCSP();
++  
++  content::WebUIDataSource::Add(Profile::FromWebUI(web_ui), source);
++  
++  // Add message handler
++  web_ui->AddMessageHandler(std::make_unique<AIChatUIHandler>());
++}
++
++AIChatSidePanelUI::~AIChatSidePanelUI() = default;
+diff --git a/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h b/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h
+new file mode 100644
+index 0000000..abcdefg
+--- /dev/null
++++ b/chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h
+@@ -0,0 +1,16 @@
++#ifndef CHROME_BROWSER_UI_WEBUI_SIDE_PANEL_AI_CHAT_AI_CHAT_SIDE_PANEL_UI_H_
++#define CHROME_BROWSER_UI_WEBUI_SIDE_PANEL_AI_CHAT_AI_CHAT_SIDE_PANEL_UI_H_
++
++#include "content/public/browser/web_ui_controller.h"
++
++class AIChatSidePanelUI : public content::WebUIController {
++ public:
++  explicit AIChatSidePanelUI(content::WebUI* web_ui);
++  ~AIChatSidePanelUI() override;
++
++  AIChatSidePanelUI(const AIChatSidePanelUI&) = delete;
++  AIChatSidePanelUI& operator=(const AIChatSidePanelUI&) = delete;
++};
++
++#endif  // CHROME_BROWSER_UI_WEBUI_SIDE_PANEL_AI_CHAT_AI_CHAT_SIDE_PANEL_UI_H_
+diff --git a/chrome/browser/ui/webui/side_panel/ai_chat/BUILD.gn b/chrome/browser/ui/webui/side_panel/ai_chat/BUILD.gn
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/ui/webui/side_panel/ai_chat/BUILD.gn
+@@ -0,0 +1,22 @@
++source_set("ai_chat") {
++  sources = [
++    "ai_chat_side_panel_ui.cc",
++    "ai_chat_side_panel_ui.h",
++  ]
++
++  deps = [
++    "//base",
++    "//chrome/browser/ai",
++    "//chrome/browser/profiles:profile",
++    "//chrome/common",
++    "//content/public/browser",
++    "//components/strings:components_strings_grit",
++    "//chrome/app:generated_resources",
++  ]
++
++  public_deps = [
++    "//base",
++    "//content/public/browser",
++  ]
++}
+diff --git a/chrome/common/webui_url_constants.cc b/chrome/common/webui_url_constants.cc
+index 1234567..abcdefg 100644
+--- a/chrome/common/webui_url_constants.cc
++++ b/chrome/common/webui_url_constants.cc
+@@ -100,6 +100,7 @@ const char kChromeUIAccessibilityHost[] = "accessibility";
+ const char kChromeUIBookmarksHost[] = "bookmarks";
+ const char kChromeUIHistoryHost[] = "history";
+ const char kChromeUIReadingListHost[] = "reading-list";
++const char kChromeUIAIChatHost[] = "ai-chat";
+ 
+ // WebUI hosts for side panel
+ const char kChromeUISidePanelHost[] = "side-panel.top-chrome";
+diff --git a/chrome/common/webui_url_constants.h b/chrome/common/webui_url_constants.h
+index 2345678..bcdefgh 100644
+--- a/chrome/common/webui_url_constants.h
++++ b/chrome/common/webui_url_constants.h
+@@ -50,6 +50,7 @@ extern const char kChromeUIAccessibilityHost[];
+ extern const char kChromeUIBookmarksHost[];
+ extern const char kChromeUIHistoryHost[];
+ extern const char kChromeUIReadingListHost[];
++extern const char kChromeUIAIChatHost[];
+ 
+ // WebUI hosts for side panel
+ extern const char kChromeUISidePanelHost[];

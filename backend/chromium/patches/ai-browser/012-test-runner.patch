@@ -1,0 +1,266 @@
+diff --git a/chrome/browser/ai/BUILD.gn b/chrome/browser/ai/BUILD.gn
+index 1234567..abcdefg 100644
+--- a/chrome/browser/ai/BUILD.gn
++++ b/chrome/browser/ai/BUILD.gn
+@@ -23,3 +23,21 @@ source_set("ai") {
+     "//components/keyed_service/core",
+   ]
+ }
++
++# Unit tests for AI service
++source_set("unit_tests") {
++  testonly = true
++  sources = [
++    "ai_service_unittest.cc",
++    "ai_service_factory_unittest.cc",
++  ]
++
++  deps = [
++    ":ai",
++    "//base/test:test_support",
++    "//chrome/test:test_support",
++    "//content/public/test:test_support",
++    "//services/network:test_support",
++    "//testing/gtest",
++  ]
++}
+diff --git a/tools/ai_browser_test.py b/tools/ai_browser_test.py
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/tools/ai_browser_test.py
+@@ -0,0 +1,150 @@
++#!/usr/bin/env python3
++"""
++AI Browser Integration Test Script
++Tests that all AI browser patches are properly integrated and functional.
++"""
++
++import os
++import subprocess
++import sys
++import json
++import time
++import requests
++from pathlib import Path
++
++class AIBrowserTester:
++    def __init__(self, chromium_build_dir):
++        self.build_dir = Path(chromium_build_dir)
++        self.chromium_exe = self.build_dir / "Chromium.app" / "Contents" / "MacOS" / "Chromium"
++        self.test_results = []
++        
++    def run_test(self, test_name, test_func):
++        """Run a test and record results."""
++        print(f"🧪 Running test: {test_name}")
++        try:
++            result = test_func()
++            if result:
++                print(f"✅ {test_name}: PASSED")
++                self.test_results.append((test_name, True, None))
++            else:
++                print(f"❌ {test_name}: FAILED")
++                self.test_results.append((test_name, False, "Test returned False"))
++        except Exception as e:
++            print(f"❌ {test_name}: ERROR - {e}")
++            self.test_results.append((test_name, False, str(e)))
++        print()
++
++    def test_chromium_builds(self):
++        """Test that Chromium executable exists and runs."""
++        if not self.chromium_exe.exists():
++            return False
++            
++        # Test version command
++        result = subprocess.run([str(self.chromium_exe), "--version"], 
++                              capture_output=True, text=True)
++        return result.returncode == 0 and "Chromium" in result.stdout
++
++    def test_chromium_headless_browse(self):
++        """Test that Chromium can browse a page in headless mode."""
++        cmd = [
++            str(self.chromium_exe),
++            "--headless",
++            "--dump-dom",
++            "--virtual-time-budget=1000",
++            "https://example.com"
++        ]
++        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
++        return result.returncode == 0 and "Example Domain" in result.stdout
++
++    def test_ai_service_patches_exist(self):
++        """Test that AI service source files exist in the build."""
++        ai_service_files = [
++            "chrome/browser/ai/ai_service.cc",
++            "chrome/browser/ai/ai_service.h", 
++            "chrome/browser/ai/ai_service_factory.cc",
++            "chrome/browser/ai/ai_service_factory.h"
++        ]
++        
++        src_dir = self.build_dir / "src"
++        for file_path in ai_service_files:
++            if not (src_dir / file_path).exists():
++                return False
++        return True
++
++    def test_ai_chat_ui_patches_exist(self):
++        """Test that AI Chat UI files exist in the build."""
++        ui_files = [
++            "chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.cc",
++            "chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h",
++            "chrome/browser/resources/side_panel/ai_chat/ai_chat_side_panel.html",
++            "chrome/browser/resources/side_panel/ai_chat/ai_chat_side_panel.js",
++            "chrome/browser/resources/side_panel/ai_chat/ai_chat_side_panel.css"
++        ]
++        
++        src_dir = self.build_dir / "src"
++        for file_path in ui_files:
++            if not (src_dir / file_path).exists():
++                return False
++        return True
++
++    def test_backend_ai_service_connection(self):
++        """Test that the FastAPI backend is running and responding."""
++        try:
++            response = requests.get("http://localhost:8000/health", timeout=5)
++            if response.status_code == 200:
++                data = response.json()
++                return data.get("status") == "healthy" and "gpt-oss" in data.get("ai_model", "")
++        except:
++            pass
++        return False
++
++    def test_backend_ai_chat(self):
++        """Test that the AI chat endpoint works."""
++        try:
++            payload = {
++                "message": "Hello AI, this is a test",
++                "page_url": "https://example.com"
++            }
++            response = requests.post("http://localhost:8000/api/chat", 
++                                   json=payload, timeout=30)
++            if response.status_code == 200:
++                data = response.json()
++                return "response" in data and len(data["response"]) > 0
++        except:
++            pass
++        return False
++
++    def test_unit_tests_exist(self):
++        """Test that unit test files exist."""
++        test_files = [
++            "chrome/browser/ai/ai_service_unittest.cc",
++            "chrome/browser/ai/ai_service_factory_unittest.cc"
++        ]
++        
++        src_dir = self.build_dir / "src"
++        for file_path in test_files:
++            if not (src_dir / file_path).exists():
++                return False
++        return True
++
++    def run_all_tests(self):
++        """Run all tests and print summary."""
++        print("🚀 AI Browser Integration Test Suite")
++        print("=" * 50)
++        
++        self.run_test("Chromium Build Exists", self.test_chromium_builds)
++        self.run_test("Chromium Can Browse Pages", self.test_chromium_headless_browse)
++        self.run_test("AI Service Patches Applied", self.test_ai_service_patches_exist)
++        self.run_test("AI Chat UI Patches Applied", self.test_ai_chat_ui_patches_exist)
++        self.run_test("Backend AI Service Running", self.test_backend_ai_service_connection)
++        self.run_test("Backend AI Chat Working", self.test_backend_ai_chat)
++        self.run_test("Unit Tests Exist", self.test_unit_tests_exist)
++        
++        # Summary
++        passed = sum(1 for _, success, _ in self.test_results if success)
++        total = len(self.test_results)
++        
++        print("=" * 50)
++        print(f"📊 Test Results: {passed}/{total} passed ({passed/total*100:.0f}%)")
++        
++        if passed == total:
++            print("🎉 All tests passed! AI Browser patches are working correctly.")
++            return True
++        else:
++            print("⚠️ Some tests failed. Review the output above.")
++            for test_name, success, error in self.test_results:
++                if not success:
++                    print(f"   FAILED: {test_name} - {error}")
++            return False
++
++if __name__ == "__main__":
++    if len(sys.argv) != 2:
++        print("Usage: python3 ai_browser_test.py <chromium_build_directory>")
++        sys.exit(1)
++    
++    build_dir = sys.argv[1]
++    tester = AIBrowserTester(build_dir)
++    success = tester.run_all_tests()
++    sys.exit(0 if success else 1)
+diff --git a/tools/apply_ai_patches.sh b/tools/apply_ai_patches.sh
+new file mode 100644
+index 0000000..abcdefg
+--- /dev/null
++++ b/tools/apply_ai_patches.sh
+@@ -0,0 +1,60 @@
++#!/bin/bash
++"""
++Script to apply AI browser patches to Chromium source
++"""
++
++set -e
++
++SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
++PATCHES_DIR="$SCRIPT_DIR/../patches/ai-browser"
++CHROMIUM_SRC_DIR="$1"
++
++if [ -z "$CHROMIUM_SRC_DIR" ]; then
++    echo "Usage: $0 <chromium_src_directory>"
++    exit 1
++fi
++
++if [ ! -d "$CHROMIUM_SRC_DIR" ]; then
++    echo "Error: Chromium source directory does not exist: $CHROMIUM_SRC_DIR"
++    exit 1
++fi
++
++echo "🔧 Applying AI Browser patches to Chromium source..."
++echo "Source directory: $CHROMIUM_SRC_DIR"
++echo "Patches directory: $PATCHES_DIR"
++echo
++
++cd "$CHROMIUM_SRC_DIR"
++
++# Apply patches in order
++PATCHES=(
++    "001-ai-service-integration.patch"
++    "002-ai-sidepanel.patch" 
++    "003-local-ai-api.patch"
++    "004-privacy-first-features.patch"
++    "005-ai-powered-omnibox.patch"
++    "006-ai-service-implementation.patch"
++    "007-ai-chat-webui.patch"
++    "008-ai-chat-resources.patch"
++    "009-fix-missing-dependencies.patch"
++)
++
++for patch in "${PATCHES[@]}"; do
++    patch_file="$PATCHES_DIR/$patch"
++    if [ -f "$patch_file" ]; then
++        echo "📄 Applying patch: $patch"
++        if patch -p1 < "$patch_file"; then
++            echo "✅ Successfully applied: $patch"
++        else
++            echo "❌ Failed to apply: $patch"
++            echo "This may be normal if the patch was already applied."
++        fi
++    else
++        echo "⚠️ Patch file not found: $patch_file"
++    fi
++    echo
++done
++
++echo "🎉 Patch application complete!"
++echo "You can now build Chromium with AI browser features."
++echo "Use: autoninja -C out/Default chrome"

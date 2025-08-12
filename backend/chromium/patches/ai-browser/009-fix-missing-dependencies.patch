@@ -1,0 +1,141 @@
+diff --git a/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc b/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc
+index abcdefg..1234567 100644
+--- a/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc
++++ b/chrome/browser/ui/views/side_panel/side_panel_coordinator.cc
+@@ -9,6 +9,7 @@
+ #include "chrome/browser/ui/views/side_panel/side_panel_web_ui_view.h"
+ #include "chrome/browser/ui/webui/side_panel/bookmarks/bookmarks_side_panel_ui.h"
+ #include "chrome/browser/ui/webui/side_panel/customize_chrome/customize_chrome_section.h"
++#include "chrome/browser/ui/webui/side_panel/ai_chat/ai_chat_side_panel_ui.h"
+ #include "chrome/common/webui_url_constants.h"
+ #include "ui/actions/actions.h"
+ #include "ui/base/models/image_model.h"
++#include "ui/gfx/vector_icon_types.h"
++
++// Define the chat icon (simple chat bubble)
++namespace {
++const gfx::VectorIcon kChatIcon = {
++    "chrome/browser/ui/webui/side_panel/ai_chat/icons/chat.icon",
++    16,
++    "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10h8V12c0-5.52-4.48-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8v8h-8z"
++};
++
++const ui::ElementIdentifier kAIChatSidePanelElementId = 
++    DEFINE_ELEMENT_IDENTIFIER_VALUE("AIChatSidePanel");
++}  // namespace
+
+diff --git a/chrome/browser/ui/side_panel/side_panel_entry_id.h b/chrome/browser/ui/side_panel/side_panel_entry_id.h
+index 3456789..cdefghi 100644
+--- a/chrome/browser/ui/side_panel/side_panel_entry_id.h
++++ b/chrome/browser/ui/side_panel/side_panel_entry_id.h
+@@ -12,6 +12,7 @@ struct SidePanelEntry {
+     kReadingList = 0,
+     kBookmarks,
+     kHistoryClusters,
++    kAIChat,
+     kUserNote,
+     kWebView,
+     kExtension,
+
+diff --git a/chrome/browser/ui/webui/side_panel/ai_chat/BUILD.gn b/chrome/browser/ui/webui/side_panel/ai_chat/BUILD.gn
+index 1234567..abcdefg 100644
+--- a/chrome/browser/ui/webui/side_panel/ai_chat/BUILD.gn
++++ b/chrome/browser/ui/webui/side_panel/ai_chat/BUILD.gn
+@@ -8,6 +8,7 @@ source_set("ai_chat") {
+     "//base",
+     "//chrome/browser/ai",
+     "//chrome/browser/profiles:profile",
++    "//chrome/browser/ui:ui",
+     "//chrome/common",
+     "//content/public/browser",
+     "//components/strings:components_strings_grit",
+@@ -20,3 +21,16 @@ source_set("ai_chat") {
+     "//content/public/browser",
+   ]
+ }
++
++# Add to main browser build
++group("ai_chat_all") {
++  deps = [
++    ":ai_chat",
++    "//chrome/browser/resources/side_panel/ai_chat:resources",
++  ]
++  
++  if (is_chromeos_ash) {
++    # Additional Chrome OS specific dependencies if needed
++  }
++}
+
+diff --git a/chrome/browser/resources/side_panel/ai_chat/BUILD.gn b/chrome/browser/resources/side_panel/ai_chat/BUILD.gn
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/chrome/browser/resources/side_panel/ai_chat/BUILD.gn
+@@ -0,0 +1,24 @@
++import("//chrome/common/features.gni")
++import("//tools/grit/grit_rule.gni")
++
++grit("resources") {
++  source = "resources.grd"
++  outputs = [
++    "grit/ai_chat_side_panel_resources.h",
++    "grit/ai_chat_side_panel_resources_map.h",
++    "ai_chat_side_panel_resources.pak",
++  ]
++  
++  deps = [
++    "//chrome/app:generated_resources",
++  ]
++}
++
++copy("copy_files") {
++  sources = [
++    "ai_chat_side_panel.html",
++    "ai_chat_side_panel.js", 
++    "ai_chat_side_panel.css",
++  ]
++  outputs = [ "$target_gen_dir/{{source_file_part}}" ]
++}
+
+diff --git a/chrome/browser/resources/side_panel/ai_chat/resources.grd b/chrome/browser/resources/side_panel/ai_chat/resources.grd
+new file mode 100644
+index 0000000..abcdefg
+--- /dev/null
++++ b/chrome/browser/resources/side_panel/ai_chat/resources.grd
+@@ -0,0 +1,16 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<grit latest_public_release="0" current_release="1"
++      output_all_resource_defines="false">
++  <outputs>
++    <output filename="grit/ai_chat_side_panel_resources.h" type="rc_header">
++      <emit emit_type='prepend'></emit>
++    </output>
++    <output filename="grit/ai_chat_side_panel_resources_map.h" type="resource_file_map_source" />
++    <output filename="ai_chat_side_panel_resources.pak" type="data_package" />
++  </outputs>
++  <release seq="1">
++    <includes>
++      <include name="IDR_AI_CHAT_SIDE_PANEL_HTML" file="ai_chat_side_panel.html" type="BINDATA" />
++      <include name="IDR_AI_CHAT_SIDE_PANEL_JS" file="ai_chat_side_panel.js" type="BINDATA" />
++      <include name="IDR_AI_CHAT_SIDE_PANEL_CSS" file="ai_chat_side_panel.css" type="BINDATA" />
++    </includes>
++  </release>
++</grit>
+
+diff --git a/chrome/app/generated_resources.grd b/chrome/app/generated_resources.grd
+index 1234567..abcdefg 100644
+--- a/chrome/app/generated_resources.grd
++++ b/chrome/app/generated_resources.grd
+@@ -5000,6 +5000,12 @@
+       <message name="IDS_SIDE_PANEL_BOOKMARKS_TAB_TITLE" desc="The tab title for the bookmarks side panel.">
+         Bookmarks
+       </message>
++      <message name="IDS_AI_CHAT_TITLE" desc="Title for AI Chat side panel">
++        AI Chat
++      </message>
++      <message name="IDS_AI_CHAT_PLACEHOLDER" desc="Placeholder text for AI chat input">
++        Ask AI anything about this page...
++      </message>
++      <message name="IDS_AI_CHAT_SEND" desc="Send button text for AI chat">
++        Send
++      </message>
