@@ -17,10 +17,16 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from ai_client import AIClient
-from real_browser_agent import real_browser_agent
-from browser_agent import BrowserAgent
-from action_pipeline import assemble_structured_actions, set_default_action_parser
+try:
+    from .ai_client import AIClient
+    from .real_browser_agent import real_browser_agent
+    from .browser_agent import BrowserAgent
+    from .action_pipeline import assemble_structured_actions, set_default_action_parser
+except ImportError:  # pragma: no cover - script execution fallback
+    from ai_client import AIClient
+    from real_browser_agent import real_browser_agent
+    from browser_agent import BrowserAgent
+    from action_pipeline import assemble_structured_actions, set_default_action_parser
 try:
     from browser_agent_enhanced import BrowserAgentEnhanced
 except ImportError:
