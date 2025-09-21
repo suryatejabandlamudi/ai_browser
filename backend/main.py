@@ -19,6 +19,8 @@ from pydantic import BaseModel
 
 from ai_client import AIClient
 from real_browser_agent import real_browser_agent
+from browser_agent import BrowserAgent
+from action_pipeline import assemble_structured_actions, set_default_action_parser
 try:
     from browser_agent_enhanced import BrowserAgentEnhanced
 except ImportError:
@@ -97,6 +99,7 @@ ai_browser_agent: Optional[AIBrowserAgent] = None  # AI Browser Agent powered by
 intelligent_browsing: Optional[Any] = None  # Advanced page understanding
 vector_knowledge_base: Optional[Any] = None  # Local vector database
 multimodal_ai: Optional[Any] = None  # Multi-modal AI system
+browser_agent: Optional[BrowserAgent] = None
 
 # Import new tool system and rolling horizon agent
 try:
@@ -113,7 +116,7 @@ except ImportError as e:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    global ai_client, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent, ai_browser_agent, intelligent_browsing, vector_knowledge_base, multimodal_ai
+    global ai_client, enhanced_agent, structured_agent, content_extractor, accessibility_extractor, task_classifier, visual_highlighter, form_processor, memory_manager, visual_processor, rolling_horizon_agent, ai_browser_agent, intelligent_browsing, vector_knowledge_base, multimodal_ai, browser_agent
     
     logger.info("Starting AI Browser Backend...")
     
@@ -129,6 +132,8 @@ async def lifespan(app: FastAPI):
     form_processor = IntelligentFormProcessor()
     memory_manager = CrossTabMemoryManager()
     visual_processor = VisualProcessor()
+    browser_agent = BrowserAgent()
+    set_default_action_parser(browser_agent)
     
     # Initialize AI Browser Agent powered by GPT-OSS 20B
     ai_browser_agent = AIBrowserAgent(
@@ -182,6 +187,9 @@ async def lifespan(app: FastAPI):
     # Cleanup
     logger.info("Shutting down AI Browser Backend...")
     # No cleanup needed for real_browser_agent
+    if browser_agent:
+        await browser_agent.cleanup()
+        set_default_action_parser(None)
     if memory_manager:
         await memory_manager.cleanup()
 
@@ -231,6 +239,7 @@ class ActionRequest(BaseModel):
     action_type: str  # click, type, navigate, etc.
     parameters: Dict[str, Any]
     page_url: str
+    page_content: Optional[str] = None
 
 class ActionResponse(BaseModel):
     success: bool
@@ -378,36 +387,78 @@ async def chat_with_ai(request: ChatRequest):
     try:
         logger.info("Processing chat request", message_preview=request.message[:100])
         
-        # Build context from page if provided
-        context = {}
-        if request.page_url and request.page_content:
-            # Extract clean content
-            cleaned_content = await content_extractor.extract_main_content(
-                request.page_content, request.page_url
-            )
+        # Build contextual information for downstream agents
+        context = dict(request.context) if request.context else {}
+        cleaned_content: Optional[str] = None
+
+        if request.page_content:
+            if request.page_url and content_extractor:
+                cleaned_content = await content_extractor.extract_main_content(
+                    request.page_content,
+                    request.page_url
+                )
+            else:
+                cleaned_content = request.page_content
+
+        if request.page_url:
+            context.setdefault("page_url", request.page_url)
+        if cleaned_content:
             context.update({
-                "page_url": request.page_url,
                 "page_content": cleaned_content,
                 "has_page_context": True
             })
-        
-        # Get AI response
-        ai_response = await ai_client.chat(
-            message=request.message,
-            context=context
+
+        page_context = {
+            "url": request.page_url or "",
+            "page_url": request.page_url or "",
+            "page_content": cleaned_content,
+            "content": cleaned_content,
+            "has_page_context": bool(cleaned_content)
+        }
+
+        base_metadata: Dict[str, Any] = {"model": "gpt-oss:20b"}
+        response_text = ""
+        candidate_actions: Optional[List[Dict[str, Any]]] = None
+
+        if enhanced_agent:
+            result = await enhanced_agent.process_task(request.message, page_context)
+            response_text = result.get("response", "")
+            candidate_actions = result.get("actions") if isinstance(result.get("actions"), list) else None
+            enhanced_agent.add_to_history(request.message, response_text)
+
+            base_metadata.update({
+                "enhanced_agent": True,
+                "task_type": result.get("task_type"),
+                "plan_confidence": result.get("plan_confidence")
+            })
+            if isinstance(result.get("metadata"), dict):
+                base_metadata.update(result["metadata"])
+        else:
+            ai_response = await ai_client.chat(
+                message=request.message,
+                context=context
+            )
+            response_text = ai_response.get("response") or ai_response.get("content", "")
+            candidate_actions = ai_response.get("actions") if isinstance(ai_response.get("actions"), list) else None
+
+            base_metadata.update({
+                "enhanced_agent": False,
+                "tokens_used": ai_response.get("usage", {})
+            })
+
+        structured_actions = await assemble_structured_actions(
+            candidate_actions,
+            response_text,
+            request.page_url,
+            page_dom=request.page_content
         )
-        
-        # No action parsing for now - just return AI response
-        actions = []
-        
+
+        base_metadata["has_actions"] = bool(structured_actions)
+
         return ChatResponse(
-            response=ai_response.get("response") or ai_response.get("content", ""),
-            actions=actions,
-            metadata={
-                "model": "gpt-oss:20b",
-                "tokens_used": ai_response.get("usage", {}),
-                "has_actions": len(actions) > 0 if actions else False
-            }
+            response=response_text or "",
+            actions=structured_actions,
+            metadata=base_metadata
         )
         
     except Exception as e:
@@ -421,33 +472,53 @@ async def enhanced_chat_with_ai(request: ChatRequest):
         logger.info("Processing enhanced chat request", message_preview=request.message[:100])
         
         # Build page context
-        page_context = {}
-        if request.page_url and request.page_content:
-            cleaned_content = await content_extractor.extract_main_content(
-                request.page_content, request.page_url
-            )
-            page_context = {
-                "page_url": request.page_url,
-                "page_content": cleaned_content,
-                "has_page_context": True
-            }
+        cleaned_content: Optional[str] = None
+        if request.page_content:
+            if request.page_url and content_extractor:
+                cleaned_content = await content_extractor.extract_main_content(
+                    request.page_content,
+                    request.page_url
+                )
+            else:
+                cleaned_content = request.page_content
+
+        page_context = {
+            "url": request.page_url or "",
+            "page_url": request.page_url or "",
+            "page_content": cleaned_content,
+            "content": cleaned_content,
+            "has_page_context": bool(cleaned_content)
+        }
         
         # Process task with enhanced agent
         result = await enhanced_agent.process_task(request.message, page_context)
         
         # Add to conversation history
         enhanced_agent.add_to_history(request.message, result["response"])
-        
+
+        structured_actions = await assemble_structured_actions(
+            result.get("actions") if isinstance(result.get("actions"), list) else None,
+            result.get("response", ""),
+            request.page_url,
+            page_dom=request.page_content
+        )
+
+        metadata = {
+            "model": "gpt-oss:20b",
+            "task_type": result.get("task_type"),
+            "plan_confidence": result.get("plan_confidence"),
+            "enhanced_agent": True,
+        }
+
+        if isinstance(result.get("metadata"), dict):
+            metadata.update(result["metadata"])
+
+        metadata["has_actions"] = bool(structured_actions)
+
         return ChatResponse(
-            response=result["response"],
-            actions=result.get("actions", []),
-            metadata={
-                "model": "gpt-oss:20b",
-                "task_type": result.get("task_type"),
-                "plan_confidence": result.get("plan_confidence"),
-                "enhanced_agent": True,
-                **result.get("metadata", {})
-            }
+            response=result.get("response", ""),
+            actions=structured_actions,
+            metadata=metadata
         )
         
     except Exception as e:
@@ -534,7 +605,8 @@ async def execute_action(request: ActionRequest):
         result = await real_browser_agent.execute_action(
             action_type=request.action_type,
             parameters=request.parameters,
-            page_url=request.page_url
+            page_url=request.page_url,
+            page_dom=request.page_content
         )
         
         return ActionResponse(
@@ -646,19 +718,27 @@ async def create_workflow(request: WorkflowRequest):
     """Create a new multi-step workflow"""
     try:
         logger.info("Creating workflow", name=request.name, actions_count=len(request.actions))
-        
-        # Temporary: Workflow functionality not yet implemented
-        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
-        
+        if not browser_agent:
+            raise HTTPException(status_code=503, detail="Workflow engine not initialized")
+
+        workflow_id = await browser_agent.create_workflow(
+            name=request.name,
+            actions=request.actions,
+            user_intent=request.user_intent or "",
+            page_url=request.page_url or ""
+        )
+
+        status = browser_agent.get_workflow_status(workflow_id)
+        data = status.get("data") if status.get("success") else {
+            "workflow_id": workflow_id,
+            "status": "pending"
+        }
+
         return WorkflowResponse(
             success=True,
-            message=f"Workflow '{request.name}' created successfully",
+            message=f"Workflow '{request.name}' created",
             workflow_id=workflow_id,
-            data={
-                "workflow_id": workflow_id,
-                "name": request.name,
-                "steps_count": len(request.actions)
-            }
+            data=data
         )
         
     except Exception as e:
@@ -670,12 +750,19 @@ async def execute_workflow(workflow_id: str):
     """Execute a multi-step workflow"""
     try:
         logger.info("Executing workflow", workflow_id=workflow_id)
-        
-        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
-        
+        if not browser_agent:
+            raise HTTPException(status_code=503, detail="Workflow engine not initialized")
+
+        result = await browser_agent.execute_workflow(workflow_id)
+
+        if not result.get("success"):
+            message = result.get("message", "Workflow execution failed")
+            status_code = 404 if "not found" in message.lower() else 500
+            raise HTTPException(status_code=status_code, detail=message)
+
         return WorkflowResponse(
-            success=result["success"],
-            message=result["message"],
+            success=True,
+            message=result.get("message", "Workflow executed"),
             workflow_id=workflow_id,
             data=result.get("data")
         )
@@ -688,12 +775,15 @@ async def execute_workflow(workflow_id: str):
 async def get_workflow_status(workflow_id: str):
     """Get the status of a workflow"""
     try:
-        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
-        
-        if not result["success"]:
-            raise HTTPException(status_code=404, detail=result["message"])
-        
-        return result["data"]
+        if not browser_agent:
+            raise HTTPException(status_code=503, detail="Workflow engine not initialized")
+
+        status = browser_agent.get_workflow_status(workflow_id)
+
+        if not status.get("success"):
+            raise HTTPException(status_code=404, detail=status.get("message", "Workflow not found"))
+
+        return status.get("data", {})
         
     except HTTPException:
         raise
@@ -705,11 +795,17 @@ async def get_workflow_status(workflow_id: str):
 async def pause_workflow(workflow_id: str):
     """Pause an active workflow"""
     try:
-        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
-        
-        if not result["success"]:
-            raise HTTPException(status_code=404, detail=result["message"])
-        
+        if not browser_agent:
+            raise HTTPException(status_code=503, detail="Workflow engine not initialized")
+
+        result = browser_agent.pause_workflow(workflow_id)
+
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=404 if "not found" in result.get("message", "").lower() else 400,
+                detail=result.get("message", "Unable to pause workflow")
+            )
+
         return result
         
     except HTTPException:
@@ -722,11 +818,17 @@ async def pause_workflow(workflow_id: str):
 async def resume_workflow(workflow_id: str):
     """Resume a paused workflow"""
     try:
-        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
-        
-        if not result["success"]:
-            raise HTTPException(status_code=404, detail=result["message"])
-        
+        if not browser_agent:
+            raise HTTPException(status_code=503, detail="Workflow engine not initialized")
+
+        result = browser_agent.resume_workflow(workflow_id)
+
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=404 if "not found" in result.get("message", "").lower() else 400,
+                detail=result.get("message", "Unable to resume workflow")
+            )
+
         return result
         
     except HTTPException:
@@ -739,8 +841,36 @@ async def resume_workflow(workflow_id: str):
 async def list_workflows():
     """List all active and recent workflows"""
     try:
-        raise HTTPException(status_code=501, detail="Workflow functionality not yet implemented")
-        
+        if not browser_agent:
+            raise HTTPException(status_code=503, detail="Workflow engine not initialized")
+
+        active = [
+            {
+                "workflow_id": workflow_id,
+                "name": workflow.name,
+                "status": workflow.status,
+                "steps": len(workflow.steps),
+                "created_at": workflow.created_at.isoformat()
+            }
+            for workflow_id, workflow in browser_agent.active_workflows.items()
+        ]
+
+        recent = [
+            {
+                "workflow_id": workflow.id,
+                "name": workflow.name,
+                "status": workflow.status,
+                "steps": len(workflow.steps),
+                "completed_at": workflow.created_at.isoformat()
+            }
+            for workflow in browser_agent.workflow_history[-20:]
+        ]
+
+        return {
+            "active": active,
+            "recent": list(reversed(recent))
+        }
+
     except Exception as e:
         logger.error("Failed to list workflows", error=str(e))
         raise HTTPException(status_code=500, detail=f"Failed to list workflows: {str(e)}")

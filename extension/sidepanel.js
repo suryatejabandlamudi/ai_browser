@@ -196,7 +196,7 @@ class AIBrowserSidePanel {
                 this.addAIMessage(content, data);
                 this.clearCurrentStreamingMessage();
                 // Check if we need to execute browser actions
-                await this.checkForBrowserActions(content);
+                await this.checkForBrowserActions(content, data);
                 break;
                 
             case 'completion':
@@ -276,12 +276,23 @@ class AIBrowserSidePanel {
     
     addAIMessage(content, data = null) {
         const message = this.addMessage(content, 'ai', false);
-        
-        // Handle additional data (like actions, tools results, etc.)
-        if (data && data.ai_actions && data.ai_actions.length > 0) {
-            this.handleActions(data.ai_actions);
+
+        const queuedActions = [];
+        if (data) {
+            if (Array.isArray(data.ai_actions)) {
+                queuedActions.push(...data.ai_actions);
+            }
+            if (Array.isArray(data.actions)) {
+                queuedActions.push(...data.actions);
+            }
         }
-        
+
+        if (queuedActions.length > 0) {
+            this.handleActions(queuedActions).catch(error => {
+                console.error('Failed to execute AI-provided actions:', error);
+            });
+        }
+
         return message;
     }
     
@@ -349,12 +360,7 @@ class AIBrowserSidePanel {
             const aiResponse = response.data;
             
             // Add AI response to chat
-            this.addMessage(aiResponse.response || aiResponse.message || 'I received your message.', 'ai');
-            
-            // Handle any actions
-            if (aiResponse.actions && aiResponse.actions.length > 0) {
-                await this.handleActions(aiResponse.actions);
-            }
+            this.addAIMessage(aiResponse.response || aiResponse.message || 'I received your message.', aiResponse);
         } else {
             this.addMessage('Sorry, I encountered an error processing your request. Please try again.', 'ai');
         }
@@ -431,27 +437,78 @@ class AIBrowserSidePanel {
     }
     
     async handleActions(actions) {
-        for (const action of actions) {
+        if (!Array.isArray(actions) || actions.length === 0) {
+            return;
+        }
+
+        for (const rawAction of actions) {
+            const actionType = (rawAction?.type || '').toString().toUpperCase();
+            if (!actionType) {
+                continue;
+            }
+
+            if (rawAction.reasoning) {
+                this.addActionFeedback(`🧠 ${rawAction.reasoning}`, 'info');
+            }
+
+            const preparedAction = {
+                ...rawAction,
+                type: actionType
+            };
+
+            if (!preparedAction.selector && rawAction?.parameters) {
+                preparedAction.selector = rawAction.parameters.selector || rawAction.parameters.target || preparedAction.selector;
+            }
+
+            if (rawAction.executable === false) {
+                this.addActionFeedback(`⚠️ ${actionType}: backend marked action as non-executable`, 'error');
+                continue;
+            }
+
+            if ((actionType === 'CLICK' || actionType === 'TYPE') && !preparedAction.selector) {
+                this.addActionFeedback(`⚠️ ${actionType}: missing selector`, 'error');
+                continue;
+            }
+
+            if (actionType === 'TYPE' && !preparedAction.text) {
+                this.addActionFeedback('⚠️ TYPE: missing text to input', 'error');
+                continue;
+            }
+
+            if (actionType === 'NAVIGATE' && !preparedAction.url) {
+                this.addActionFeedback('⚠️ NAVIGATE: missing destination URL', 'error');
+                continue;
+            }
+
+            if (actionType === 'WAIT') {
+                const duration = Number(preparedAction.duration || preparedAction?.parameters?.duration || 1000);
+                this.addActionFeedback(`⏳ WAIT: pausing for ${duration}ms`, 'info');
+                await new Promise(resolve => setTimeout(resolve, duration));
+                continue;
+            }
+
             try {
                 const result = await chrome.runtime.sendMessage({
                     type: 'EXECUTE_ACTION',
-                    data: action
+                    data: preparedAction
                 });
-                
-                if (result.success) {
-                    this.addActionFeedback(`✓ ${action.type}: ${result.data.message}`, 'success');
+
+                if (result?.success) {
+                    const successMessage = result.data?.message || 'Action completed';
+                    this.addActionFeedback(`✅ ${actionType}: ${successMessage}`, 'success');
                 } else {
-                    this.addActionFeedback(`✗ ${action.type}: ${result.data.message}`, 'error');
+                    const errorMessage = result?.data?.message || result?.error || 'Unknown error';
+                    this.addActionFeedback(`❌ ${actionType}: ${errorMessage}`, 'error');
                 }
-                
-                // Small delay between actions
-                await new Promise(resolve => setTimeout(resolve, 500));
             } catch (error) {
                 console.error('Error executing action:', error);
-                this.addActionFeedback(`✗ ${action.type}: Failed to execute`, 'error');
+                this.addActionFeedback(`❌ ${actionType}: Failed to execute`, 'error');
             }
+
+            // Small delay between actions
+            await new Promise(resolve => setTimeout(resolve, 500));
         }
-        
+
         // Refresh page content after actions
         await this.refreshPageContent();
     }
@@ -459,17 +516,38 @@ class AIBrowserSidePanel {
     addActionFeedback(message, type) {
         const feedbackDiv = document.createElement('div');
         feedbackDiv.className = `message message-ai`;
+        const colors = {
+            success: '#34a853',
+            error: '#ea4335',
+            info: '#4285f4'
+        };
+        const color = colors[type] || colors.info;
         feedbackDiv.innerHTML = `
-            <div class="message-content" style="font-size: 12px; opacity: 0.8; color: ${type === 'success' ? '#34a853' : '#ea4335'}">
+            <div class="message-content" style="font-size: 12px; opacity: 0.8; color: ${color}">
                 ${message}
             </div>
         `;
-        
+
         this.elements.chatContainer.appendChild(feedbackDiv);
         this.scrollToBottom();
     }
     
-    async checkForBrowserActions(aiResponse) {
+    async checkForBrowserActions(aiResponse, aiData = null) {
+        const structuredActions = [];
+        if (aiData) {
+            if (Array.isArray(aiData.ai_actions)) {
+                structuredActions.push(...aiData.ai_actions);
+            }
+            if (Array.isArray(aiData.actions)) {
+                structuredActions.push(...aiData.actions);
+            }
+        }
+
+        if (structuredActions.length > 0) {
+            await this.handleActions(structuredActions);
+            return;
+        }
+
         // Analyze AI response to determine if browser actions are needed
         const actionKeywords = [
             'click', 'type', 'fill', 'submit', 'navigate', 'scroll',

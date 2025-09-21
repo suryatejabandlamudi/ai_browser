@@ -1,17 +1,17 @@
 # Project Status
 
 ## Current Reality
-- Backend chat endpoint returns text responses only; action parsing is deliberately disabled and workflow APIs still 501, so automation is not wired up (`backend/main.py:400`, `backend/main.py:650`).
+- Backend chat endpoints now emit structured action payloads backed by DOM-aware selector generation, reducing blind guesses but still needing real-browser validation (`backend/action_pipeline.py:28`, `backend/real_browser_agent.py:48`, extension/sidepanel.js:195`).
 - Browser agent generates generic selectors from keywords instead of inspecting the live DOM, making extension-executed actions unreliable (`backend/real_browser_agent.py:82-167`).
-- Extension infers actions from free-form LLM text and depends on `/api/action`, which currently cannot bridge context, so side panel automation rarely succeeds (`extension/sidepanel.js:492-610`, `extension/background.js:86-149`).
+- Extension now prioritizes structured actions from the backend but still falls back to keyword inference when none are supplied, so non-grounded automation can leak through (`extension/sidepanel.js:277-563`).
 - Custom Chromium build pipeline has never completed: patches fail, `gn` is missing, and build logs end with "Chrome binary not found" despite success banners (`logs/chromium_build.log:13`, `logs/chromium_build.log:49`, `logs/ai_browser_build.log:11495`).
 - Repository contains compiled `__pycache__` files and large build logs under version control, and a partially-synced Chromium tree sits unstaged at `backend/chromium/build/src`.
 
 ## Pending Tasks (Next to Close)
 | Priority | Area | Task | Evidence/Notes |
 | --- | --- | --- | --- |
-| P0 | Backend ↔ Extension | Reinstate structured action parsing and deliver executable steps to the extension instead of returning text-only chat responses. | `backend/main.py:400` comment removes action parsing; extension waits for `actions` list. |
-| P0 | Backend Automation | Replace placeholder workflow endpoints with real orchestration or remove them until implemented to avoid 501 responses. | `backend/main.py:650-742`.
+| P0 | Backend ↔ Extension | Validate the DOM-informed structured-action pipeline in a real browser session and monitor selector accuracy against dynamic sites. | `backend/action_pipeline.py:28`, `backend/real_browser_agent.py:140`, `extension/sidepanel.js:439`.
+| P0 | Backend Automation | Add integration harness (FastAPI TestClient or mocked extension) that covers chat → action emission and basic workflow lifecycles to catch regressions. | `backend/tests/test_actions.py`, `backend/tests/test_workflows.py`.
 | P0 | Build System | Restore the Chromium toolchain (install `gn`/`autoninja`), fix the AI patch series, and prove a successful build before advertising a custom browser. | `logs/chromium_build.log`, `logs/ai_browser_build.log`.
 | P1 | Automation Reliability | Give the browser agent real DOM grounding (page structure inspection or extension telemetry) instead of static selector heuristics. | `backend/real_browser_agent.py:82-167` relies on keyword guesses. |
 | P1 | Extension UX | Stop guessing automation intents from prose; accept explicit tool responses or add UI affordances so users confirm before executing actions. | `extension/sidepanel.js:528-576`.
@@ -22,7 +22,7 @@
 | P2 | Dependency Handling | Document and validate optional modules (vector DB, multimodal); fail gracefully when extras are missing. | Imports guarded by `try/except` in `backend/main.py:38-86` currently just log warnings. |
 
 ## Immediate Next Steps
-1. Align backend and extension by delivering actionable plans (P0).
+1. Dry-run extension automation against a representative site to verify selectors and fill any gaps surfaced by the new tests (P0).
 2. Stabilize the build story or de-emphasize the Chromium fork until reproducible (P0).
 3. Decide on automation UX approach, then backfill tests and docs accordingly (P1).
 
