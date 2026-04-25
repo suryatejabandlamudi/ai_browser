@@ -2,6 +2,7 @@ backend/chromium/_gclient_src*/
 backend/chromium/src/
 backend/chromium/BrowserOS/
 backend/chromium/BrowserOS-agent/
-
-browser-use/
 backend/chromium/build/
+depot_tools/
+temp_depot_tools/
+logs/
